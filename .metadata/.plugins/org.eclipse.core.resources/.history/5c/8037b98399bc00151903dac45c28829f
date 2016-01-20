@@ -1,0 +1,18 @@
+#ifndef VISIONTRACKING_HPP
+#define VISIONTRACKING_HP_
+
+#include "Schematic.hpp"
+
+class VisionTracking {
+private:
+	std::shared_ptr<NetworkTable> goalImageTable;
+
+public:
+	VisionTracking() {
+			goalImageTable = NetworkTable::GetTable("GRIP/myContoursReport");
+	}
+
+	double GetXOffset();
+};
+
+#endif

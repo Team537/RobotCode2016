@@ -1,0 +1,14 @@
+#ifndef SHOOTER_HPP
+#define SHOOTER_HPP
+
+#include "Schematic.hpp"
+#include "ShooterVision.hpp"
+
+class Shooter {
+private:
+	VisionNetwork *vision;
+public:
+	Shooter();
+};
+
+#endif

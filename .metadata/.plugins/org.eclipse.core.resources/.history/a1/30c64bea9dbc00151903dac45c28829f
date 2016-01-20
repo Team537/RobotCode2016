@@ -1,0 +1,13 @@
+#include "Shooter.hpp"
+
+void Shooter::Update() {
+	vision->Update();
+}
+
+void Shooter::Dashboard() {
+	vision->Dashboard();
+}
+
+bool Shooter::Activated() {
+	return activated;
+}

@@ -1,0 +1,19 @@
+#include "ShooterVision.hpp"
+
+void ShooterVision::Update() {
+	llvm::ArrayRef<double> data = goalImageTable->GetNumberArray("centerX", llvm::ArrayRef<double>());
+
+	if (!data.empty()) {
+		centerX = data[0];
+	} else {
+		centerX = -1;
+	}
+}
+
+void ShooterVision::Dashboard() {
+	SmartDashboard::PutNumber("X Offset", GetXOffset());
+}
+
+double ShooterVision::GetXOffset() {
+	return centerX; // '/ WEBCAM_WIDTH'
+}

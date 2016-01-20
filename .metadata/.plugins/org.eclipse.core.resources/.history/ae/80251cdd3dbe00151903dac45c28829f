@@ -1,0 +1,12 @@
+#include "Shooter.hpp"
+
+void Shooter::Update(Vision vision) {
+	if (activateButton->WasDown()) {
+		activated = !activated;
+	}
+}
+
+
+bool Shooter::IsActivated() {
+	return activated;
+}

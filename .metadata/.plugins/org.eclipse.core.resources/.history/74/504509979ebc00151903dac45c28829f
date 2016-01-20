@@ -1,0 +1,13 @@
+#include "ShooterVision.hpp"
+
+void ShooterVision::Update() {
+	readings = goalImageTable->GetNumberArray("centerX", llvm::ArrayRef<double>());
+}
+
+void ShooterVision::Dashboard() {
+	SmartDashboard::PutNumber("X Offset", GetXOffset());
+}
+
+double ShooterVision::GetXOffset() {
+	return readings[0] / WEBCAM_WIDTH;
+}

@@ -1,0 +1,51 @@
+#include "ShooterVision.hpp"
+
+void ShooterVision::Update() {
+	/** Center X */
+	llvm::ArrayRef<double> centerXData = goalImageTable->GetNumberArray("centerX", llvm::ArrayRef<double>());
+
+	if (!centerXData.empty()) {
+		centerX = centerXData[0];
+	} else {
+		centerX = -1;
+	}
+
+	/** Width */
+	llvm::ArrayRef<double> widthData = goalImageTable->GetNumberArray("width", llvm::ArrayRef<double>());
+
+	if (!widthData.empty()) {
+		width = widthData[0];
+	} else {
+		width = -1;
+	}
+
+	/** Height */
+	llvm::ArrayRef<double> heightData = goalImageTable->GetNumberArray("height", llvm::ArrayRef<double>());
+
+	if (!heightData.empty()) {
+		height = heightData[0];
+	} else {
+		height = -1;
+	}
+}
+
+void ShooterVision::Dashboard() {
+	SmartDashboard::PutNumber("X Offset", GetXOffset());
+	SmartDashboard::PutNumber("Target Distance", GetGoalDistance());
+}
+
+double ShooterVision::GetXOffset() {
+	return centerX; // '/ WEBCAM_WIDTH'
+}
+
+double ShooterVision::GetWidth() {
+	return width;
+}
+
+double ShooterVision::GetHeight() {
+	return height;
+}
+
+double ShooterVision::GetGoalDistance() {
+	return ((TARGET_WIDTH / 12) * WEBCAM_PIXEL_WIDTH) / (2 * GetWidth() * TAN_FOV);
+}

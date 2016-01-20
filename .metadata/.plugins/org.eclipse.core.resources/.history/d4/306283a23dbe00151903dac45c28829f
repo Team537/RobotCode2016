@@ -1,0 +1,26 @@
+#ifndef SHOOTER_HPP
+#define SHOOTER_HPP
+
+#include "Schematic.hpp"
+#include "MyButton.hpp"
+#include "Vision.hpp"
+
+class Shooter {
+private:
+	Joystick *joystick;
+	MyButton *activateButton;
+	bool activated;
+
+public:
+	Shooter(Joystick *joy) {
+		joystick = joy;
+		activateButton = new MyButton(joystick, 10);
+		activated = true;
+	}
+
+	void Update();
+	void Dashboard();
+	bool IsActivated();
+};
+
+#endif

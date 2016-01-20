@@ -1,0 +1,14 @@
+/*
+ * Shooter.cpp
+ *
+ *  Created on: Jan 16, 2016
+ *      Author: code01
+ */
+
+#include <Shooter.hpp>
+
+Shooter::Shooter() {
+	// TODO Auto-generated constructor stub
+
+}
+

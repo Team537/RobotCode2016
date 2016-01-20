@@ -1,0 +1,28 @@
+#ifndef SHOOTERVISION_HPP
+#define SHOOTERVISION_HPP
+
+#include "Schematic.hpp"
+
+class ShooterVision {
+private:
+	std::shared_ptr<NetworkTable> goalImageTable;
+	double centerX;
+	double width;
+	double height;
+
+public:
+	ShooterVision() {
+		goalImageTable = NetworkTable::GetTable("GRIP/myContoursReport");
+		centerX = 0;
+		width = 0;
+		height = 0;
+	}
+
+	void Update();
+	void Dashboard();
+	double GetXOffset();
+	double GetWidth();
+	double GetHeight();
+};
+
+#endif

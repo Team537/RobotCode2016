@@ -1,0 +1,46 @@
+#include "VisionNetwork.hpp"
+#include "Schematic.hpp"
+#include "Swerve.hpp"
+#include "Shooter.hpp"
+
+class Robot: public IterativeRobot {
+private:
+	Joystick *joystick;
+	AnalogGyro *gyro;
+	VisionNetwork *vision;
+	Swerve *swerve;
+	Shooter* shooter;
+
+	void RobotInit() {
+		joystick = new Joystick(0);
+		gyro = new AnalogGyro(1);
+		gyro->Reset();
+		vision = new VisionNetwork();
+		swerve = new Swerve(joystick, gyro);
+		shooter = new Shooter();
+	}
+
+	void AutonomousInit() {
+	}
+
+	void AutonomousPeriodic() {
+	}
+
+	void TeleopInit() {
+	}
+
+	void TeleopPeriodic() {
+		vision->Update();
+		vision->Dashboard();
+
+		swerve->Drive();
+		// swerve->Tune(swerve->frontRightAngle);
+		// swerve->TuneMinMax(swerve->frontRightAngle);
+		swerve->Dashboard();
+	}
+
+	void TestPeriodic() {
+	}
+};
+
+START_ROBOT_CLASS(Robot);

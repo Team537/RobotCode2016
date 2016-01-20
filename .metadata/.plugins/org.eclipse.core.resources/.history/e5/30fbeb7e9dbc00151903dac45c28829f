@@ -1,0 +1,10 @@
+#include "Shooter.hpp"
+
+void ShooterVision::Update() {
+	vision->Update();
+}
+
+void ShooterVision::Dashboard() {
+	vision->Dashboard();
+}
+

@@ -1,0 +1,21 @@
+#ifndef VISIONTRACKING_HPP
+#define VISIONTRACKING_HP_
+
+#include "Schematic.hpp"
+
+class VisionTracking {
+private:
+	std::shared_ptr<NetworkTable> goalImageTable;
+	std::vector<double> readings;
+
+public:
+	VisionTracking(std::string table) {
+		goalImageTable = NetworkTable::GetTable(table);
+		readings = new std::vector<>();
+	}
+
+	void Update();
+	double GetXOffset();
+};
+
+#endif

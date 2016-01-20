@@ -1,0 +1,17 @@
+/*
+ * VisionTracking.hpp
+ *
+ *  Created on: Jan 16, 2016
+ *      Author: code01
+ */
+
+#ifndef SRC_VISIONTRACKING_HPP_
+#define SRC_VISIONTRACKING_HPP_
+
+class VisionTracking {
+public:
+	VisionTracking();
+	virtual ~VisionTracking();
+};
+
+#endif /* SRC_VISIONTRACKING_HPP_ */
