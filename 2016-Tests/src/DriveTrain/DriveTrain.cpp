@@ -20,3 +20,11 @@ void DriveTrain::Drive(double leftSpeed, double rightSpeed){
 void DriveTrain::Shift(int gear) {
 	shifter->Set(gear == 1 ? false : true);
 }
+
+bool DriveTrain::IsUserControl() {
+	return userControl;
+}
+
+void DriveTrain::SetUserControl(bool userControl) {
+	this->userControl = userControl;
+}

@@ -69,7 +69,7 @@ public:
 
 		visionSource = new VisionSource();
 		visionOutput = new VisionOutput();
-		visionPID = new PIDController(10, 0, 0, visionSource, visionOutput);
+		visionPID = new PIDController(100, 0, 0, visionSource, visionOutput);
 		visionPID->SetAbsoluteTolerance(0.05);
 		visionPID->SetInputRange(-1, 1);
 		visionPID->SetOutputRange(-1, 1);

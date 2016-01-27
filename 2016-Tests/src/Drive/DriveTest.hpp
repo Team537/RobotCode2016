@@ -10,9 +10,9 @@ private:
 	Gyro *gyro;
 
 public:
-	DriveTest(Gyro *gyro) : IDrive() {
+	DriveTest() : IDrive() {
 		anglePID = new AnglePID(1);
-		this->gyro = gyro;
+		//gyro = new Gyro();
 	}
 
 	void Update(DriveTrain *driveTrain);

@@ -7,6 +7,8 @@
 
 #define PI 3.14159268
 
+#define GYRO_PORT 0
+
 #define WHEEL_BASE 58.0
 #define TRACK_WIDTH 58.0
 
