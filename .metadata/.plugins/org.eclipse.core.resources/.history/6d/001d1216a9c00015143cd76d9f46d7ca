@@ -1,0 +1,12 @@
+#include <DriveTrain.hpp>
+
+void DriveTrain::run (Joystick *Joy){
+	RightDrive->Set(fabs(Joy->GetRawAxis(0)) >= JOYSTICK_DEADBAND ? Joy->GetRawAxis(0) : 0);
+	LeftDrive->Set(fabs(Joy->GetRawAxis(2)) >= JOYSTICK_DEADBAND ? Joy->GetRawAxis(2) : 0);
+
+	if(Joy->GetRawButton(5)){
+		Shifter->Set(true);
+	} else if(Joy->GetRawButton(7)){
+		Shifter->Set(false);
+	}
+}

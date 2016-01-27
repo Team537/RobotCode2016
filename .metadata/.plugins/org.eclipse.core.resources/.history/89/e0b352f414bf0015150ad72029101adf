@@ -1,0 +1,9 @@
+#ifndef AUTONOMUSTEST_HPP
+#define AUTONOMUSTEST_HPP
+
+class AutonomusTest {
+public:
+	AutonomusTest();
+};
+
+#endif /* SRC_AUTONOMUSTEST_H_ */

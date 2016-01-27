@@ -1,0 +1,11 @@
+#include "Collector.hpp"
+
+void Collector::Collect(Button BTN)
+{
+
+}
+
+void Collector::Extend(Button BTN)
+{
+
+}

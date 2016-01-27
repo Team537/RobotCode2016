@@ -17,7 +17,7 @@
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug/FRCUserProgram"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="Swerve-2.0"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="2016-Tests"/>
 <booleanAttribute key="org.eclipse.cdt.launch.use_terminal" value="true"/>
 <stringAttribute key="org.eclipse.debug.core.ATTR_GDBSERVER_COMMAND" value="gdbserver"/>
 <stringAttribute key="org.eclipse.debug.core.ATTR_GDBSERVER_PORT" value="2345"/>

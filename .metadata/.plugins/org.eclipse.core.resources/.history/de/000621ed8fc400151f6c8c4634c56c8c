@@ -1,0 +1,10 @@
+#include <Drive/DriveTest.hpp>
+
+void DriveTest::Update(DriveTrain *driveTrain) {
+	double left = 0;
+	double right = 0;
+}
+
+bool DriveTest::AtTarget() {
+	return anglePID->anglePID->OnTarget();
+}

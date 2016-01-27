@@ -1,0 +1,14 @@
+#ifndef IAUTONOMUS_HPP
+#define IAUTONOMUS_HPP
+
+#include "Schematic.hpp"
+
+class IAutonomus {
+private:
+public:
+	virtual void Start();
+	virtual void Update();
+	virtual void Stop();
+};
+
+#endif

@@ -1,0 +1,14 @@
+/*
+ * DriveTest.hpp
+ *
+ *  Created on: Jan 26, 2016
+ *      Author: code01
+ */
+
+#ifndef SRC_DRIVE_DRIVETEST_HPP_
+#define SRC_DRIVE_DRIVETEST_HPP_
+
+class DriveTest {
+};
+
+#endif /* SRC_DRIVE_DRIVETEST_HPP_ */

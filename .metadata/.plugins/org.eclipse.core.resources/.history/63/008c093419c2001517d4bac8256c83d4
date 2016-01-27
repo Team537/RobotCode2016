@@ -1,0 +1,21 @@
+#include "Collector.hpp"
+
+void Collector::Collect(Button BTN)
+{
+	if(BTN && motorState == 1)
+	{
+		motorState--;
+	}
+	if(BTN && motorState == 0)
+	{
+		motorState++;
+	}
+}
+
+void Collector::Extend(Button BTN)
+{
+	if (BTN)
+	{
+		Pistons->Set(!Pistons->Get());
+	}
+}

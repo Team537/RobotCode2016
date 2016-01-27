@@ -1,0 +1,11 @@
+#ifndef AUTONOMUSTEST_HPP
+#define AUTONOMUSTEST_HPP
+
+class AutonomusTest : IAutonomus {
+public:
+	AutonomusTest() {
+
+	}
+};
+
+#endif

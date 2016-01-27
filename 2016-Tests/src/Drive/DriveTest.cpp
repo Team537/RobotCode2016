@@ -1,0 +1,13 @@
+#include <Drive/DriveTest.hpp>
+
+void DriveTest::Update(DriveTrain *driveTrain) {
+	anglePID->angleSource->PIDAngle((gyro->GetAngle() * (1.0f / 360.0f)) * 2 - 1);
+	double reading = anglePID->anglePID->Get(); // -1 => 1
+	double left = ((reading > 0) ? 1 : -1) * fabs(reading);
+	double right = ((reading > 0) ? -1 : 1) * fabs(reading);
+	driveTrain->Drive(left, right);
+}
+
+bool DriveTest::AtTarget() {
+	return anglePID->anglePID->OnTarget();
+}

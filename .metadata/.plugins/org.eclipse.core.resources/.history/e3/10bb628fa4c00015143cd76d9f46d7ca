@@ -1,0 +1,16 @@
+/*
+ * DriveTrain.hpp
+ *
+ *  Created on: Jan 21, 2016
+ *      Author: code01
+ */
+
+#ifndef SRC_DRIVETRAIN_HPP_
+#define SRC_DRIVETRAIN_HPP_
+
+class DriveTrain {
+public:
+	DriveTrain();
+};
+
+#endif /* SRC_DRIVETRAIN_HPP_ */

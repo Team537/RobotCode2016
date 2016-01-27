@@ -1,0 +1,14 @@
+/*
+ * IDrive.cpp
+ *
+ *  Created on: Jan 26, 2016
+ *      Author: code01
+ */
+
+#include <IDrive.h>
+
+IDrive::IDrive() {
+	// TODO Auto-generated constructor stub
+
+}
+

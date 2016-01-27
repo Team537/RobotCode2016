@@ -1,0 +1,11 @@
+#ifndef IAUTONOMUS_HPP
+#define IAUTONOMUS_HPP
+
+#include "Schematic.h"
+
+class IAutonomus {
+private:
+public:
+};
+
+#endif

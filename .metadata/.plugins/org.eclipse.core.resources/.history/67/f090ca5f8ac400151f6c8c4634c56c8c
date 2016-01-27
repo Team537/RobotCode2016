@@ -1,0 +1,13 @@
+#ifndef DRIVETRAIN_HPP
+#define DRIVETRAIN_HPP
+
+#include "Schematic.hpp"
+
+class DriveTrain {
+public:
+	DriveTrain() {
+
+	}
+};
+
+#endif

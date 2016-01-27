@@ -1,0 +1,13 @@
+#include <Autonomus/AutonomousTest.hpp>
+
+void AutonomusTest::Start() {
+
+}
+
+void AutonomusTest::Update() {
+
+}
+
+void AutonomusTest::Stop() {
+
+}

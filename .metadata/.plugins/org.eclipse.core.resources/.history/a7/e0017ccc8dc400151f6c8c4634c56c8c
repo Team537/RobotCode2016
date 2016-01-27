@@ -1,0 +1,55 @@
+#ifndef IDRIVE_HPP
+#define IDRIVE_HPP
+
+#include "DriveTrain/DriveTrain.hpp"
+
+class DrivePID {
+
+};
+
+class AnglePID {
+	class AngleSource: public PIDSource {
+	private:
+		double angle;
+	public:
+		AngleSource() {
+			angle = -1;
+		}
+
+		void SetPIDSourceType(PIDSourceType pidSource) {
+			m_pidSource = pidSource;
+		}
+
+		void PIDCenter(double angle) {
+			this->angle = angle;
+		}
+
+		double PIDGet() {
+			return angle;
+		}
+	};
+
+	class AngleOutput: public PIDOutput {
+	private:
+		float output;
+	public:
+		AngleOutput() {
+			output = 0;
+		}
+
+		void PIDWrite(float output) {
+			this->output = output;
+		}
+
+		float GetOutput() {
+			return output;
+		}
+	};
+};
+
+class IDrive {
+public:
+	virtual void Update(DriveTrain *driveTrain);
+};
+
+#endif

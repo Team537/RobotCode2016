@@ -1,9 +1,0 @@
-#ifndef SHOOTER_HPP
-#define SHOOTER_HPP
-
-class Shooter {
-public:
-	Shooter();
-};
-
-#endif

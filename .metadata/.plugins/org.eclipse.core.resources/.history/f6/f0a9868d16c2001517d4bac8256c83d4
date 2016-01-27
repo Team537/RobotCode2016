@@ -1,0 +1,17 @@
+#ifndef SRC_COLLECTOR_HPP_
+#define SRC_COLLECTOR_HPP_
+
+#include <WPILib.h>
+
+class Collector
+{
+private:
+	Solenoid *Pistons;
+	Pistons = new Solenoid(1);
+	Victor *Motor;
+public:
+	void Extend(Button BTN);
+	void Collect(Button BTN);
+};
+
+#endif

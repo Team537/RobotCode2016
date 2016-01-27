@@ -1,0 +1,14 @@
+/*
+ * DriveTrain.cpp
+ *
+ *  Created on: Jan 21, 2016
+ *      Author: code01
+ */
+
+#include <DriveTrain.hpp>
+
+DriveTrain::DriveTrain() {
+	// TODO Auto-generated constructor stub
+
+}
+

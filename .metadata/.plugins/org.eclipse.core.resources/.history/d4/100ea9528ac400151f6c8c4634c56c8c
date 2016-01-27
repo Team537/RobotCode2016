@@ -1,0 +1,11 @@
+#ifndef SRC_DRIVETRAIN_DRIVETRAIN_HPP_
+#define SRC_DRIVETRAIN_DRIVETRAIN_HPP_
+
+class DriveTrain {
+public:
+	DriveTrain() {
+
+	}
+};
+
+#endif

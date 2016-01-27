@@ -1,0 +1,28 @@
+#include "Collector.hpp"
+
+void Collector::Collect(bool BTN1, bool BTN2)
+{
+	switch(btnState){
+
+	case 0:
+		if (BTN1 && speed == 0)
+		{
+
+		}
+	break;
+	case 1:
+
+	break;
+	case 2:
+
+	break;
+	}
+}
+
+void Collector::Extend(bool BTN)
+{
+	if (BTN)
+	{
+		Pistons->Set(!Pistons->Get());
+	}
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;2016-Tests/src/IDrive.h&apos; to &apos;IDrive.hpp&apos;" description="Rename resource &apos;IDrive.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/IDrive.h" name="IDrive.hpp" stamp="1453854555741" updateReferences="true"/>
+</session>

@@ -1,0 +1,19 @@
+#ifndef DRIVETEST_HPP
+#define DRIVETEST_HPP
+
+#include "Schematic.hpp"
+#include "IDrive.hpp"
+
+class DriveTest : IDrive {
+private:
+	AnglePID *anglePID;
+
+public:
+	DriveTest() {
+		anglePID = new AnglePID(1);
+	}
+
+	void Update(DriveTrain *driveTrain);
+};
+
+#endif
