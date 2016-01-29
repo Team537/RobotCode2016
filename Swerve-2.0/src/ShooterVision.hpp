@@ -6,6 +6,7 @@
 class ShooterVision {
 private:
 	std::shared_ptr<NetworkTable> goalImageTable;
+	double goalArea;
 	double goalCenterX;
 	double goalWidth;
 	double goalHeight;
@@ -14,6 +15,7 @@ private:
 public:
 	ShooterVision() {
 		goalImageTable = NetworkTable::GetTable("GRIP/myContoursReport");
+		goalArea = 0;
 		goalCenterX = 0;
 		goalWidth = 0;
 		goalHeight = 0;
@@ -22,10 +24,26 @@ public:
 
 	void Update();
 	void Dashboard();
-	float GetGoalXOffset();
-	double GetGoalWidth();
-	double GetGoalHeight();
-	double GetGoalDistance();
+
+	double GetGoalArea() const {
+		return goalArea;
+	}
+
+	double GetGoalCenterX() const {
+		return goalCenterX;
+	}
+
+	double GetGoalDistance() const {
+		return goalDistance;
+	}
+
+	double GetGoalHeight() const {
+		return goalHeight;
+	}
+
+	double GetGoalWidth() const {
+		return goalWidth;
+	}
 };
 
 #endif

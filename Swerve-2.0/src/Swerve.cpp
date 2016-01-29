@@ -5,7 +5,7 @@ void Swerve::Drive(Shooter *shooter) {
 	double fwd, str, rcw;
 
 	if (shooter->IsActivated()) {
-		double goalPosX = (shooter->GetVision()->GetGoalXOffset() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
+		double goalPosX = (shooter->GetVision()->GetGoalCenterX() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
 		visionPID->Enable();
 		visionSource->SetPIDCenter(goalPosX);
 		visionPID->SetSetpoint(0);

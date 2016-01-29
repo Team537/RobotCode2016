@@ -1,11 +1,27 @@
 #include "ShooterVision.hpp"
 
 void ShooterVision::Update() {
+	/** Area */
+	llvm::ArrayRef<double> areaData = goalImageTable->GetNumberArray("area", llvm::ArrayRef<double>());
+	unsigned int pointer = 0;
+
+	for (int i = 0; i < areaData.size(); i++) {
+		if (areaData[i] > areaData[pointer]) {
+			pointer = i;
+		}
+	}
+
+	if (!areaData.empty()) {
+		goalArea = areaData[pointer];
+	} else {
+		goalArea = 0;
+	}
+
 	/** Center X */
 	llvm::ArrayRef<double> centerXData = goalImageTable->GetNumberArray("centerX", llvm::ArrayRef<double>());
 
 	if (!centerXData.empty()) {
-		goalCenterX = centerXData[0];
+		goalCenterX = centerXData[pointer];
 	} else {
 		goalCenterX = -1;
 	}
@@ -14,7 +30,7 @@ void ShooterVision::Update() {
 	llvm::ArrayRef<double> widthData = goalImageTable->GetNumberArray("width", llvm::ArrayRef<double>());
 
 	if (!widthData.empty()) {
-		goalWidth = widthData[0];
+		goalWidth = widthData[pointer];
 	} else {
 		goalWidth = -1;
 	}
@@ -23,7 +39,7 @@ void ShooterVision::Update() {
 	llvm::ArrayRef<double> heightData = goalImageTable->GetNumberArray("height", llvm::ArrayRef<double>());
 
 	if (!heightData.empty()) {
-		goalHeight = heightData[0];
+		goalHeight = heightData[pointer];
 	} else {
 		goalHeight = -1;
 	}
@@ -33,24 +49,9 @@ void ShooterVision::Update() {
 }
 
 void ShooterVision::Dashboard() {
-	SmartDashboard::PutNumber("X Offset", GetGoalXOffset());
-	SmartDashboard::PutNumber("Goal Height", GetGoalHeight());
-	SmartDashboard::PutNumber("Goal Width", GetGoalWidth());
-	SmartDashboard::PutNumber("Target Distance", GetGoalDistance());
-}
-
-float ShooterVision::GetGoalXOffset() {
-	return goalCenterX;
-}
-
-double ShooterVision::GetGoalWidth() {
-	return goalWidth;
-}
-
-double ShooterVision::GetGoalHeight() {
-	return goalHeight;
-}
-
-double ShooterVision::GetGoalDistance() {
-	return goalDistance;
+	SmartDashboard::PutNumber("Goal Area (px)", GetGoalArea());
+	SmartDashboard::PutNumber("Goal Offset X (px)", GetGoalCenterX());
+	SmartDashboard::PutNumber("Goal Height (px)", GetGoalHeight());
+	SmartDashboard::PutNumber("Goal Width (px)", GetGoalWidth());
+	SmartDashboard::PutNumber("Goal Distance (ft)", GetGoalDistance());
 }
