@@ -1,7 +1,0 @@
-#include <DriveTrain.hpp>
-
-void DriveTrain::run (Joystick *Joy){
-	RightDrive->Set(Joy->GetRawAxis(0));
-	LeftDrive->Set(Joy->GetRawAxis(2));
-
-}
