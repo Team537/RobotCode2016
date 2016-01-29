@@ -3,7 +3,8 @@
 
 #include "Schematic.hpp"
 
-class ShooterVision {
+class ShooterVision
+{
 private:
 	std::shared_ptr<NetworkTable> goalImageTable;
 	double goalCenterX;
@@ -12,7 +13,8 @@ private:
 	double goalDistance;
 
 public:
-	ShooterVision() {
+	ShooterVision()
+	{
 		goalImageTable = NetworkTable::GetTable("GRIP/myContoursReport");
 		goalCenterX = 0;
 		goalWidth = 0;

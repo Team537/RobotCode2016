@@ -4,8 +4,7 @@ void AutonomousTest::Start() {
 
 }
 
-void AutonomousTest::Update(DriveTrain *driveTrain) {
-	driveTest->Update(driveTrain);
+void AutonomousTest::Update() {
 }
 
 void AutonomousTest::Stop() {

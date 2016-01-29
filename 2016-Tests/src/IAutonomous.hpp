@@ -12,6 +12,8 @@ public:
 		name = autoName;
 	}
 
+	virtual ~IAutonomous();
+
 	virtual void Start() {}
 	virtual void Update() {}
 	virtual void Stop() {}

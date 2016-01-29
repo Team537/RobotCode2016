@@ -1,0 +1,15 @@
+#include <DriveTrain.hpp>
+
+void DriveTrain::Drive (Joystick *Joy)
+{
+	CurrentSpeedLeft = Joy->GetRawAxis(LEFT_AXIS);
+	CurrentSpeedRight = Joy->GetRawAxis(RIGHT_AXIS);
+	if (fabs(Joy->GetRawAxis(LEFT_AXIS)) < JOYSTICK_DEADBAND)
+	{
+
+	}
+	if (fabs(Joy->GetRawAxis(RIGHT_AXIS)) < JOYSTICK_DEADBAND)
+	{
+
+	}
+}

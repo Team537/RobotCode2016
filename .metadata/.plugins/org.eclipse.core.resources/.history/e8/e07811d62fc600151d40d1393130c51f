@@ -1,0 +1,23 @@
+#ifndef ICOMPONENT_HPP
+#define ICOMPONENT_HPP
+
+#include "Schematic.hpp"
+
+class IComponent {
+private:
+	Joystick *joystick;
+public:
+	IComponent(Joystick *joystick) {
+		this->joystick = joystick;
+	}
+
+	virtual void Update() {}
+	virtual void Dashboard() {}
+	virtual void CleanUp() {}
+
+	Joystick* GetJoystick() {
+		return joystick;
+	}
+};
+
+#endif

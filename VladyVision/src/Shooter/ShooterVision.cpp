@@ -1,12 +1,15 @@
 #include "ShooterVision.hpp"
 
-void ShooterVision::Update() {
+void ShooterVision::Update()
+	{
 	/** Area */
 	llvm::ArrayRef<double> areaData = goalImageTable->GetNumberArray("area", llvm::ArrayRef<double>());
 	int pointer = 0;
 
-	for (int i = 0; i < areaData.size(); i++) {
-		if (areaData[i] > areaData[pointer]) {
+	for (int i = 0; i < areaData.size(); i++)
+	{
+		if (areaData[i] > areaData[pointer])
+		{
 			pointer = i;
 		}
 	}

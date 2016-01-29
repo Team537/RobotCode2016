@@ -1,0 +1,25 @@
+#include <DriveTrain.hpp>
+
+void DriveTrain::Drive (Joystick *Joy)
+{
+	CurrentSpeedLeft = Joy->GetRawAxis(LEFT_AXIS);
+	CurrentSpeedRight = Joy->GetRawAxis(RIGHT_AXIS);
+	if (fabs(CurrentSpeedLeft) < JOYSTICK_DEADBAND)
+	{
+		CurrentSpeedLeft = 0;
+	}
+	if (fabs(CurrentSpeedRight) < JOYSTICK_DEADBAND)
+	{
+		CurrentSpeedRight = 0;
+	}
+}
+
+void DriveTrain::Ramping()
+{
+
+}
+
+void DriveTrain::Clamping(float Clamping)
+{
+
+}

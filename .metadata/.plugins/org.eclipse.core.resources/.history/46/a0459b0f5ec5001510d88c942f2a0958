@@ -1,0 +1,25 @@
+#include <DriveTrain.hpp>
+
+void DriveTrain::Drive (Joystick *Joy)
+{
+	CurrentSpeedLeft = Joy->GetRawAxis(LEFT_AXIS);
+	CurrentSpeedRight = Joy->GetRawAxis(RIGHT_AXIS);
+	if (fabs(CurrentSpeedLeft) < JOYSTICK_DEADBAND)
+	{
+		CurrentSpeedLeft = 0;
+	}
+	if (fabs(CurrentSpeedRight) < JOYSTICK_DEADBAND)
+	{
+		CurrentSpeedRight = 0;
+	}
+	DeltaSpeedLeft = CurrentSpeedLeft - OldSpeedLeft;
+	DeltaSpeedLeft = CurrentSpeedRight - OldSpeedRight;
+	if (DeltaSpeedLeft > RAMP_SPEED)
+	{
+		CurrentSpeedLeft = OldSpeedLeft + RAMP_SPEED;
+	}
+	if (DeltaSpeedLeft < -RAMP_SPEED)
+	{
+		CurrentSpeedLeft = OldSpeedLeft - RAMP_SPEED;
+	}
+}

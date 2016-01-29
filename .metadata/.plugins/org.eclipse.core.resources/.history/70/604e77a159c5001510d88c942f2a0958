@@ -1,0 +1,6 @@
+#include <DriveTrain.hpp>
+
+void DriveTrain::Drive (Joystick *Joy)
+{
+
+}

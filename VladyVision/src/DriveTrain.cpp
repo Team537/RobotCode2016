@@ -1,15 +1,47 @@
+// include header files
 #include <DriveTrain.hpp>
 
-void DriveTrain::run (Joystick *Joy){
-	float leftJoy = fabs(Joy->GetRawAxis(0)) >= JOYSTICK_DEADBAND ? Joy->GetRawAxis(0) : 0;
-	float rightJoy = fabs(Joy->GetRawAxis(2)) >= JOYSTICK_DEADBAND ? Joy->GetRawAxis(2) : 0;
-
-	RightDrive->Set(leftJoy);
-	LeftDrive->Set(rightJoy);
-
-	if(Joy->GetRawButton(5)){
-		Shifter->Set(true);
-	} else if(Joy->GetRawButton(7)){
-		Shifter->Set(false);
+// function that sets the speed of the motors
+void DriveTrain::Drive (Joystick *Joy)
+{
+	// get the position of the left and right joysticks
+	CurrentSpeedLeft = Joy->GetRawAxis(LEFT_AXIS);
+	CurrentSpeedRight = Joy->GetRawAxis(RIGHT_AXIS);
+	// deadband
+	if (fabs(CurrentSpeedLeft) < JOYSTICK_DEADBAND)
+	{
+		CurrentSpeedLeft = 0;
 	}
+	if (fabs(CurrentSpeedRight) < JOYSTICK_DEADBAND)
+	{
+		CurrentSpeedRight = 0;
+	}
+	// ramping
+	DeltaSpeedLeft = CurrentSpeedLeft - OldSpeedLeft;
+	DeltaSpeedLeft = CurrentSpeedRight - OldSpeedRight;
+	LeftSign = CurrentSpeedLeft/fabs(CurrentSpeedLeft);
+	RightSign = CurrentSpeedRight/fabs(CurrentSpeedRight);
+	if (fabs(DeltaSpeedLeft) > RAMP_SPEED)
+	{
+		CurrentSpeedLeft = OldSpeedLeft + LeftSign*RAMP_SPEED;
+	}
+	if (fabs(DeltaSpeedRight) > RAMP_SPEED)
+	{
+		CurrentSpeedRight = OldSpeedRight + RightSign*RAMP_SPEED;
+	}
+	// clamping
+	if (fabs(CurrentSpeedLeft) > 1)
+	{
+		CurrentSpeedLeft = LeftSign;
+	}
+	if (fabs(CurrentSpeedRight) > 1)
+	{
+		CurrentSpeedRight = RightSign;
+	}
+	// log the left and right speeds
+	OldSpeedLeft = CurrentSpeedLeft;
+	OldSpeedRight = CurrentSpeedRight;
+	// set the motors
+	LeftDrive->SetSpeed(CurrentSpeedLeft);
+	RightDrive->SetSpeed(CurrentSpeedRight);
 }

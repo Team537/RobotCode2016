@@ -1,7 +1,7 @@
 #ifndef SWERVE_HPP
 #define SWERVE_HPP
 
-#include "Schematic.hpp"
+#include "IComponent.hpp"
 #include "Swerve/SwerveModule.hpp"
 #include "Shooter/Shooter.hpp"
 #include "Shooter/ShooterVision.hpp"
@@ -19,7 +19,7 @@ public:
 		m_pidSource = pidSource;
 	}
 
-	void PIDCenter(double center) {
+	void SetPIDCenter(double center) {
 		this->center = center;
 	}
 
@@ -45,10 +45,11 @@ public:
 	}
 };
 
-class Swerve {
+class Swerve : IComponent {
 private:
-	Joystick *joystick;
 	Gyro* gyro;
+	Shooter *shooter;
+
 	MyButton *tuningButton;
 	SwerveModule *frontRight, *frontLeft, *backLeft, *backRight;
 
@@ -56,10 +57,12 @@ private:
 	VisionOutput *visionOutput;
 	PIDController *visionPID;
 
+	void Tune(SwerveModule *module);
+
 public:
-	Swerve(Joystick *joystick, Gyro *gyro) {
-		this->joystick = joystick;
+	Swerve(Joystick *joystick, Gyro *gyro, Shooter *shooter) : IComponent(joystick, new std::string("Swerve")) {
 		this->gyro = gyro;
+		this->shooter = shooter;
 		this->tuningButton = new MyButton(joystick, 10);
 
 		frontLeft = new SwerveModule("Front Right", 9, 6);
@@ -69,15 +72,15 @@ public:
 
 		visionSource = new VisionSource();
 		visionOutput = new VisionOutput();
-		visionPID = new PIDController(100, 0, 0, visionSource, visionOutput);
+		visionPID = new PIDController(10, 0.001, 5, visionSource, visionOutput);
 		visionPID->SetAbsoluteTolerance(0.05);
 		visionPID->SetInputRange(-1, 1);
 		visionPID->SetOutputRange(-1, 1);
 	}
 
-	void Drive(Shooter *shooter);
-	void Tune(SwerveModule *module);
+	void Update();
 	void Dashboard();
+	void CleanUp();
 };
 
 #endif

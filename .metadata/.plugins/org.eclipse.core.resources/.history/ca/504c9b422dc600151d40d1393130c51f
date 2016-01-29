@@ -1,0 +1,14 @@
+/*
+ * IComponent.hpp
+ *
+ *  Created on: Jan 28, 2016
+ *      Author: code01
+ */
+
+#ifndef SRC_ICOMPONENT_HPP_
+#define SRC_ICOMPONENT_HPP_
+
+class IComponent {
+};
+
+#endif /* SRC_ICOMPONENT_HPP_ */

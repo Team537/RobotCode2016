@@ -2,7 +2,7 @@
 #include "Swerve/Swerve.hpp"
 #include "Shooter/Shooter.hpp"
 
-class Robot: public IterativeRobot {
+class Robot : public IterativeRobot {
 private:
 	Joystick *joystick;
 	AnalogGyro *gyro;
@@ -18,8 +18,8 @@ private:
 		joystick = new Joystick(0);
 		gyro = new AnalogGyro(1);
 		gyro->Reset();
-		swerve = new Swerve(joystick, gyro);
 		shooter = new Shooter(joystick);
+		swerve = new Swerve(joystick, gyro, shooter);
 
 		sendableAutonomous = new SendableChooser();
 		// autonomous = new std::vector<IAutonomous>();
