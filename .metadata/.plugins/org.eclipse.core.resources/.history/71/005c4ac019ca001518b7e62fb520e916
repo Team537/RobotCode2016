@@ -2,7 +2,7 @@
 
 void DriveTrain::Update()
 {
-	if (shooterManager->IsActivated()) //  || drivePID->IsEnabled()
+	if (shooterManager->IsActivated() || drivePID->IsEnabled())
 	{
 		double target = (shooterManager->GetVision()->GetGoalCenterX() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
 
