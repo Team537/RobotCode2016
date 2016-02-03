@@ -1,0 +1,13 @@
+#include <Autonomus/AutonomousReach.hpp>
+
+void AutonomousReach::Start()
+{
+}
+
+void AutonomousReach::Run()
+{
+}
+
+void AutonomousReach::Stop()
+{
+}

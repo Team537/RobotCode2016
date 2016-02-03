@@ -1,0 +1,61 @@
+#include <Schematic.hpp>
+#include <Shooter/ShooterManager.hpp>
+#include <DriveTrain/DriveTrain.hpp>
+
+class Robot: public IterativeRobot
+{
+private:
+	LiveWindow *liveWindow;
+	SendableChooser *autoChooser;
+
+	Joystick *primary;
+	Joystick *secondary;
+
+	ShooterVision *vision;
+	ShooterManager *shooter;
+	DriveTrain *driveTrain;
+
+	void RobotInit()
+	{
+		// Sets up WPILib things.
+		liveWindow = LiveWindow::GetInstance();
+
+		// Sets up the joysticks.
+		primary = new Joystick(CONTROLLER_PRIMARY);
+		secondary = new Joystick(CONTROLLER_SECONDARY);
+
+		// Sets up robot sub components.
+		vision = ShooterVision(primary);
+		shooter = new ShooterManager(primary);
+		driveTrain = new DriveTrain(primary, shooter);
+
+		// Sets up auto mode.
+		autoChooser = new SendableChooser();
+		SmartDashboard::PutData("Auto Modes", autoChooser);
+	}
+
+	void AutonomousInit()
+	{
+	}
+
+	void AutonomousPeriodic()
+	{
+		shooter->RunComponent();
+		driveTrain->RunComponent();
+	}
+
+	void TeleopInit()
+	{
+	}
+
+	void TeleopPeriodic()
+	{
+	}
+
+	void TestPeriodic()
+	{
+		liveWindow->Run();
+	}
+};
+
+START_ROBOT_CLASS(Robot)

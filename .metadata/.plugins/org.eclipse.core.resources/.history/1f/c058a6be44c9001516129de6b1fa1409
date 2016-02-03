@@ -1,0 +1,31 @@
+#ifndef SHOOTERMANAGER_HPP
+#define SHOOTERMANAGER_HPP
+
+#include <Schematic.hpp>
+#include <Shooter/ShooterVision.hpp>
+
+class ShooterManager
+{
+private:
+	ShooterVision *shooterVision;
+	bool *activated;
+
+public:
+	ShooterManager()
+	{
+		shooterVision = new ShooterVision();
+		activated = false;
+	}
+
+	const ShooterVision*& GetShooterVision() const
+	{
+		return shooterVision;
+	}
+
+	bool* GetActivated() const
+	{
+		return activated;
+	}
+};
+
+#endif

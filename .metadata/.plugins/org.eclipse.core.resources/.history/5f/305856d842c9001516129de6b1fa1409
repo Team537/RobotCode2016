@@ -1,0 +1,27 @@
+#ifndef SCHEMATIC_H
+#define SCHEMATIC_H
+
+#include <math.h>
+#include <cmath>
+
+#define PI 3.14159268
+
+#define PRIMARY_CONTROLLER 0
+#define SECONDARY_CONTROLLER 1
+
+#define JOYSTICK_DEADBAND 0.20
+
+#define WEBCAM_PIXEL_WIDTH 320
+#define WEBCAM_PIXEL_HEIGHT 240
+#define WEBCAM_FOV 68.5
+#define WEBCAM_TAN_FOV 0.414213 // tan(WEBCAM_FOV / 2) / ((2 * PI) * 360)
+
+#define GOAL_GROUND_HEIGHT 368.3
+#define GOAL_WIDTH 20.5
+
+#define DRIVE_AXIS_LEFT 1
+#define DRIVE_AXIS_RIGHT 3
+#define DRIVE_RAMP_SPEED 0.1
+#define DRIVE_SPEED_MULTIPLIER 0.5
+
+#endif

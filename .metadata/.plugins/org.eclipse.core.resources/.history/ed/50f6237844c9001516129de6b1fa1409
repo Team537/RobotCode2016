@@ -1,0 +1,9 @@
+/*
+ * ShooterManager.cpp
+ *
+ *  Created on: Feb 1, 2016
+ *      Author: code01
+ */
+
+#include <Shooter/ShooterManager.hpp>
+

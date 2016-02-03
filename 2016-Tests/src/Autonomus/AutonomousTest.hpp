@@ -3,11 +3,11 @@
 
 #include <IAutonomous.hpp>
 
-class AutonomousTest : IAutonomous {
+class AutonomousReach : IAutonomous {
 private:
 
 public:
-	AutonomousTest() : IAutonomous("Test") {
+	AutonomousReach() : IAutonomous("Test") {
 	}
 
 	void Start();

@@ -1,0 +1,22 @@
+#ifndef AUTONOMUSTEST_HPP
+#define AUTONOMUSTEST_HPP
+
+#include <IAutonomous.hpp>
+
+class AutonomousReach : public IAutonomous
+{
+private:
+
+public:
+	AutonomousReach() : IAutonomous("Test")
+	{
+		ReachState = 0;
+	}
+
+	void Start();
+	void Run(double time);
+	void Stop();
+	int ReachState;
+};
+
+#endif

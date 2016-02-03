@@ -2,46 +2,67 @@
 #include <DriveTrain.hpp>
 
 // function that sets the speed of the motors
-void DriveTrain::Drive (Joystick *Joy)
+void DriveTrain::Drive ()
 {
-	// get the position of the left and right joysticks
-	CurrentSpeedLeft = Joy->GetRawAxis(LEFT_AXIS);
-	CurrentSpeedRight = Joy->GetRawAxis(RIGHT_AXIS);
-	// deadband
-	if (fabs(CurrentSpeedLeft) < JOYSTICK_DEADBAND)
-	{
-		CurrentSpeedLeft = 0;
+	if (shooter->isActivated()) {
+		double goalPosX = (shooter->GetVision()->GetGoalXOffset() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
+		visionPID->Enable();
+		visionSource->SetPIDCenter(goalPosX);
+		visionPID->SetSetpoint(0);
+		currentSpeedLeft = visionOutput->GetOutput();
+		SmartDashboard::PutNumber("Right Drive", visionOutput->GetOutput());
+
 	}
-	if (fabs(CurrentSpeedRight) < JOYSTICK_DEADBAND)
-	{
-		CurrentSpeedRight = 0;
+	else{
+		// get the position of the left and right joysticks
+		currentSpeedLeft = joystick->GetRawAxis(LEFT_AXIS);
+		currentSpeedRight = joystick->GetRawAxis(RIGHT_AXIS);
+		// deadband
+		if (fabs(currentSpeedLeft) < JOYSTICK_DEADBAND)
+		{
+			currentSpeedLeft = 0;
+		}
+		if (fabs(currentSpeedRight) < JOYSTICK_DEADBAND)
+		{
+			currentSpeedRight = 0;
+		}
+		// ramping
+		deltaSpeedLeft = currentSpeedLeft - oldSpeedLeft;
+		deltaSpeedLeft = currentSpeedRight - oldSpeedRight;
+		leftSign = currentSpeedLeft/fabs(currentSpeedLeft);
+		rightSign = currentSpeedRight/fabs(currentSpeedRight);
+		if (fabs(deltaSpeedLeft) > RAMP_SPEED)
+		{
+			currentSpeedLeft = oldSpeedLeft + leftSign*RAMP_SPEED;
+		}
+		if (fabs(deltaSpeedRight) > RAMP_SPEED)
+		{
+			currentSpeedRight = oldSpeedRight + rightSign*RAMP_SPEED;
+		}
+		// clamping
+		if (fabs(currentSpeedLeft) > 1)
+		{
+			currentSpeedLeft = leftSign;
+		}
+		if (fabs(currentSpeedRight) > 1)
+		{
+			currentSpeedRight = rightSign;
+		}
+		// log the left and right speeds
+		oldSpeedLeft = currentSpeedLeft;
+		oldSpeedRight = currentSpeedRight;
+		// set the motors
+		leftDrive->SetSpeed(currentSpeedLeft);
+		rightDrive->SetSpeed(-currentSpeedRight);
 	}
-	// ramping
-	DeltaSpeedLeft = CurrentSpeedLeft - OldSpeedLeft;
-	DeltaSpeedLeft = CurrentSpeedRight - OldSpeedRight;
-	LeftSign = CurrentSpeedLeft/fabs(CurrentSpeedLeft);
-	RightSign = CurrentSpeedRight/fabs(CurrentSpeedRight);
-	if (fabs(DeltaSpeedLeft) > RAMP_SPEED)
-	{
-		CurrentSpeedLeft = OldSpeedLeft + LeftSign*RAMP_SPEED;
-	}
-	if (fabs(DeltaSpeedRight) > RAMP_SPEED)
-	{
-		CurrentSpeedRight = OldSpeedRight + RightSign*RAMP_SPEED;
-	}
-	// clamping
-	if (fabs(CurrentSpeedLeft) > 1)
-	{
-		CurrentSpeedLeft = LeftSign;
-	}
-	if (fabs(CurrentSpeedRight) > 1)
-	{
-		CurrentSpeedRight = RightSign;
-	}
-	// log the left and right speeds
-	OldSpeedLeft = CurrentSpeedLeft;
-	OldSpeedRight = CurrentSpeedRight;
-	// set the motors
-	LeftDrive->SetSpeed(CurrentSpeedLeft);
-	RightDrive->SetSpeed(CurrentSpeedRight);
+}
+
+void DriveTrain::FirePiston(bool FireOn, bool FireOff)
+{
+	shooter->Feed(FireOn, FireOff);
+}
+
+void DriveTrain::Shoot(bool ShooterOn)
+{
+	shooter->Shoot(ShooterOn);
 }

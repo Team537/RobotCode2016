@@ -1,0 +1,62 @@
+#include <Schematic.hpp>
+#include <DriveTrain/DriveTrain.hpp>
+#include <Shooter/ShooterManager.hpp>
+#include <Vision/VisionManager.hpp>
+
+class Robot: public IterativeRobot
+{
+private:
+	SendableChooser *autoChooser;
+
+	Joystick *primary;
+	Joystick *secondary;
+
+	IAutonomous selectedAuto;
+
+	VisionManager *vision;
+	ShooterManager *shooter;
+	DriveTrain *driveTrain;
+
+	void RobotInit()
+	{
+		// Sets up the joysticks.
+		primary = new Joystick(CONTROLLER_PRIMARY);
+		secondary = new Joystick(CONTROLLER_SECONDARY);
+
+		// Sets up robot sub components.
+		vision = new VisionManager();
+		shooter = new ShooterManager(primary, vision);
+		driveTrain = new DriveTrain(primary, shooter);
+
+		// Sets up auto modes.
+		autoChooser = new SendableChooser();
+		SmartDashboard::PutData("Auto Modes", autoChooser);
+	}
+
+	void AutonomousInit()
+	{
+	}
+
+	void AutonomousPeriodic()
+	{
+		vision->ComponentUpdate();
+		shooter->ComponentUpdate();
+		driveTrain->ComponentUpdate();
+	}
+
+	void TeleopInit()
+	{
+	}
+
+	void TeleopPeriodic()
+	{
+	}
+
+	void TestPeriodic()
+	{
+		TeleopPeriodic();
+		LiveWindow::GetInstance()->Run();
+	}
+};
+
+START_ROBOT_CLASS(Robot)

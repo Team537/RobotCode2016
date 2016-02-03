@@ -1,0 +1,40 @@
+#ifndef SHOOTERMANAGER_HPP
+#define SHOOTERMANAGER_HPP
+
+#include <Schematic.hpp>
+#include <Toolbox/MyButton.hpp>
+#include <Shooter/ShooterVision.hpp>
+
+using namespace std;
+
+class ShooterManager : public IComponent
+{
+private:
+	ShooterVision *vision;
+	MyButton *activateButton;
+	bool activated;
+
+public:
+	ShooterManager(Joystick *joystick) : IComponent(joystick, new string("Shooter"))
+	{
+		vision = new ShooterVision();
+		activateButton = new MyButton(joystick, 10);
+		activated = false;
+	}
+
+	void Update();
+	void Dashboard();
+	void CleanUp();
+
+	ShooterVision* GetVision() const
+	{
+		return vision;
+	}
+
+	bool IsActivated() const
+	{
+		return activated;
+	}
+};
+
+#endif

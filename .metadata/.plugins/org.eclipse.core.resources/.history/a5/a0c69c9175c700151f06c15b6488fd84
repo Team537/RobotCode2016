@@ -1,0 +1,38 @@
+#include "Shooter.hpp"
+
+void Shooter::Update() {
+	vision->Update();
+}
+
+void Shooter::Shoot( bool ShooterToggle) {
+	if(ShooterToggle == 1 && lastpressedShoot == false)
+	{
+		if(ShooterMotor->Get() == 0)
+		{
+			ShooterMotor->Set(.5);
+		}
+		if(ShooterMotor->Get() != 0)
+		{
+			ShooterMotor->Set(0);
+		}
+	}
+	lastpressedShoot = ShooterToggle;
+}
+
+void Shooter::Feed(bool FeedButton){
+	if(FeedButton == 1 && lastpressedFeed == false)
+	{
+		Feeder->Set(!Feeder->Get());
+	}
+	lastpressedFeed = FeedButton;
+	SmartDashboard::PutBoolean("Feed", FeedButton);
+}
+
+void Shooter::Dashboard() {
+	vision->Dashboard();
+
+
+bool Shooter::isActivated()
+{
+	return ActivateShooter;
+}

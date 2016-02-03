@@ -1,0 +1,26 @@
+#ifndef IAUTONOMUS_HPP
+#define IAUTONOMUS_HPP
+
+#include <Schematic.hpp>
+
+using namespace std;
+
+class IAutonomous {
+private:
+	string name;
+
+public:
+	IAutonomous(string autoName) {
+		name = autoName;
+	}
+
+	virtual ~IAutonomous();
+
+	virtual void Start() {}
+	virtual void Run() {}
+	virtual void Stop() {}
+
+	inline string GetName() { return name; }
+};
+
+#endif

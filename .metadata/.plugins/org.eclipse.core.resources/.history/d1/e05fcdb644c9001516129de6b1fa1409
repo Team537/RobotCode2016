@@ -1,0 +1,15 @@
+#ifndef SHOOTERMANAGER_HPP
+#define SHOOTERMANAGER_HPP
+
+class ShooterManager
+{
+private:
+	ShooterVision *shooterVision;
+public:
+	ShooterManager()
+	{
+		shooterVision = new ShooterVision();
+	}
+};
+
+#endif

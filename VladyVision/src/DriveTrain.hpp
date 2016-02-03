@@ -1,6 +1,7 @@
 #ifndef DRIVETRAIN_HPP
 #define DRIVETRAIN_HPP
 #include "Schematic.hpp"
+#include "Shooter/Shooter.hpp"
 
 class VisionSource: public PIDSource
 {
@@ -17,7 +18,7 @@ public:
 		m_pidSource = pidSource;
 	}
 
-	void PIDCenter(double center)
+	void SetPIDCenter(double center)
 	{
 		this->center = center;
 	}
@@ -52,46 +53,54 @@ public:
 class DriveTrain
 {
 private:
-	Victor *RightDrive;
-	Victor *LeftDrive;
-	Solenoid *Shifter;
-	Gyro *AngleGyro;
-	PIDController *VisionPID;
-	PIDController *RobotAngle;
+	Victor *rightDrive;
+	Victor *leftDrive;
+	Solenoid *shifter;
+	AnalogGyro *angleGyro;
+	PIDController *visionPID;
+	PIDController *robotAngle;
 	VisionSource *visionSource;
 	VisionOutput *visionOutput;
+	Shooter *shooter;
+	Joystick *joystick;
 public:
-	DriveTrain()
+	DriveTrain(Joystick *joystick)
 	{
-		RightDrive = new Victor(0);
-		LeftDrive = new Victor(1);
-		Shifter = new Solenoid(0);
-		AngleGyro= new Gyro(0);
+		rightDrive = new Victor(5);
+		leftDrive = new Victor(6);
+		shifter = new Solenoid(0);
+		angleGyro= new AnalogGyro(0);
 		visionSource = new VisionSource();
 		visionOutput = new VisionOutput();
-		VisionPID = new PIDController(1, 0, 0, visionSource, visionOutput);
-		RobotAngle = new PIDController(1,0,0, AngleGyro, RightDrive);
+		visionPID = new PIDController(1, 0, 0, visionSource, visionOutput);
+		robotAngle = new PIDController(1,0,0, angleGyro, rightDrive);
+		joystick = joystick;
+		shooter = new Shooter();
 
-		CurrentSpeedLeft = 0;
-		CurrentSpeedRight = 0;
-		OldSpeedLeft = 0;
-		OldSpeedRight = 0;
-		DeltaSpeedLeft = 0;
-		DeltaSpeedRight = 0;
-		LeftSign = 1;
-		RightSign = 1;
+
+		currentSpeedLeft = 0;
+		currentSpeedRight = 0;
+		oldSpeedLeft = 0;
+		oldSpeedRight = 0;
+		deltaSpeedLeft = 0;
+		deltaSpeedRight = 0;
+		leftSign = 1;
+		rightSign = 1;
 	}
-	float CurrentSpeedLeft;
-	float CurrentSpeedRight;
-	float OldSpeedLeft;
-	float OldSpeedRight;
-	float DeltaSpeedLeft;
-	float DeltaSpeedRight;
-	float LeftSign;
-	float RightSign;
+	float currentSpeedLeft;
+	float currentSpeedRight;
+	float oldSpeedLeft;
+	float oldSpeedRight;
+	float deltaSpeedLeft;
+	float deltaSpeedRight;
+	float leftSign;
+	float rightSign;
 
-	void Drive (Joystick *Joy);
+
+	void Drive ();
 	void AutoAngle(float TargetAngle);
+	void FirePiston(bool FireOn, bool FireOff);
+	void Shoot(bool ShooterOn);
 };
 
 #endif

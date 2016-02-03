@@ -1,0 +1,16 @@
+#include <Shooter/ShooterManager.hpp>
+
+void ShooterManager::Update()
+{
+
+}
+
+void ShooterManager::Dashboard()
+{
+
+}
+
+void ShooterManager::CleanUp()
+{
+
+}

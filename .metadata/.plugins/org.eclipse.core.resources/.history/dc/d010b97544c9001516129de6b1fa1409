@@ -1,0 +1,14 @@
+/*
+ * ShooterManager.hpp
+ *
+ *  Created on: Feb 1, 2016
+ *      Author: code01
+ */
+
+#ifndef SRC_SHOOTER_SHOOTERMANAGER_HPP_
+#define SRC_SHOOTER_SHOOTERMANAGER_HPP_
+
+class ShooterManager {
+};
+
+#endif /* SRC_SHOOTER_SHOOTERMANAGER_HPP_ */

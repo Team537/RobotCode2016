@@ -1,12 +1,12 @@
 #include <Autonomus/AutonomousTest.hpp>
 
-void AutonomousTest::Start() {
+void AutonomousReach::Start() {
 
 }
 
-void AutonomousTest::Update() {
+void AutonomousReach::Update() {
 }
 
-void AutonomousTest::Stop() {
+void AutonomousReach::Stop() {
 
 }
