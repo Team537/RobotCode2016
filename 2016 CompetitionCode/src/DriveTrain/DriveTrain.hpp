@@ -5,14 +5,14 @@
 #include <Shooter/ShooterManager.hpp>
 #include <Vision/VisionManager.hpp>
 
-class VisionSource : public PIDSource
+class DrivePIDSource: public PIDSource
 {
 private:
-	double center;
+	double target;
 public:
-	VisionSource()
+	DrivePIDSource()
 	{
-		center = -1;
+		target = -1;
 	}
 
 	void SetPIDSourceType(PIDSourceType pidSource)
@@ -20,23 +20,23 @@ public:
 		m_pidSource = pidSource;
 	}
 
-	void SetPIDCenter(double center)
+	void SetPIDTarget(double center)
 	{
-		this->center = center;
+		this->target = center;
 	}
 
 	double PIDGet()
 	{
-		return center;
+		return target;
 	}
 };
 
-class VisionOutput : public PIDOutput
+class DrivePIDOutput: public PIDOutput
 {
 private:
 	float output;
 public:
-	VisionOutput()
+	DrivePIDOutput()
 	{
 		output = 0;
 	}
@@ -52,18 +52,18 @@ public:
 	}
 };
 
-class DriveTrain : public IComponent
+class DriveTrain: public IComponent
 {
 private:
 	CANTalon *rightDrive;
 	CANTalon *leftDrive;
 	Solenoid *shifter;
 	AnalogGyro *angleGyro;
-	VisionSource *visionSource;
-	VisionOutput *visionOutput;
-	PIDController *visionPID;
-	PIDController *robotAngle;
 	ShooterManager *shooterManager;
+
+	DrivePIDSource *drivePIDSource;
+	DrivePIDOutput *drivePIDOutput;
+	PIDController *drivePID;
 
 	float currentSpeedLeft;
 	float currentSpeedRight;
@@ -74,23 +74,25 @@ private:
 	float leftSign;
 	float rightSign;
 public:
-	DriveTrain(Joystick *joystick, ShooterManager *shooterManager) : IComponent(joystick, new string("DriveTrain"))
+	DriveTrain(Joystick *joystick, AnalogGyro *gyro, ShooterManager *shooter) : IComponent(joystick, new string("DriveTrain"))
 	{
 		rightDrive = new CANTalon(5);
 		rightDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 		rightDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 		rightDrive->EnableControl();
+
 		leftDrive = new CANTalon(6);
 		leftDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 		leftDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 		leftDrive->EnableControl();
+
 		shifter = new Solenoid(0);
-		angleGyro= new AnalogGyro(0);
-		visionSource = new VisionSource();
-		visionOutput = new VisionOutput();
-		visionPID = new PIDController(1, 0, 0, visionSource, visionOutput);
-		robotAngle = new PIDController(1, 0, 0, angleGyro, rightDrive);
-		this->shooterManager = shooterManager;
+		angleGyro = gyro;
+		shooterManager = shooter;
+
+		drivePIDSource = new DrivePIDSource();
+		drivePIDOutput = new DrivePIDOutput();
+		drivePID = new PIDController(1, 0, 0, drivePIDSource, drivePIDOutput);
 
 		currentSpeedLeft = 0;
 		currentSpeedRight = 0;
@@ -105,7 +107,7 @@ public:
 	void Update();
 	void Dashboard();
 
-	void AutoAngle(float targetAngle);
+	bool AutoAngle(float targetAngle);
 };
 
 #endif

@@ -1,0 +1,23 @@
+#ifndef AUTONOMUSTEST_HPP
+#define AUTONOMUSTEST_HPP
+
+#include <Schematic.hpp>
+#include <IAutonomous.hpp>
+
+class AutonomousReach : public IAutonomous
+{
+private:
+	int reachState;
+
+public:
+	AutonomousReach(SendableChooser *chooser, bool defaultChooser) : IAutonomous(chooser, defaultChooser, "Test")
+	{
+		reachState = 0;
+	}
+
+	void Start();
+	bool Run(double time);
+	void Stop();
+};
+
+#endif

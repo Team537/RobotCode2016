@@ -13,6 +13,7 @@ private:
 	Joystick *primary;
 	Joystick *secondary;
 
+	AnalogGyro *gyro;
 	VisionManager *vision;
 	ShooterManager *shooter;
 	DriveTrain *driveTrain;
@@ -24,14 +25,15 @@ private:
 		secondary = new Joystick(CONTROLLER_SECONDARY);
 
 		// Sets up robot sub components.
+		gyro = new AnalogGyro(0);
 		vision = new VisionManager();
 		shooter = new ShooterManager(primary, vision);
-		driveTrain = new DriveTrain(primary, shooter);
+		driveTrain = new DriveTrain(primary, gyro, shooter);
 
 		// Sets up auto modes.
 		selectedAuto = NULL;
 		autoChooser = new SendableChooser();
-		new AutonomousReach(autoChooser, true);
+		new AutonomousReach(autoChooser, true, driveTrain);
 		SmartDashboard::PutData("Auto Modes", autoChooser);
 	}
 
