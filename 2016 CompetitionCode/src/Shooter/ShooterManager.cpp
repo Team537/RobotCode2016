@@ -1,6 +1,6 @@
 #include <Shooter/ShooterManager.hpp>
 
-void ShooterManager::Update()
+void ShooterManager::Update(bool teleop)
 {
 	if (activateButton->WasDown())
 	{

@@ -61,8 +61,10 @@ private:
 	AnalogGyro *angleGyro;
 	ShooterManager *shooterManager;
 
-	DrivePIDSource *drivePIDSource;
-	DrivePIDOutput *drivePIDOutput;
+	DrivePIDSource *anglePIDSource;
+	DrivePIDOutput *anglePIDOutput;
+	PIDController *anglePID;
+
 	PIDController *drivePID;
 
 	float currentSpeedLeft;
@@ -79,6 +81,7 @@ public:
 		rightDrive = new CANTalon(5);
 		rightDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 		rightDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+		rightDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
 		rightDrive->EnableControl();
 
 		leftDrive = new CANTalon(6);
@@ -90,9 +93,14 @@ public:
 		angleGyro = gyro;
 		shooterManager = shooter;
 
-		drivePIDSource = new DrivePIDSource();
-		drivePIDOutput = new DrivePIDOutput();
-		drivePID = new PIDController(1, 0, 0, drivePIDSource, drivePIDOutput);
+		anglePIDSource = new DrivePIDSource();
+		anglePIDOutput = new DrivePIDOutput();
+		anglePID = new PIDController(1, 0, 0, anglePIDSource, anglePIDOutput);
+		anglePID->SetAbsoluteTolerance(0.05);
+		anglePID->Disable();
+
+		drivePID = new PIDController(1, 0, 0, angleGyro, rightDrive);
+		drivePID->Disable();
 
 		currentSpeedLeft = 0;
 		currentSpeedRight = 0;
@@ -104,10 +112,16 @@ public:
 		rightSign = 1;
 	}
 
-	void Update();
+	void Update(bool teleop);
+	void AutonomousInit();
+	void TeleOpInit();
 	void Dashboard();
+	bool OnTarget();
 
-	bool AutoAngle(float targetAngle);
+	void DisablePIDs();
+
+	void AutoDrive(float distanceFt);
+	void AutoAngle(float targetAngle);
 };
 
 #endif

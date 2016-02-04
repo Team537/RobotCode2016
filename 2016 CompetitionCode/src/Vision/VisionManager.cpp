@@ -1,6 +1,6 @@
 #include <Vision/VisionManager.hpp>
 
-void VisionManager::Update()
+void VisionManager::Update(bool teleop)
 {
 	/** Area. */
 	llvm::ArrayRef<double> areaData = goalImageTable->GetNumberArray("area", llvm::ArrayRef<double>());

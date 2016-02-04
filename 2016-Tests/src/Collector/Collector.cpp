@@ -1,6 +1,6 @@
 #include "Collector.hpp"
 
-void Collector::Collect(bool BTN1, bool BTN2) {
+void CollectorManager::Collect(bool BTN1, bool BTN2) {
 	switch (btnState) {
 	case 0:
 		if (BTN1 && speed == 0) {
@@ -37,7 +37,7 @@ void Collector::Collect(bool BTN1, bool BTN2) {
 	Motor->SetSpeed(speed);
 }
 
-void Collector::Extend(bool BTN) {
+void CollectorManager::Extend(bool BTN) {
 	if (BTN) {
 		Pistons->Set(!Pistons->Get());
 	}

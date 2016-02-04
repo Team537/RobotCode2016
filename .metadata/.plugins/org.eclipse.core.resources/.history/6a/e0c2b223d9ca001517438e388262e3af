@@ -1,0 +1,44 @@
+#include <DriveTrain2/DriveTrain2.hpp>
+
+void DriveTrain2::AutoInit()
+{
+	rightDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	rightDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	rightDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+	rightDrive->EnableControl();
+
+	leftDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	leftDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	leftDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+	leftDrive->EnableControl();
+}
+
+void DriveTrain2::TeleopInit()
+{
+	rightDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	rightDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	rightDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
+	rightDrive->EnableControl();
+
+	leftDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	leftDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	leftDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
+	leftDrive->EnableControl();
+}
+
+void DriveTrain2::Update(bool teleop)
+{
+	if (teleop)
+	{
+
+	}
+	else
+	{
+
+	}
+}
+
+void DriveTrain2::Dashboard()
+{
+
+}

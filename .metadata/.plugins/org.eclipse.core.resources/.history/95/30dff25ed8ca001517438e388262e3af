@@ -1,0 +1,18 @@
+#ifndef DRIVETRAIN2_HPP
+#define DRIVETRAIN2_HPP
+
+#include <Schematic.hpp>
+#include <Shooter/ShooterManager.hpp>
+#include <Vision/VisionManager.hpp>
+
+class DriveTrain2 : IComponent {
+	DriveTrain2(Joystick *joystick, AnalogGyro *gyro, ShooterManager *shooter) : IComponent(joystick, new string("DriveTrain2"))
+	{
+
+	}
+
+	void Update(bool teleop);
+	void Dashboard();
+};
+
+#endif

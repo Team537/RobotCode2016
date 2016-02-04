@@ -1,0 +1,75 @@
+#include <DriveTrain2/DriveTrain2.hpp>
+
+void DriveTrain2::AutoInit()
+{
+	rightDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	rightDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	rightDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+	rightDrive->EnableControl();
+
+	leftDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	leftDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	leftDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+	leftDrive->EnableControl();
+}
+
+void DriveTrain2::TeleopInit()
+{
+	rightDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	rightDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	rightDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
+	rightDrive->EnableControl();
+
+	leftDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	leftDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	leftDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
+	leftDrive->EnableControl();
+}
+
+void DriveTrain2::Update(bool teleop)
+{
+	if (teleop)
+	{
+		if (shooterManager->IsActivated())
+		{
+			double target = (shooterManager->GetVision()->GetGoalCenterX() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
+
+		}
+		else
+		{
+			leftSpeed = joystick->GetRawAxis(DRIVE_AXIS_LEFT);
+			rightSpeed = joystick->GetRawAxis(DRIVE_AXIS_RIGHT);
+		}
+	}
+	else
+	{
+
+	}
+}
+
+void DriveTrain2::Dashboard()
+{
+	SmartDashboard::PutNumber("Drive Speed Left", leftSpeed);
+	SmartDashboard::PutNumber("Drive Speed Right", rightSpeed);
+}
+
+void DriveTrain2::AutoAngle(float angle)
+{
+
+}
+
+void DriveTrain2::AutoDistance(float distance)
+{
+
+}
+
+bool DriveTrain2::AtTargetAngle()
+{
+	return true;
+}
+
+bool DriveTrain2::AtTargetDistance()
+{
+	bool onTarget = (rightDrive->GetError() < DRIVE_DISTANCE_ERROR) && (leftDrive->GetError() < DRIVE_DISTANCE_ERROR);
+	return onTarget;
+}

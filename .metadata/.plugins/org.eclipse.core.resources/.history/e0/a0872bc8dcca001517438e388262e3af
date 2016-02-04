@@ -1,0 +1,53 @@
+#ifndef ANGLE_PID_SOURCE_HPP
+#define ANGLE_PID_SOURCE_HPP
+
+#include <Schematic.hpp>
+
+class DrivePIDSource: public PIDSource
+{
+private:
+	double target;
+public:
+	DrivePIDSource()
+	{
+		target = -1;
+	}
+
+	void SetPIDSourceType(PIDSourceType pidSource)
+	{
+		m_pidSource = pidSource;
+	}
+
+	void SetPIDTarget(double center)
+	{
+		this->target = center;
+	}
+
+	double PIDGet()
+	{
+		return target;
+	}
+};
+
+class AnglePIDOutput: public PIDOutput
+{
+private:
+	float output;
+public:
+	AnglePIDOutput()
+	{
+		output = 0;
+	}
+
+	void PIDWrite(float output)
+	{
+		this->output = output;
+	}
+
+	float GetOutput()
+	{
+		return output;
+	}
+};
+
+#endif

@@ -98,7 +98,7 @@ public:
 
 
 	void Drive ();
-	void AutoAngle(float TargetAngle);
+	void TargetAngle(float TargetAngle);
 	void FirePiston(bool FireOn, bool FireOff);
 	void Shoot(bool ShooterOn);
 };

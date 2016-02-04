@@ -50,6 +50,7 @@ private:
 		{
 			double time = DriverStation::GetInstance().GetMatchTime();
 			bool autoRunning = selectedAuto->AutonomousUpdate(time);
+			ComponentsUpdate();
 
 			if (!autoRunning)
 			{
@@ -69,14 +70,20 @@ private:
 
 	void TeleopPeriodic()
 	{
-		vision->ComponentUpdate();
-		shooter->ComponentUpdate();
-		driveTrain->ComponentUpdate();
+		ComponentsUpdate();
+	}
+
+	void ComponentsUpdate()
+	{
+		bool teleop = DriverStation::GetInstance().IsOperatorControl();
+		vision->ComponentUpdate(teleop);
+		shooter->ComponentUpdate(teleop);
+		driveTrain->ComponentUpdate(teleop);
 	}
 
 	void TestPeriodic()
 	{
-		TeleopPeriodic();
+		ComponentsUpdate();
 		LiveWindow::GetInstance()->Run();
 	}
 };

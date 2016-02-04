@@ -1,0 +1,90 @@
+#include <DriveTrain2/DriveTrain2.hpp>
+
+void DriveTrain2::Update(bool teleop)
+{
+	if (teleop)
+	{
+		if (shooterManager->IsActivated())
+		{
+			double target = (shooterManager->GetVision()->GetGoalCenterX() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
+
+			anglePID->Enable();
+			anglePIDSource->SetPIDTarget(target);
+			anglePID->SetSetpoint(0);
+
+			double output = anglePIDOutput->GetOutput();
+
+			leftSpeed = (output > 0) ? fabs(output) : -fabs(output);
+			rightSpeed = (output > 0) ? -fabs(output) : fabs(output);
+
+			if (anglePID->OnTarget())
+			{
+				anglePID->Disable();
+			}
+		}
+		else
+		{
+			leftSpeed = joystick->GetRawAxis(DRIVE_AXIS_LEFT);
+			rightSpeed = joystick->GetRawAxis(DRIVE_AXIS_RIGHT);
+		}
+	}
+	else
+	{
+		if (anglePID->IsEnabled() && !AtTargetAngle())
+		{
+			anglePID->SetSetpoint(0);
+
+			double output = anglePIDOutput->GetOutput();
+
+			leftSpeed = (output > 0) ? fabs(output) : -fabs(output);
+			rightSpeed = (output > 0) ? -fabs(output) : fabs(output);
+		}
+		else if (distancePID->IsEnabled() && !AtTargetDistance())
+		{
+			distancePID->SetSetpoint(0);
+
+			double output = distancePIDOutput->GetOutput();
+
+			leftSpeed = output;
+			rightSpeed = output;
+		}
+	}
+
+	leftDrive->Set(leftSpeed);
+	leftDrive->Set(rightSpeed);
+}
+
+void DriveTrain2::Dashboard()
+{
+	SmartDashboard::PutNumber("Drive Speed Left", leftSpeed);
+	SmartDashboard::PutNumber("Drive Speed Right", rightSpeed);
+
+	SmartDashboard::PutNumber("Drive PID Angle Target", anglePIDSource->PIDGet());
+	SmartDashboard::PutBoolean("Drive PID Angle On Target", anglePID->OnTarget());
+}
+
+void DriveTrain2::AutoAngle(float angle)
+{
+	anglePID->Enable();
+	distancePID->Disable();
+	double target = ((analogGyro->GetAngle() - targetAngle) * (1.0f / 360.0f)) * 2 - 1; // TODO: Double check this!
+	anglePIDSource->SetPIDTarget(target);
+}
+
+void DriveTrain2::AutoDistance(float distance)
+{
+	anglePID->Disable();
+	distancePID->Enable();
+	double target = distance;
+	distancePIDSource->SetPIDTarget(target);
+}
+
+bool DriveTrain2::AtTargetAngle()
+{
+	return anglePID->OnTarget();
+}
+
+bool DriveTrain2::AtTargetDistance()
+{
+	return distancePID->OnTarget();
+}

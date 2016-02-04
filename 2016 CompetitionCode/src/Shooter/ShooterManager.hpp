@@ -22,7 +22,7 @@ public:
 		activated = false;
 	}
 
-	void Update();
+	void Update(bool teleop);
 	void Dashboard();
 
 	VisionManager* GetVision() const

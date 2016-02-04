@@ -1,0 +1,7 @@
+#ifndef DRIVETRAIN2_HPP
+#define DRIVETRAIN2_HPP
+
+class DriveTrain2 {
+};
+
+#endif

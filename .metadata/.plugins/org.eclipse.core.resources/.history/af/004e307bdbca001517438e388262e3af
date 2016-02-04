@@ -1,0 +1,91 @@
+#include <DriveTrain2/DriveTrain2.hpp>
+
+void DriveTrain2::AutoInit()
+{
+	rightDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	rightDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	rightDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+	rightDrive->EnableControl();
+
+	leftDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	leftDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	leftDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+	leftDrive->EnableControl();
+}
+
+void DriveTrain2::TeleopInit()
+{
+	rightDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	rightDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	rightDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
+	rightDrive->EnableControl();
+
+	leftDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+	leftDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+	leftDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
+	leftDrive->EnableControl();
+}
+
+void DriveTrain2::Update(bool teleop)
+{
+	if (teleop)
+	{
+		if (shooterManager->IsActivated())
+		{
+			double target = (shooterManager->GetVision()->GetGoalCenterX() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
+
+		}
+		else
+		{
+			leftSpeed = joystick->GetRawAxis(DRIVE_AXIS_LEFT);
+			rightSpeed = joystick->GetRawAxis(DRIVE_AXIS_RIGHT);
+		}
+	}
+	else
+	{
+		if (anglePID->IsEnabled())
+		{
+			anglePID->SetSetpoint(0);
+
+			double output = anglePIDOutput->GetOutput();
+
+			leftSpeed = (output > 0) ? fabs(output) : -fabs(output);
+			rightSpeed = (output > 0) ? -fabs(output) : fabs(output);
+
+			if (anglePID->OnTarget()) {
+				anglePID->Disable();
+			}
+		}
+	}
+}
+
+void DriveTrain2::Dashboard()
+{
+	SmartDashboard::PutNumber("Drive Speed Left", leftSpeed);
+	SmartDashboard::PutNumber("Drive Speed Right", rightSpeed);
+
+	SmartDashboard::PutNumber("Drive PID Angle Target", anglePIDSource->PIDGet());
+	SmartDashboard::PutBoolean("Drive PID Angle On Target", anglePID->OnTarget());
+}
+
+void DriveTrain2::AutoAngle(float angle)
+{
+	anglePID->Enable();
+	double target = ((analogGyro->GetAngle() - targetAngle) * (1.0f / 360.0f)) * 2 - 1; // TODO: Double check this!
+	anglePIDSource->SetPIDTarget(target);
+}
+
+void DriveTrain2::AutoDistance(float distance)
+{
+
+}
+
+bool DriveTrain2::AtTargetAngle()
+{
+	return anglePID->OnTarget();
+}
+
+bool DriveTrain2::AtTargetDistance()
+{
+	return (rightDrive->GetError() < DRIVE_DISTANCE_ERROR) && (leftDrive->GetError() < DRIVE_DISTANCE_ERROR);
+}

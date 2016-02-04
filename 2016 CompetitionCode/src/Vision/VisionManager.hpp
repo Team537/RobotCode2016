@@ -26,7 +26,7 @@ public:
 		goalDistance = 0;
 	}
 
-	void Update();
+	void Update(bool teleop);
 	void Dashboard();
 
 	double GetGoalArea() const
