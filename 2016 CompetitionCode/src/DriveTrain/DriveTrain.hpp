@@ -52,11 +52,16 @@ public:
 	}
 };
 
+enum DriveState {
+	NONE, ANGLE_PID, DRIVE_ENC, SHOOTER_TEL, CONTROL_TEL
+};
+
 class DriveTrain: public IComponent
 {
 private:
 	CANTalon *rightDrive;
 	CANTalon *leftDrive;
+
 	Solenoid *shifter;
 	AnalogGyro *angleGyro;
 	ShooterManager *shooterManager;
@@ -65,23 +70,23 @@ private:
 	DrivePIDOutput *anglePIDOutput;
 	PIDController *anglePID;
 
-	PIDController *drivePID;
+	DriveState *state;
+	float encoderGoal;
 
-	float currentSpeedLeft;
-	float currentSpeedRight;
-	float oldSpeedLeft;
-	float oldSpeedRight;
-	float deltaSpeedLeft;
-	float deltaSpeedRight;
-	float leftSign;
-	float rightSign;
+	float leftSpeedCurrent;
+	float rightSpeedCurrent;
+	float leftSpeedOld;
+	float rightSpeedOld;
+	float leftSpeedDelta;
+	float rightSpeedDelta;
+	float leftDriveSign;
+	float rightDriveSign;
 public:
 	DriveTrain(Joystick *joystick, AnalogGyro *gyro, ShooterManager *shooter) : IComponent(joystick, new string("DriveTrain"))
 	{
 		rightDrive = new CANTalon(5);
 		rightDrive->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 		rightDrive->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-		rightDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
 		rightDrive->EnableControl();
 
 		leftDrive = new CANTalon(6);
@@ -99,29 +104,28 @@ public:
 		anglePID->SetAbsoluteTolerance(0.05);
 		anglePID->Disable();
 
-		drivePID = new PIDController(1, 0, 0, angleGyro, rightDrive);
-		drivePID->Disable();
+		state = CONTROL_TEL;
+		encoderGoal = 0;
 
-		currentSpeedLeft = 0;
-		currentSpeedRight = 0;
-		oldSpeedLeft = 0;
-		oldSpeedRight = 0;
-		deltaSpeedLeft = 0;
-		deltaSpeedRight = 0;
-		leftSign = 1;
-		rightSign = 1;
+		leftSpeedCurrent = 0;
+		rightSpeedCurrent = 0;
+		leftSpeedOld = 0;
+		rightSpeedOld = 0;
+		leftSpeedDelta = 0;
+		rightSpeedDelta = 0;
+		leftDriveSign = 1;
+		rightDriveSign = 1;
 	}
 
 	void Update(bool teleop);
-	void AutonomousInit();
-	void TeleOpInit();
 	void Dashboard();
-	bool OnTarget();
-
-	void DisablePIDs();
+	void ChangeState(DriveState newState);
 
 	void AutoDrive(float distanceFt);
 	void AutoAngle(float targetAngle);
+	bool Waiting();
+	bool OnTargetAngle();
+	bool OnTargetDistance();
 };
 
 #endif

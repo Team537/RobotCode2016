@@ -10,12 +10,18 @@ bool AutonomousReach::Run(double time)
 	switch(reachState)
 	{
 		case(0):
-			bool finished = driveTrain->AutoDrive(10);
-			reachState += finished ? 1 : 0;
+			driveTrain->AutoDrive(10);
+			reachState++;
 			break;
 		case(1):
-			bool finished = driveTrain->AutoAngle(180);
-			reachState += finished ? 1 : 0;
+			reachState += driveTrain->OnTargetDistance() ? 1 : 0;
+			break;
+		case(2):
+			driveTrain->AutoAngle(180);
+			reachState++;
+			break;
+		case(3):
+			reachState += driveTrain->OnTargetAngle() ? 1 : 0;
 			break;
 	}
 
@@ -24,5 +30,5 @@ bool AutonomousReach::Run(double time)
 
 void AutonomousReach::Stop()
 {
-	driveTrain->DisablePIDs();
+	driveTrain->ChangeState(DriveState::NONE);
 }

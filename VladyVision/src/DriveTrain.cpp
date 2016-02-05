@@ -9,51 +9,51 @@ void DriveTrain::Drive ()
 		visionPID->Enable();
 		visionSource->SetPIDCenter(goalPosX);
 		visionPID->SetSetpoint(0);
-		currentSpeedLeft = visionOutput->GetOutput();
+		leftSpeedCurrent = visionOutput->GetOutput();
 		SmartDashboard::PutNumber("Right Drive", visionOutput->GetOutput());
 
 	}
 	else{
 		// get the position of the left and right joysticks
-		currentSpeedLeft = joystick->GetRawAxis(LEFT_AXIS);
-		currentSpeedRight = joystick->GetRawAxis(RIGHT_AXIS);
+		leftSpeedCurrent = joystick->GetRawAxis(LEFT_AXIS);
+		rightSpeedCurrent = joystick->GetRawAxis(RIGHT_AXIS);
 		// deadband
-		if (fabs(currentSpeedLeft) < JOYSTICK_DEADBAND)
+		if (fabs(leftSpeedCurrent) < JOYSTICK_DEADBAND)
 		{
-			currentSpeedLeft = 0;
+			leftSpeedCurrent = 0;
 		}
-		if (fabs(currentSpeedRight) < JOYSTICK_DEADBAND)
+		if (fabs(rightSpeedCurrent) < JOYSTICK_DEADBAND)
 		{
-			currentSpeedRight = 0;
+			rightSpeedCurrent = 0;
 		}
 		// ramping
-		deltaSpeedLeft = currentSpeedLeft - oldSpeedLeft;
-		deltaSpeedLeft = currentSpeedRight - oldSpeedRight;
-		leftSign = currentSpeedLeft/fabs(currentSpeedLeft);
-		rightSign = currentSpeedRight/fabs(currentSpeedRight);
-		if (fabs(deltaSpeedLeft) > RAMP_SPEED)
+		leftSpeedDelta = leftSpeedCurrent - leftSpeedOld;
+		leftSpeedDelta = rightSpeedCurrent - rightSpeedOld;
+		leftDriveSign = leftSpeedCurrent/fabs(leftSpeedCurrent);
+		rightDriveSign = rightSpeedCurrent/fabs(rightSpeedCurrent);
+		if (fabs(leftSpeedDelta) > RAMP_SPEED)
 		{
-			currentSpeedLeft = oldSpeedLeft + leftSign*RAMP_SPEED;
+			leftSpeedCurrent = leftSpeedOld + leftDriveSign*RAMP_SPEED;
 		}
-		if (fabs(deltaSpeedRight) > RAMP_SPEED)
+		if (fabs(rightSpeedDelta) > RAMP_SPEED)
 		{
-			currentSpeedRight = oldSpeedRight + rightSign*RAMP_SPEED;
+			rightSpeedCurrent = rightSpeedOld + rightDriveSign*RAMP_SPEED;
 		}
 		// clamping
-		if (fabs(currentSpeedLeft) > 1)
+		if (fabs(leftSpeedCurrent) > 1)
 		{
-			currentSpeedLeft = leftSign;
+			leftSpeedCurrent = leftDriveSign;
 		}
-		if (fabs(currentSpeedRight) > 1)
+		if (fabs(rightSpeedCurrent) > 1)
 		{
-			currentSpeedRight = rightSign;
+			rightSpeedCurrent = rightDriveSign;
 		}
 		// log the left and right speeds
-		oldSpeedLeft = currentSpeedLeft;
-		oldSpeedRight = currentSpeedRight;
+		leftSpeedOld = leftSpeedCurrent;
+		rightSpeedOld = rightSpeedCurrent;
 		// set the motors
-		leftDrive->SetSpeed(currentSpeedLeft);
-		rightDrive->SetSpeed(-currentSpeedRight);
+		leftDrive->SetSpeed(leftSpeedCurrent);
+		rightDrive->SetSpeed(-rightSpeedCurrent);
 	}
 }
 

@@ -2,123 +2,186 @@
 
 void DriveTrain::Update(bool teleop)
 {
-
-	if (shooterManager->IsActivated())
+	switch (state)
 	{
-		double target = (shooterManager->GetVision()->GetGoalCenterX() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
+		case (ANGLE_PID):
+			anglePID->Enable();
+			// anglePIDSource->SetPIDTarget(target);
+			anglePID->SetSetpoint(0);
 
-		anglePID->Enable();
-		anglePIDSource->SetPIDTarget(target);
-		anglePID->SetSetpoint(0);
+			double output = anglePIDOutput->GetOutput();
 
-		double output = anglePIDOutput->GetOutput();
+			leftSpeedCurrent = (output > 0) ? fabs(output) : -fabs(output);
+			rightSpeedCurrent = (output > 0) ? -fabs(output) : fabs(output);
 
-		currentSpeedLeft = (output > 0) ? fabs(output) : -fabs(output);
-		currentSpeedRight = (output > 0) ? -fabs(output) : fabs(output);
+			if (OnTargetAngle())
+			{
+				ChangeState(NONE);
+			}
 
-		if (anglePID->OnTarget())
-		{
-			anglePID->Disable();
-		}
-	}
-	else
-	{
-		DisablePIDs();
-		currentSpeedLeft = joystick->GetRawAxis(DRIVE_AXIS_LEFT);
-		currentSpeedRight = joystick->GetRawAxis(DRIVE_AXIS_RIGHT);
+			break;
+		case (DRIVE_ENC):
+			leftSpeedCurrent = leftDrive->GetSpeed();
+			rightSpeedCurrent = rightDrive->GetSpeed();
+
+			if (OnTargetDistance())
+			{
+				ChangeState(NONE);
+			}
+
+			break;
+		case (SHOOTER_TEL):
+			double target = (shooterManager->GetVision()->GetGoalCenterX() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
+			anglePID->Enable();
+			anglePIDSource->SetPIDTarget(target);
+			anglePID->SetSetpoint(0);
+
+			double output = anglePIDOutput->GetOutput();
+
+			leftSpeedCurrent = (output > 0) ? fabs(output) : -fabs(output);
+			rightSpeedCurrent = (output > 0) ? -fabs(output) : fabs(output);
+
+			if (OnTargetAngle())
+			{
+				shooterManager->IsActivated() = false;
+				ChangeState(CONTROL_TEL);
+			}
+
+			break;
+		case (CONTROL_TEL):
+			if (shooterManager->IsActivated())
+			{
+				ChangeState(SHOOTER_TEL);
+			}
+			else
+			{
+				leftSpeedCurrent = joystick->GetRawAxis(DRIVE_AXIS_LEFT);
+				rightSpeedCurrent = joystick->GetRawAxis(DRIVE_AXIS_RIGHT);
+			}
+
+			break;
+		case (NONE):
+			if (teleop)
+			{
+				state = CONTROL_TEL;
+			}
+
+			break;
 	}
 
 	// Deadband.
-	if (fabs(currentSpeedLeft) < JOYSTICK_DEADBAND)
+	if (fabs(leftSpeedCurrent) < JOYSTICK_DEADBAND)
 	{
-		currentSpeedLeft = 0;
+		leftSpeedCurrent = 0;
 	}
 
-	if (fabs(currentSpeedRight) < JOYSTICK_DEADBAND)
+	if (fabs(rightSpeedCurrent) < JOYSTICK_DEADBAND)
 	{
-		currentSpeedRight = 0;
+		rightSpeedCurrent = 0;
 	}
 
 	// Ramping.
-	deltaSpeedLeft = currentSpeedLeft - oldSpeedLeft;
-	deltaSpeedLeft = currentSpeedRight - oldSpeedRight;
-	leftSign = currentSpeedLeft / fabs(currentSpeedLeft);
-	rightSign = currentSpeedRight / fabs(currentSpeedRight);
+	leftSpeedDelta = leftSpeedCurrent - leftSpeedOld;
+	leftSpeedDelta = rightSpeedCurrent - rightSpeedOld;
+	leftDriveSign = leftSpeedCurrent / fabs(leftSpeedCurrent);
+	rightDriveSign = rightSpeedCurrent / fabs(rightSpeedCurrent);
 
-	if (fabs(deltaSpeedLeft) > DRIVE_RAMP_SPEED)
+	if (fabs(leftSpeedDelta) > DRIVE_RAMP_SPEED)
 	{
-		currentSpeedLeft = oldSpeedLeft + leftSign * DRIVE_RAMP_SPEED;
+		leftSpeedCurrent = leftSpeedOld + leftDriveSign * DRIVE_RAMP_SPEED;
 	}
 
-	if (fabs(deltaSpeedRight) > DRIVE_RAMP_SPEED)
+	if (fabs(rightSpeedDelta) > DRIVE_RAMP_SPEED)
 	{
-		currentSpeedRight = oldSpeedRight + rightSign * DRIVE_RAMP_SPEED;
+		rightSpeedCurrent = rightSpeedOld + rightDriveSign * DRIVE_RAMP_SPEED;
 	}
 
 	// Clamping.
-	if (fabs(currentSpeedLeft) > 1)
+	if (fabs(leftSpeedCurrent) > 1)
 	{
-		currentSpeedLeft = leftSign;
+		leftSpeedCurrent = leftDriveSign;
 	}
 
-	if (fabs(currentSpeedRight) > 1)
+	if (fabs(rightSpeedCurrent) > 1)
 	{
-		currentSpeedRight = rightSign;
+		rightSpeedCurrent = rightDriveSign;
 	}
 
 	// Log the left and right speeds.
-	oldSpeedLeft = currentSpeedLeft;
-	oldSpeedRight = currentSpeedRight;
+	leftSpeedOld = leftSpeedCurrent;
+	rightSpeedOld = rightSpeedCurrent;
 
-	// Set the motors.
-	leftDrive->Set(currentSpeedLeft);
-	rightDrive->Set(-currentSpeedRight);
+	// Set the talons.
+	leftDrive->Set(leftSpeedCurrent);
+	rightDrive->Set(-rightSpeedCurrent);
 }
 
 void DriveTrain::Dashboard()
 {
-	SmartDashboard::PutNumber("Drive Speed Left", currentSpeedLeft);
-	SmartDashboard::PutNumber("Drive Speed Right", currentSpeedRight);
+	SmartDashboard::PutNumber("Drive Speed Left", leftSpeedCurrent);
+	SmartDashboard::PutNumber("Drive Speed Right", rightSpeedCurrent);
 
 	SmartDashboard::PutNumber("Drive PID Angle Target", anglePIDSource->PIDGet());
 	SmartDashboard::PutBoolean("Drive PID Angle On Target", anglePID->OnTarget());
-
-	SmartDashboard::PutNumber("Drive PID Distance Target", drivePID->Get());
-	SmartDashboard::PutBoolean("Drive PID Distance On Target", drivePID->OnTarget());
 }
 
-void DriveTrain::DisablePIDs()
+void DriveTrain::ChangeState(DriveState newState)
 {
-	anglePID->Disable();
-	drivePID->Disable();
-}
+	state = newState;
 
-
-void DriveTrain::AutonomousInit()
-{
-	leftDrive->SetControlMode(CANTalon::ControlMode::kPosition);
-	rightDrive->SetControlMode(CANTalon::ControlMode::kPosition);
-}
-
-void DriveTrain::TeleOpInit()
-{
-	leftDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
-	rightDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
+	switch(state)
+	{
+		case(SHOOTER_TEL):
+		case(ANGLE_PID):
+			anglePID->Enable();
+			leftDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+			rightDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+			break;
+		case(DRIVE_ENC):
+			anglePID->Disable();
+			leftDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
+			rightDrive->SetControlMode(CANTalon::ControlMode::kSpeed);
+			break;
+		case(CONTROL_TEL):
+			anglePID->Disable();
+			leftDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+			rightDrive->SetControlMode(CANTalon::ControlMode::kPosition);
+			break;
+		case(NONE):
+			break;
+	}
 }
 
 void DriveTrain::AutoDrive(float distanceFt)
 {
+	ChangeState(DriveState::DRIVE_ENC);
+	encoderGoal = distanceFt * DRIVE_FT_TO_ENCODER;
 
-	double target = distanceFt;
-	drivePID->SetSetpoint(target);
+	leftDrive->Reset();
+	rightDrive->Reset();
+
+	leftDrive->Set(encoderGoal);
+	rightDrive->Set(encoderGoal);
 }
 
-
-bool DriveTrain::AutoAngle(float targetAngle)
+void DriveTrain::AutoAngle(float targetAngle)
 {
-	anglePID->Enable();
-	double target = ((angleGyro->GetAngle() - targetAngle) * (1.0f / 360.0f)) * 2 - 1; // TODO: Double check this!
+	ChangeState(DriveState::ANGLE_PID);
+	double target = ((angleGyro->GetAngle() - targetAngle) * (1.0f / 360.0f)) * 2 - 1; // TODO: Check!
 	anglePIDSource->SetPIDTarget(target);
-	return anglePID->OnTarget();
 }
 
+bool DriveTrain::Waiting()
+{
+	return state == NONE;
+}
+
+bool DriveTrain::OnTargetAngle()
+{
+	return anglePID->IsEnabled() && anglePID->OnTarget();
+}
+
+bool DriveTrain::OnTargetDistance()
+{
+	return (fabs(leftDrive->GetEncPosition() - encoderGoal) < DRIVE_DISTANCE_ERROR) && (fabs(rightDrive->GetEncPosition() - encoderGoal) < DRIVE_DISTANCE_ERROR);
+}
