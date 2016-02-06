@@ -69,7 +69,7 @@ void DriveTrain::Update(bool teleop)
 			break;
 	}
 
-	// Deadband.
+	// Deadband
 	if (fabs(leftSpeedCurrent) < JOYSTICK_DEADBAND)
 	{
 		leftSpeedCurrent = 0;

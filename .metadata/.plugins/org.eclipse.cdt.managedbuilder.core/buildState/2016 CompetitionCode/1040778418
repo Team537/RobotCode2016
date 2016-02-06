@@ -1,0 +1,19 @@
+#
+#Sat Feb 06 10:56:47 CST 2016
+src/Autonomous/AutonomousReach.cpp=1
+Debug/src/DriveTrain/DriveTrain.o=1
+src/Autonomous/AutonomousReach.hpp=1
+src/Autonomous/CrossReachAuto.cpp=1
+Debug/src/Robot.o=1
+src/Autonomous/CrossReachAuto.hpp=1
+Debug/FRCUserProgram=1
+Debug/src/Shooter/ShooterManager.o=1
+src/DriveTrain/DriveTrain.cpp=1
+src/DriveTrain/DriveTrain.hpp=1
+Debug/src/Autonomous/CrossReachAuto.o=1
+src/Shooter/ShooterManager.cpp=1
+src/Robot.cpp=1
+src/Shooter/ShooterManager.hpp=1
+Debug/src/Autonomous/AutonomousReach.o=1
+src/Vision/VisionManager.cpp=1
+Debug/src/Vision/VisionManager.o=1

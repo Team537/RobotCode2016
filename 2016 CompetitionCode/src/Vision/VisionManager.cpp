@@ -3,8 +3,8 @@
 void VisionManager::Update(bool teleop)
 {
 	/** Area. */
-	llvm::ArrayRef<double> areaData = goalImageTable->GetNumberArray("area", llvm::ArrayRef<double>());
-	unsigned int pointer = 0;
+	ArrayRef<double> areaData = goalImageTable->GetNumberArray("area", ArrayRef<double>());
+	int pointer = 0;
 
 	for (int i = 0; i < areaData.size(); i++)
 	{
@@ -24,7 +24,7 @@ void VisionManager::Update(bool teleop)
 	}
 
 	/** Center X. */
-	llvm::ArrayRef<double> centerXData = goalImageTable->GetNumberArray("centerX", llvm::ArrayRef<double>());
+	ArrayRef<double> centerXData = goalImageTable->GetNumberArray("centerX", ArrayRef<double>());
 
 	if (!centerXData.empty())
 	{
@@ -36,7 +36,7 @@ void VisionManager::Update(bool teleop)
 	}
 
 	/** Width. */
-	llvm::ArrayRef<double> widthData = goalImageTable->GetNumberArray("width", llvm::ArrayRef<double>());
+	ArrayRef<double> widthData = goalImageTable->GetNumberArray("width", ArrayRef<double>());
 
 	if (!widthData.empty())
 	{
@@ -48,7 +48,7 @@ void VisionManager::Update(bool teleop)
 	}
 
 	/** Height. */
-	llvm::ArrayRef<double> heightData = goalImageTable->GetNumberArray("height", llvm::ArrayRef<double>());
+	ArrayRef<double> heightData = goalImageTable->GetNumberArray("height", ArrayRef<double>());
 
 	if (!heightData.empty())
 	{
