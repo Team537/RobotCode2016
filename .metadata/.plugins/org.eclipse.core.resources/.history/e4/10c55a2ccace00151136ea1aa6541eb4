@@ -1,0 +1,16 @@
+#include "Climber.hpp"
+
+void Climber::Update(bool teleop)
+{
+
+}
+
+void Climber::Extend()
+{
+
+}
+
+void Climber::Hook()
+{
+
+}

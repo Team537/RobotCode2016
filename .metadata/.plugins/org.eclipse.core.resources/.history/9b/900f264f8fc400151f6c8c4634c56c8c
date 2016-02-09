@@ -1,7 +1,0 @@
-#ifndef DRIVETEST_HPP
-#define DRIVETEST_HPP
-
-class DriveTest {
-};
-
-#endif

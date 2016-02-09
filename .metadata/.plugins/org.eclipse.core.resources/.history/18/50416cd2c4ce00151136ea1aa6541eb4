@@ -1,0 +1,21 @@
+#ifndef SRC_CLIMBER_CLIMBER_HPP
+#define SRC_CLIMBER_CLIMBER_HPP
+
+#include <Schematic.hpp>
+
+class Climber : public IComponent
+{
+private:
+	DigitalInput *Switch1, *Switch2, *Switch3, *Switch4;
+	Solenoid *Solenoid1, *Solenoid2, *Solenoid3, *Solenoid4;
+
+public:
+	Climber()
+	{
+
+	}
+	void Init();
+	void Run();
+};
+
+#endif

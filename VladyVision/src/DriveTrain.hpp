@@ -101,6 +101,7 @@ public:
 	void TargetAngle(float TargetAngle);
 	void FirePiston(bool FireOn, bool FireOff);
 	void Shoot(bool ShooterOn);
+	void AutoDrive(float speed);
 };
 
 #endif

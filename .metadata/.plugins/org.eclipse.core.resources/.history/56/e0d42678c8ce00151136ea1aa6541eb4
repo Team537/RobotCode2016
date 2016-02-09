@@ -1,0 +1,31 @@
+#ifndef SRC_CLIMBER_CLIMBER_HPP
+#define SRC_CLIMBER_CLIMBER_HPP
+
+#include <Schematic.hpp>
+
+class Climber : public IComponent
+{
+private:
+	DigitalInput leftRetracted, *rightRetracted, *leftExtended, *rightExtended;
+	Solenoid *leftHook, *rightHook, *leftExtender, *rightExtender;
+	MyButton *extenderButton, hookButton;
+
+public:
+	Climber(Joystick* joystick) : IComponent(joystick, new string("Climber"))
+	{
+		extenderButton = new MyButton(joystick, 0),
+		hookButton = new MyButton(joystick, 0),
+		leftRetracted = new DigitalInput(0),
+		rightRetracted = new DigitalInput(0),
+		leftExtended = new DigitalInput(0),
+		rightExtended = new DigitalInput(0),
+		leftHook = new Solenoid(0),
+		rightHook = new Solenoid(0),
+		leftExtender = new Solenoid(0),
+		rightExtender = new Solenoid(0);
+	}
+	void Init();
+	void Run();
+};
+
+#endif

@@ -1,0 +1,27 @@
+/*
+ * AutoReach.h
+ *
+ *  Created on: Feb 6, 2016
+ *      Author: code01
+ */
+
+#include "Schematic.hpp"
+
+#ifndef SRC_AUTOREACH_H_
+#define SRC_AUTOREACH_H_
+
+class AutoReach {
+private:
+	Timer *clock;
+	DriveTrain *drive;
+public:
+	void Init();
+	void Run();
+	AutoReach()
+	{
+
+	}
+
+};
+
+#endif /* SRC_AUTOREACH_H_ */

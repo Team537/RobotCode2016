@@ -1,0 +1,26 @@
+#include "Climber.hpp"
+
+void Climber::Update(bool teleop)
+{
+
+}
+
+void Climer::Reset()
+{
+	backLeftExtender->Set(0);
+	frontLeftExtender->Set(0);
+	backRightExtender->Set(0);
+	frontRightExtender->Set(0);
+	leftHook->Set(0);
+	rightHook->Set(0);
+}
+
+void Climber::Extend()
+{
+
+}
+
+void Climber::Hook()
+{
+
+}

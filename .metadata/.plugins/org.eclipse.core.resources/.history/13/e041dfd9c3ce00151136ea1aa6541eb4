@@ -1,0 +1,12 @@
+#ifndef SRC_CLIMBER_CLIMBER_HPP
+#define SRC_CLIMBER_CLIMBER_HPP
+
+class Climber
+{
+private:
+
+public:
+
+};
+
+#endif

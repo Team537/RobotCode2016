@@ -1,9 +1,0 @@
-#ifndef IDRIVE_HPP
-#define IDRIVE_HPP
-
-class IDrive {
-public:
-	virtual void Update(DriveTrain *driveTrain);
-};
-
-#endif

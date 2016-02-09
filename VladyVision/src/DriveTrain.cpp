@@ -57,6 +57,12 @@ void DriveTrain::Drive ()
 	}
 }
 
+void DriveTrain::AutoDrive(float speed)
+{
+	leftDrive->SetSpeed(speed);
+	rightDrive->SetSpeed(-speed);
+}
+
 void DriveTrain::FirePiston(bool FireOn, bool FireOff)
 {
 	shooter->Feed(FireOn, FireOff);

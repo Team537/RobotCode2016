@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;VladyVision/src/AutoReach.h&apos; to &apos;AutoReach.hpp&apos;" description="Rename resource &apos;AutoReach.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/AutoReach.h" name="AutoReach.hpp" stamp="1454792066284" updateReferences="true"/>
+</session>

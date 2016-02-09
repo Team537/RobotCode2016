@@ -1,9 +1,0 @@
-#include <Drive/DriveTest.hpp>
-
-void DriveTest::Update(DriveTrain *driveTrain) {
-
-}
-
-bool DriveTest::AtTarget() {
-	return anglePID->anglePID->OnTarget();
-}

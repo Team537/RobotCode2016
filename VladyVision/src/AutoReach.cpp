@@ -1,0 +1,38 @@
+/*
+ * AutoReach.cpp
+ *
+ *  Created on: Feb 6, 2016
+ *      Author: code01
+ */
+
+#include <AutoReach.hpp>
+#include <AHRS.h>
+
+AutoReach::AutoReach() {
+	// TODO Auto-generated constructor stub
+
+}
+
+AutoReach::~AutoReach() {
+	// TODO Auto-generated destructor stubs
+}
+
+void AutoReach::Init()
+{
+	clock->Reset();
+	clock->Start();
+}
+
+void AutoReach::Run()
+{
+	if (clock->Get() >= 3)
+	{
+		clock->Stop();
+		drive->AutoDrive(0);
+	}
+	else
+	{
+		drive->AutoDrive(1);
+	}
+}
+

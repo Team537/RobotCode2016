@@ -1,0 +1,11 @@
+#include "Climber.hpp"
+
+void Climber::Init()
+{
+
+}
+
+void Climber::Run()
+{
+
+}

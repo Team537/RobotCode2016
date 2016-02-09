@@ -1,8 +1,0 @@
-#ifndef SHOOTERMANAGER_HPP
-#define SHOOTERMANAGER_HPP
-
-class ShooterManager
-{
-};
-
-#endif

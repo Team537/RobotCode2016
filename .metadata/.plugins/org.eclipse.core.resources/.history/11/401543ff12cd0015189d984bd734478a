@@ -1,0 +1,29 @@
+/*
+ * AutoReach.cpp
+ *
+ *  Created on: Feb 6, 2016
+ *      Author: code01
+ */
+
+#include <AutoReach.h>
+
+AutoReach::AutoReach() {
+	// TODO Auto-generated constructor stub
+
+}
+
+AutoReach::~AutoReach() {
+	// TODO Auto-generated destructor stubs
+}
+
+void AutoReach::Init()
+{
+	clock->Reset();
+	clock->Start();
+}
+
+void AutoReach::Run()
+{
+
+}
+

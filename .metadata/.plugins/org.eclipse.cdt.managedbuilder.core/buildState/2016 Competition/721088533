@@ -1,0 +1,18 @@
+#
+#Mon Feb 08 19:53:05 CST 2016
+Debug/src/DriveTrain/DriveTrain.o=1
+src/Autonomous/CrossReachAuto.cpp=1
+Debug/src/Robot.o=1
+src/Autonomous/CrossReachAuto.hpp=1
+Debug/FRCUserProgram=1
+Debug/src/Shooter/ShooterManager.o=1
+src/DriveTrain/DriveTrain.cpp=1
+Debug/src/Collector/CollectorManager.o=1
+Debug/src/Autonomous/CrossReachAuto.o=1
+src/Shooter/ShooterManager.cpp=1
+Debug/src/Toolbox/MyButton.o=1
+Debug/src/Climber/Climber.o=1
+Debug/src/Autonomous/AutonomousReach.o=1
+src/Climber/Climber.cpp=1
+src/Climber/Climber.hpp=1
+Debug/src/Vision/VisionManager.o=1
