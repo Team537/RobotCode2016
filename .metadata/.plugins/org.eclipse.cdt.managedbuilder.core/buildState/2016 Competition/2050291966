@@ -1,0 +1,20 @@
+#
+#Wed Feb 10 20:14:32 CST 2016
+Debug/src/Robot.o=1
+src/Autonomous/CrossReachAuto.hpp=1
+Debug/src/Climber/Climber.o=1
+Debug/src/Toolbox/MyButton.o=1
+src/Climber/Climber.hpp=1
+src/Autonomous/CrossReachAuto.cpp=1
+src/Collector/CollectorManager.hpp=1
+src/Climber/Climber.cpp=1
+src/DriveTrain/DriveTrain.cpp=1
+Debug/src/DriveTrain/DriveTrain.o=1
+src/Toolbox/MyButton.cpp=1
+Debug/FRCUserProgram=1
+src/Collector/CollectorManager.cpp=1
+src/Robot.cpp=1
+Debug/src/Vision/VisionManager.o=1
+Debug/src/Collector/CollectorManager.o=1
+src/Vision/VisionManager.cpp=1
+Debug/src/Autonomous/CrossReachAuto.o=1

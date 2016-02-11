@@ -9,7 +9,7 @@ void ShooterManager::Update(bool teleop)
 
 	if (activated && drive->GetState() != DriveState::SHOOTER_TEL)
 	{
-		drive->SetState(DriveState::SHOOTER_TEL);
+		drive->ChangeState(DriveState::SHOOTER_TEL);
 	}
 
 	if (activated && drive->OnTargetAngle())

@@ -1,7 +1,7 @@
 #ifndef SRC_CLIMBER_CLIMBER_HPP
 #define SRC_CLIMBER_CLIMBER_HPP
 
-#include <Schematic.hpp>
+#include "Schematic.hpp"
 
 class Climber : public IComponent
 {

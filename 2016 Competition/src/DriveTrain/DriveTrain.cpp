@@ -18,7 +18,6 @@ void DriveTrain::Update(bool teleop)
 			{
 				ChangeState(NONE);
 			}
-
 			break;
 		case (DRIVE_ENC):
 			leftSpeedCurrent = leftDrive->GetSpeed();

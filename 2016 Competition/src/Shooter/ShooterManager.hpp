@@ -23,12 +23,14 @@ public:
 		this->drive = drive;
 		activateButton = new MyButton(joystick, 10);
 		activated = false;
+		ShooterState = 0;
 	}
 
 	void Update(bool teleop);
 	void Dashboard();
 	void Auto();
 	void Manual();
+	int ShooterState;
 
 	VisionManager* GetVision() const
 	{
