@@ -51,12 +51,10 @@ public:
 	}
 };
 
-enum DriveState {
-	NONE, ANGLE_PID, DRIVE_ENC, SHOOTER_TEL, CONTROL_TEL
-};
-
 class DriveTrain: public IComponent
 {
+
+
 private:
 	CANTalon *rightDrive;
 	CANTalon *leftDrive;
@@ -70,7 +68,7 @@ private:
 	DrivePIDOutput *anglePIDOutput;
 	PIDController *anglePID;
 
-	DriveState state;
+	int state;
 	float encoderGoal;
 
 	float leftSpeedCurrent;
@@ -104,7 +102,7 @@ public:
 		anglePID->SetAbsoluteTolerance(0.05);
 		anglePID->Disable();
 
-		state = CONTROL_TEL;
+		state = CONTROL_TELOPERATION;
 		encoderGoal = 0;
 
 		leftSpeedCurrent = 0;
@@ -115,18 +113,22 @@ public:
 		rightSpeedDelta = 0;
 		leftDriveSign = 1;
 		rightDriveSign = 1;
+		target = 0;
+		output = 0;
 	}
 
 	void Update(bool teleop);
 	void Dashboard();
-	void ChangeState(DriveState newState);
-	DriveState GetState();
+	void ChangeState(int newState);
+	int GetState();
 
 	void AutoDrive(float distanceFt);
 	void AutoAngle(float targetAngle);
 	bool Waiting();
 	bool OnTargetAngle();
 	bool OnTargetDistance();
+	double output;
+	double target;
 };
 
 #endif

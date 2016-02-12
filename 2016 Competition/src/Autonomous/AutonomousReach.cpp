@@ -13,6 +13,7 @@ bool AutonomousReach::Run(double time)
 			driveTrain->AutoDrive(10);
 			reachState++;
 			break;
+
 		case(1):
 			reachState += driveTrain->OnTargetDistance() ? 1 : 0;
 			break;
@@ -30,5 +31,5 @@ bool AutonomousReach::Run(double time)
 
 void AutonomousReach::Stop()
 {
-	driveTrain->ChangeState(DriveState::NONE);
+	driveTrain->ChangeState(NO_STATE);
 }

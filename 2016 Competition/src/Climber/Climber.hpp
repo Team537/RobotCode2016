@@ -2,19 +2,20 @@
 #define SRC_CLIMBER_CLIMBER_HPP
 
 #include "Schematic.hpp"
+#include <Toolbox/MyButton.hpp>
 
 class Climber : public IComponent
 {
 private:
-	DigitalInput leftRetracted, *rightRetracted, *leftExtended, *rightExtended;
+	DigitalInput *leftRetracted, *rightRetracted, *leftExtended, *rightExtended;
 	Solenoid *leftHook, *rightHook, *backLeftExtender, *frontLeftExtender, *backRightExtender, *frontRightExtender;
 	MyButton *extenderButton, *hookButton;
 
 public:
-	Climber(Joystick* joystick) : IComponent(joystick, new string("Climber"))
+	Climber(Joystick* stick) : IComponent(stick, new string("Climber"))
 	{
-		extenderButton = new MyButton(joystick, 0),
-		hookButton = new MyButton(joystick, 0),
+		extenderButton = new MyButton(stick, 0),
+		hookButton = new MyButton(stick, 0),
 		leftRetracted = new DigitalInput(0),
 		rightRetracted = new DigitalInput(0),
 		leftExtended = new DigitalInput(0),

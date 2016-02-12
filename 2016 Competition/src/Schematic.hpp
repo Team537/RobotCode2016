@@ -32,4 +32,12 @@
 #define DRIVE_RAMP_SPEED 0.1
 #define DRIVE_SPEED_MULTIPLIER 0.5
 
+#define NO_STATE 0
+#define ANGLE_PID 1
+#define DRIVE_ENC 2
+#define SHOOTER_TELOPERATION 3
+#define CONTROL_TELOPERATION 4
+
+
+
 #endif

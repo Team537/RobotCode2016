@@ -37,5 +37,5 @@ bool CrossReachAuto::Run(double time, Gyro *gyro)
 
 void CrossReachAuto::Stop()
 {
-	driveTrain->ChangeState(DriveState::NONE);
+	driveTrain->ChangeState(NO_STATE);
 }
