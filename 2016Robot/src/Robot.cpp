@@ -1,0 +1,96 @@
+#include <Climber/Climber.hpp>
+#include <Collector/Collector.hpp>
+#include <DriveTrain/DriveTrain.hpp>
+#include <Shooter/Shooter.hpp>
+#include <Vision/Vision.hpp>
+#include <Schematic.hpp>
+
+class Robot: public IterativeRobot
+{
+private:
+	SendableChooser* autoChooser;
+	IAutonomous* selectedAuto;
+
+	Joystick* joystickPrimary;
+	Joystick* joystickSecondary;
+	AnalogGyro* gyro;
+	Compressor *compressor;
+
+	// Vision* visionTracking;
+	DriveTrain* driveTrain;
+	// Shooter* shooter;
+	// Climber* climber;
+	// Collector* collector;
+
+	void RobotInit()
+	{
+		// Sets up the joysticks.
+		joystickPrimary = new Joystick(CONTROLLER_PRIMARY);
+		joystickSecondary = new Joystick(CONTROLLER_SECONDARY);
+
+		// Sets up robot components.
+		gyro = new AnalogGyro(GYRO_PORT);
+		compressor = new Compressor();
+
+		// Creates the robot components.
+		// visionTracking = new Vision();
+		driveTrain = new DriveTrain(joystickPrimary, gyro); // , visionTracking
+		// shooter = new Shooter(joystickPrimary, visionTracking, driveTrain);
+		// climber = new Climber(joystickPrimary);
+		// collector = new Collector(joystickPrimary);
+	}
+
+	void ComponentsUpdate()
+	{
+		bool isTeleop = DriverStation::GetInstance().IsOperatorControl();
+		// visionTracking->ComponentUpdate(isTeleop);
+		// shooter->ComponentUpdate(isTeleop);
+		// climber->ComponentUpdate(isTeleop);
+		driveTrain->ComponentUpdate(isTeleop);
+		// collector->ComponentUpdate(isTeleop);
+	}
+
+	void AutonomousInit()
+	{
+		selectedAuto = (IAutonomous*) autoChooser->GetSelected();
+	}
+
+	void AutonomousPeriodic()
+	{
+		SmartDashboard::PutString("Auto Selected", ((IAutonomous*) autoChooser->GetSelected())->GetName());
+
+		if (selectedAuto != NULL)
+		{
+			double time = DriverStation::GetInstance().GetMatchTime();
+			bool autoRunning = selectedAuto->AutonomousUpdate(time);
+			ComponentsUpdate();
+
+			if (!autoRunning)
+			{
+				selectedAuto = NULL;
+			}
+		}
+	}
+
+	void TeleopInit()
+	{
+		//if (selectedAuto == NULL)
+		//{
+		//	selectedAuto->AutonomousUpdate(1000);
+		//	selectedAuto = NULL;
+		//}
+	}
+
+	void TeleopPeriodic()
+	{
+		ComponentsUpdate();
+	}
+
+	void TestPeriodic()
+	{
+		ComponentsUpdate();
+		LiveWindow::GetInstance()->Run();
+	}
+};
+
+START_ROBOT_CLASS(Robot)

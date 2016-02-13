@@ -1,0 +1,65 @@
+#include <Shooter/ShooterManager.hpp>
+
+void ShooterManager::Update(bool teleop)
+{
+	if (activateButton->WasDown())
+	{
+		activated = !activated;
+	}
+
+	if (activated && drive->GetState() != SHOOTER_TELOPERATION)
+	{
+		drive->ChangeState(SHOOTER_TELOPERATION);
+	}
+
+	if (activated && drive->OnTargetAngle())
+	{
+		activated = false;
+	}
+}
+
+void ShooterManager::Init()
+{
+	if (leftPiston->Get())
+	{
+		leftPiston->Set(false);
+	}
+
+}
+
+void ShooterManager::Dashboard()
+{
+	SmartDashboard::PutBoolean("Shooter Activated", activated);
+}
+
+void ShooterManager::Auto()
+{
+	if (drive->OnTargetAngle())
+	{
+		Fire();
+	}
+}
+
+void ShooterManager::Manual()
+{
+	if (activateButton->GetState() && !activateButton->WasDown())
+	{
+		Fire();
+	}
+}
+
+void ShooterManager::Fire()
+{
+	switch (State)
+	{
+	case 0:
+		leftMotor->Set(findSpeed());
+		break;
+	case 1:
+
+		break;
+	case 2:
+
+		break;
+	}
+}

@@ -1,0 +1,59 @@
+#ifndef SHOOTERMANAGER_HPP
+#define SHOOTERMANAGER_HPP
+
+#include <Schematic.hpp>
+#include <DriveTrain/DriveTrain.hpp>
+#include <Toolbox/MyButton.hpp>
+#include <Vision/VisionManager.hpp>
+
+using namespace std;
+
+class ShooterManager : public IComponent
+{
+private:
+	VisionManager *vision;
+	DriveTrain *drive;
+	CANTalon *leftMotor, *rightMotor;
+	Solenoid *leftPiston;
+	MyButton *activateButton;
+	void Fire();
+	bool activated;
+	int State = 0;
+	float speed = 0;
+
+public:
+	ShooterManager(Joystick *joystick, VisionManager *vision, DriveTrain *drive) : IComponent(joystick, new string("Shooter"))
+	{
+		this->vision = vision;
+		this->drive = drive;
+		leftMotor = new CANTalon(0);
+		leftMotor->SetControlMode(CANTalon::ControlMode::kSpeed);
+		leftMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+		rightMotor = new CANTalon(0);
+		rightMotor->SetControlMode(CANTalon::ControlMode::kFollower);
+		rightMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+		leftPiston = new Solenoid(0);
+		activateButton = new MyButton(joystick, 10);
+		activated = false;
+		ShooterState = 0;
+	}
+
+	void Update(bool teleop);
+	void Dashboard();
+	void Auto();
+	void Manual();
+	void Init();
+	int ShooterState;
+
+	VisionManager* GetVision() const
+	{
+		return vision;
+	}
+
+	bool IsActivated() const
+	{
+		return activated;
+	}
+};
+
+#endif
