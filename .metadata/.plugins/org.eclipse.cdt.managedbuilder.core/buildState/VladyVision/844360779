@@ -1,6 +1,8 @@
 #
-#Sat Feb 13 08:17:34 CST 2016
+#Sat Feb 13 11:30:29 CST 2016
 Debug/FRCUserProgram=1
 src/AutoReach.hpp=1
 Debug/src/AutoReach.o=1
+Debug/src/Shooter/ShooterVision.o=1
+Debug/src/Shooter/Shooter.o=1
 src/AutoReach.cpp=1

@@ -1,0 +1,120 @@
+#include <Autonomous/AutonomousReach.hpp>
+#include <Climber/Climber.hpp>
+#include <Collector/Collector.hpp>
+#include <DriveTrain/DriveTrain.hpp>
+#include <Shooter/Shooter.hpp>
+#include <Vision/Vision.hpp>
+#include <Schematic.hpp>
+
+class Robot: public IterativeRobot
+{
+	enum State { STOPED, AUTO, TELEOP };
+
+private:
+	SendableChooser* autoChooser;
+	IAutonomous* selectedAuto;
+
+	Joystick* joystickPrimary;
+	Joystick* joystickSecondary;
+	Compressor *compressor;
+	AHRS *ahrs;
+
+	Vision* vision;
+	DriveTrain* driveTrain;
+	Shooter* shooter;
+	// Climber* climber;
+	// Collector* collector;
+
+	State gameState;
+
+	void RobotInit()
+	{
+		// Sets up the joysticks.
+		joystickPrimary = new Joystick(CONTROLLER_PRIMARY);
+		joystickSecondary = new Joystick(CONTROLLER_SECONDARY);
+
+		// Sets up robot components.
+		compressor = new Compressor();
+
+        try {
+            /* Communicate w/navX-MXP via the MXP SPI Bus. */
+            /* Alternatively:  I2C::Port::kMXP, SerialPort::Port::kMXP or SerialPort::Port::kUSB */
+            /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+            ahrs = new AHRS(SPI::Port::kMXP);
+        } catch (exception ex ) {
+            std::string err_string = "Error instantiating navX-MXP:  ";
+            err_string += ex.what();
+            DriverStation::ReportError(err_string.c_str());
+        }
+
+		// Creates the robot components.
+		vision = new Vision();
+		driveTrain = new DriveTrain(joystickPrimary, gyro, vision);
+		shooter = new Shooter(joystickPrimary, vision, driveTrain);
+		// climber = new Climber(joystickPrimary);
+		// collector = new Collector(joystickPrimary);
+
+		// Creates the auto modes.
+		selectedAuto = NULL;
+		autoChooser = new SendableChooser();
+		new AutonomousReach(autoChooser, true, driveTrain);
+		SmartDashboard::PutData("Auto Modes", autoChooser);
+
+		// Sets up the game states.
+		gameState = State::STOPED;
+	}
+
+	void ComponentsUpdate()
+	{
+		bool isTeleop = DriverStation::GetInstance().IsOperatorControl();
+		vision->ComponentUpdate(isTeleop);
+		shooter->ComponentUpdate(isTeleop);
+		// climber->ComponentUpdate(isTeleop);
+		driveTrain->ComponentUpdate(isTeleop);
+		// collector->ComponentUpdate(isTeleop);
+	}
+
+	void AutonomousInit()
+	{
+		selectedAuto = (IAutonomous*) autoChooser->GetSelected();
+	}
+
+	void AutonomousPeriodic()
+	{
+		SmartDashboard::PutString("Auto Selected", ((IAutonomous*) autoChooser->GetSelected())->GetName());
+
+		if (selectedAuto != NULL)
+		{
+			double time = DriverStation::GetInstance().GetMatchTime();
+			bool autoRunning = selectedAuto->AutonomousUpdate(time);
+			ComponentsUpdate();
+
+			if (!autoRunning)
+			{
+				selectedAuto = NULL;
+			}
+		}
+	}
+
+	void TeleopInit()
+	{
+		if (selectedAuto != NULL)
+		{
+			selectedAuto->AutonomousUpdate(1000);
+			selectedAuto = NULL;
+		}
+	}
+
+	void TeleopPeriodic()
+	{
+		ComponentsUpdate();
+	}
+
+	void TestPeriodic()
+	{
+		ComponentsUpdate();
+		LiveWindow::GetInstance()->Run();
+	}
+};
+
+START_ROBOT_CLASS(Robot)

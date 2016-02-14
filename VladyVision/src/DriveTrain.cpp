@@ -18,11 +18,11 @@ void DriveTrain::Drive ()
 		leftSpeedCurrent = joystick->GetRawAxis(LEFT_AXIS);
 		rightSpeedCurrent = joystick->GetRawAxis(RIGHT_AXIS);
 		// deadband
-		if (fabs(leftSpeedCurrent) < JOYSTICK_DEADBAND)
+		if (fabs(leftSpeedCurrent) < CONTROLLER_DEADBAND)
 		{
 			leftSpeedCurrent = 0;
 		}
-		if (fabs(rightSpeedCurrent) < JOYSTICK_DEADBAND)
+		if (fabs(rightSpeedCurrent) < CONTROLLER_DEADBAND)
 		{
 			rightSpeedCurrent = 0;
 		}
