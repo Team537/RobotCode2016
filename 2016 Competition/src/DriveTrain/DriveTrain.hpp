@@ -1,9 +1,9 @@
 #ifndef DRIVETRAIN_HPP
 #define DRIVETRAIN_HPP
 
+#include <DriveTrain/PIDAngleOutput.hpp>
 #include <Schematic.hpp>
-#include <DriveTrain/DrivePIDOutput.hpp>
-#include <DriveTrain/DrivePIDSource.hpp>
+#include <DriveTrain/PIDAngleSource.hpp>
 #include <Toolbox/RobotButton.hpp>
 #include <Vision/Vision.hpp>
 
@@ -20,9 +20,11 @@ private:
 
 	Vision* vision;
 
-	DrivePIDSource* anglePIDSource;
-	DrivePIDOutput* anglePIDOutput;
-	PIDController* anglePID;
+	PIDController *PIDDriveDistance;
+
+	PIDAngleSource *anglePIDSource;
+	PIDAngleOutput *anglePIDOutput;
+	PIDController *anglePID;
 
 	float encoderGoal;
 	float targetAngle;
@@ -80,8 +82,10 @@ public:
 		this->ahrs = ahrs;
 		vision = visionTracking;
 
-		anglePIDSource = new DrivePIDSource();
-		anglePIDOutput = new DrivePIDOutput();
+		PIDDriveDistance = new PIDController(DRIVE_DISTANCE_PID, SpeedEncoder, SpeedOutput);
+
+		anglePIDSource = new PIDAngleSource();
+		anglePIDOutput = new PIDAngleOutput();
 		anglePID = new PIDController(0.002f, 0, 0, anglePIDSource, anglePIDOutput);
 		anglePID->SetInputRange(-1, 1);
 		anglePID->SetOutputRange(-1, 1);

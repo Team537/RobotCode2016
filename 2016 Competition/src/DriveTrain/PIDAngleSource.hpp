@@ -1,15 +1,15 @@
-#ifndef DRIVEPIDSOURCE_HPP
-#define DRIVEPIDSOURCE_HPP
+#ifndef PIDANGLESOURCE_HPP
+#define PIDANGLESOURCE_HPP
 
 #include <Schematic.hpp>
 
-class DrivePIDSource: public PIDSource
+class PIDAngleSource: public PIDSource
 {
 private:
 	double target;
 
 public:
-	DrivePIDSource()
+	PIDAngleSource()
 	{
 		target = -1;
 	}

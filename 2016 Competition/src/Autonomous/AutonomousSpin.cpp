@@ -1,35 +1,26 @@
-#include <Autonomous/AutonomousReach.hpp>
+#include <Autonomous/AutonomousSpin.hpp>
 
-void AutonomousReach::Start()
+void AutonomousSpin::Start()
 {
 }
 
-bool AutonomousReach::Run(double time)
+bool AutonomousSpin::Run(double time)
 {
 	switch(reachState)
 	{
 		case(0):
-			//driveTrain->AutoDrive(6.0f);
 			driveTrain->AutoAngle(90.0f);
 			reachState++;
 			break;
 		case(1):
-			//reachState += driveTrain->OnTargetDistance() ? 1 : 0;
 			reachState += driveTrain->OnTargetAngle() ? 1 : 0;
 			break;
-		/*case(2):
-			driveTrain->AutoAngle(180.0f);
-			reachState++;
-			break;
-		case(3):
-			reachState += driveTrain->OnTargetAngle() ? 1 : 0;
-			break;*/
 	}
 
 	return reachState <= 1;
 }
 
-void AutonomousReach::Stop()
+void AutonomousSpin::Stop()
 {
 	driveTrain->ChangeState(DriveTrain::DriveState::NONE);
 }

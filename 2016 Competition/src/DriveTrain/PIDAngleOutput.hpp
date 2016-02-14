@@ -1,15 +1,15 @@
-#ifndef SRC_DRIVETRAIN_DRIVEPIDOUTPUT_HPP_
-#define SRC_DRIVETRAIN_DRIVEPIDOUTPUT_HPP_
+#ifndef PIDANGLEOUTPUT_HPP
+#define PIDANGLEOUTPUT_HPP
 
 #include <Schematic.hpp>
 
-class DrivePIDOutput: public PIDOutput
+class PIDAngleOutput: public PIDOutput
 {
 private:
 	float output;
 
 public:
-	DrivePIDOutput()
+	PIDAngleOutput()
 	{
 		output = 0;
 	}

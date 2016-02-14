@@ -1,4 +1,5 @@
-#include <Autonomous/AutonomousReach.hpp>
+#include <Autonomous/AutonomousSpin.hpp>
+#include <Autonomous/AutonomousDrive.hpp>
 #include <Climber/Climber.hpp>
 #include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
@@ -10,7 +11,7 @@ using namespace std;
 
 class Robot: public IterativeRobot
 {
-	enum State { STOPED, AUTO, TELEOP };
+	enum State { STOPED, AUTO, TELEOP, TEST };
 
 private:
 	SendableChooser* autoChooser;
@@ -38,15 +39,14 @@ private:
 		// Sets up robot components.
 		compressor = new Compressor();
 
-        try {
-            /* Communicate w/navX-MXP via the MXP SPI Bus. */
-            /* Alternatively:  I2C::Port::kMXP, SerialPort::Port::kMXP or SerialPort::Port::kUSB */
-            /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+        try
+        {
             ahrs = new AHRS(SPI::Port::kMXP);
             ahrs->Reset();
-        } catch (exception ex ) {
-            std::string err_string = "Error instantiating navX-MXP:  ";
-            err_string += ex.what();
+        }
+        catch (exception e)
+        {
+            string err_string = "Error instantiating NavX-MXP: " + e.what();
             DriverStation::ReportError(err_string.c_str());
         }
 
@@ -60,7 +60,8 @@ private:
 		// Creates the auto modes.
 		selectedAuto = NULL;
 		autoChooser = new SendableChooser();
-		new AutonomousReach(autoChooser, true, driveTrain);
+		new AutonomousSpin(autoChooser, true, driveTrain);
+		new AutonomousDrive(autoChooser, false, driveTrain);
 		SmartDashboard::PutData("Auto Modes", autoChooser);
 
 		// Sets up the game states.
@@ -89,6 +90,7 @@ private:
 	{
 		selectedAuto = (IAutonomous*) autoChooser->GetSelected();
         ahrs->Reset();
+        gameState = State::AUTO;
 	}
 
 	void AutonomousPeriodic()
@@ -118,6 +120,7 @@ private:
 		}
 
         ahrs->Reset();
+        gameState = State::TELEOP;
 	}
 
 	void TeleopPeriodic()
@@ -129,6 +132,7 @@ private:
 	{
 		ComponentsUpdate();
 		LiveWindow::GetInstance()->Run();
+        gameState = State::TEST;
 	}
 };
 
