@@ -31,13 +31,14 @@
 #define DRIVE_FT_TO_ENCODER 12.60 // 256 Ticks Per Revolution: ((ticks / 1rev) * (3rev / 1rev) * (20rev / 64revs) * (1rev / 19.047in))
 #define SHOOTER_SPEED_DEADBAND 0.10
 
+#define ENCODER_SCALAR 12.6004 //Pulses per inch (round to nearest whole pulse)
+
 #define DRIVE_ANGLE_TOLERENCE 0.05
 #define DRIVE_RAMP_SPEED 0.05 // TODO: Better ramp!
 #define DRIVE_SPEED_MULTIPLIER 1.00
 #define DRIVE_SPEED_ROCK_WALL 0.7
 #define DRIVE_SPEED_ROUGH_TERRAIN 0.5
 #define DRIVE_DISTANCE_PID 0.04, 0, 0
-
 #define JOYSTICK_X 1
 #define JOYSTICK_A 2
 #define JOYSTICK_B 3

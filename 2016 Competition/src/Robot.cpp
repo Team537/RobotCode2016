@@ -6,6 +6,7 @@
 #include <Shooter/Shooter.hpp>
 #include <Vision/Vision.hpp>
 #include <Schematic.hpp>
+#include <Toolbox/RobotButton.hpp>
 
 using namespace std;
 
@@ -38,7 +39,6 @@ class Robot: public IterativeRobot
             // Sets up the joysticks.
             joystickPrimary = new Joystick(CONTROLLER_PRIMARY);
             joystickSecondary = new Joystick(CONTROLLER_SECONDARY);
-
             // Sets up robot components.
             compressor = new Compressor();
 
@@ -130,6 +130,7 @@ class Robot: public IterativeRobot
         void TeleopPeriodic()
         {
             ComponentsUpdate();
+            driveTrain->distanceTuning();
         }
 
         void TestPeriodic()
@@ -137,6 +138,7 @@ class Robot: public IterativeRobot
             ComponentsUpdate();
             LiveWindow::GetInstance()->Run();
             gameState = State::TEST;
+            driveTrain->distanceTuning();
         }
 };
 

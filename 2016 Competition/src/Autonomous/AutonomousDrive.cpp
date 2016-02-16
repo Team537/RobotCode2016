@@ -9,7 +9,7 @@ bool AutonomousDrive::Run(double time)
     switch (reachState)
     {
         case (0):
-            driveTrain->AutoDistance(2.0f);
+            driveTrain->AutoDistance(24.0f);
             reachState++;
             break;
         case (1):

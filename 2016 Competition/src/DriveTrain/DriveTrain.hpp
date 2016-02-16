@@ -16,7 +16,7 @@ class DriveTrain: public IComponent
 
         Vision* vision;
 
-        RobotButton *shiftHigh, *shiftLow, *rockWallToggle, *roughTerrainToggle;
+        RobotButton *shiftHigh, *shiftLow, *rockWallToggle, *roughTerrainToggle, *distanceToggle;
 
         float leftSpeedCurrent;
         float rightSpeedCurrent;
@@ -26,6 +26,8 @@ class DriveTrain: public IComponent
         float rightSpeedDelta;
         float leftDriveSign;
         float rightDriveSign;
+
+        int driveDistance = 0;
 
     public:
         enum DriveState
@@ -40,33 +42,38 @@ class DriveTrain: public IComponent
         {
             // Right Master.
             rightDrive1 = new CANTalon(1);
-            rightDrive1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+            rightDrive1->SetControlMode(CANTalon::ControlMode::kPosition);//kPercentVbus);
             rightDrive1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            rightDrive1->Enable();
 
             // Right Slave.
             rightDrive2 = new CANTalon(2);
             rightDrive2->SetControlMode(CANTalon::ControlMode::kFollower);
             rightDrive2->Set(1);
+            rightDrive2->Enable();
 
             // Right Slave.
             rightDrive3 = new CANTalon(3);
             rightDrive3->SetControlMode(CANTalon::ControlMode::kFollower);
             rightDrive3->Set(1);
+            rightDrive3->Enable();
 
             // Left Master.
             leftDrive4 = new CANTalon(4);
-            leftDrive4->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+            leftDrive4->SetControlMode(CANTalon::ControlMode::kPosition);//kPercentVbus);
             leftDrive4->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 
             // Left Slave.
             leftDrive5 = new CANTalon(5);
             leftDrive5->SetControlMode(CANTalon::ControlMode::kFollower);
             leftDrive5->Set(4);
+            leftDrive5->Enable();
 
             // Left Slave.
             leftDrive6 = new CANTalon(6);
             leftDrive6->SetControlMode(CANTalon::ControlMode::kFollower);
             leftDrive6->Set(4);
+            leftDrive6->Enable();
 
             // Other robot objects.
             shifter = new Solenoid(4);
@@ -78,6 +85,7 @@ class DriveTrain: public IComponent
             shiftHigh = new RobotButton(joystick, JOYSTICK_BUMPER_RIGHT);
             rockWallToggle = new RobotButton(joystick, JOYSTICK_AXIS_BUTTON_RIGHT);
             roughTerrainToggle = new RobotButton(joystick, JOYSTICK_AXIS_BUTTON_LEFT);
+            distanceToggle = new RobotButton(joystick, JOYSTICK_TRIGGER_RIGHT);
 
             // Sets up the state;
             SetState(DriveState::NONE);
@@ -101,7 +109,9 @@ class DriveTrain: public IComponent
         void Shift(bool highGear);
 
         void AutoAngle(float angleDegrees);
-        void AutoDistance(float distanceFt);
+        void AutoDistance(float distanceIn);
+
+        void distanceTuning();
 
         bool IsWaiting();bool IsAtAngle();bool IsAtDistance();
         float GetCurrentDraw();

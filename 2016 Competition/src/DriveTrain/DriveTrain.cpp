@@ -3,7 +3,7 @@
 void DriveTrain::Update(bool teleop)
 {
     float output;
-    float target;
+    //float target;
 
     switch (state)
     {
@@ -25,7 +25,7 @@ void DriveTrain::Update(bool teleop)
             {
                 SetState(DriveState::NONE);
             }
-            break;
+            return;
         case (DriveState::TELEOP_CONTROL):
             leftSpeedCurrent = joystick->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
             rightSpeedCurrent = joystick->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y);
@@ -99,8 +99,8 @@ void DriveTrain::Update(bool teleop)
     rightSpeedOld = rightSpeedCurrent;
 
     // Set the talon speeds.
-    rightDrive1->Set(-rightSpeedCurrent);
-    leftDrive4->Set(leftSpeedCurrent);
+    //rightDrive1->Set(-rightSpeedCurrent);
+  //  leftDrive4->Set(leftSpeedCurrent);
 }
 
 void DriveTrain::Dashboard()
@@ -117,18 +117,6 @@ void DriveTrain::Dashboard()
             state == AUTO_DISTANCE ? "Auto Distance" :
             state == TELEOP_CONTROL ? "Teleop Control" : "None"
     );
-
-    // SmartDashboard::PutBoolean("Drive Reading Angle", gyroTurn->Get());
-    // SmartDashboard::PutBoolean("Drive Reading Encoder Right", distanceLeft->Get());
-    // SmartDashboard::PutBoolean("Drive Reading Encoder Left", distanceRight->Get());
-
-    // SmartDashboard::PutBoolean("Drive Setpoint Angle", gyroTurn->GetSetpoint());
-    // SmartDashboard::PutBoolean("Drive Setpoint Distance Right", distanceLeft->GetSetpoint());
-    // SmartDashboard::PutBoolean("Drive Setpoint Distance Left", distanceRight->GetSetpoint());
-
-    // LiveWindow::GetInstance()->AddActuator("Drive", "Rotate", gyroTurn);
-    // LiveWindow::GetInstance()->AddActuator("Drive", "Distance Left", distanceLeft);
-    // LiveWindow::GetInstance()->AddActuator("Drive", "Distance Right", distanceRight);
 }
 
 void DriveTrain::SetState(DriveState driveState)
@@ -137,11 +125,15 @@ void DriveTrain::SetState(DriveState driveState)
 
     if (state == DriveState::AUTO_DISTANCE)
     {
-        // TODO
+        rightDrive1->SetControlMode(CANTalon::ControlMode::kPosition);
+        leftDrive4->SetControlMode(CANTalon::ControlMode::kPosition);
+        rightDrive1->Enable();
+        leftDrive4->Enable();
     }
     else
     {
-        // TODO
+        rightDrive1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+        leftDrive4->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     }
 
     if (state == DriveState::AUTO_ANGLE || state == DriveState::TELEOP_SHOOT)
@@ -170,10 +162,24 @@ void DriveTrain::AutoAngle(float angleDegrees)
     // TODO
 }
 
-void DriveTrain::AutoDistance(float distanceFt)
+void DriveTrain::distanceTuning()
+{
+    if (distanceToggle)
+    {
+        AutoDistance(454);
+    }
+    else
+    {
+        AutoDistance(0);
+    }
+}
+
+void DriveTrain::AutoDistance(float distanceIn)
 {
     SetState(DriveState::AUTO_DISTANCE);
-    // TODO
+    driveDistance = distanceIn;// * ENCODER_SCALAR;
+    rightDrive1->Set(driveDistance);
+    leftDrive4->Set(driveDistance);
 }
 
 bool DriveTrain::IsWaiting()
