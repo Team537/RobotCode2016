@@ -6,48 +6,49 @@
 #include <Toolbox/RobotButton.hpp>
 #include <Vision/Vision.hpp>
 
-class Shooter : public IComponent
+class Shooter: public IComponent
 {
-private:
-	Vision *vision;
-	DriveTrain *drive;
+    private:
+        Vision *vision;
+        DriveTrain *drive;
 
-	CANTalon *spinTalon;
-	Solenoid *extend;
+        CANTalon *spinTalon;
+        Solenoid *extend;
 
-	Timer *extendTimer;
+        Timer *extendTimer;
 
-	RobotButton *aimButton, *shootButton;
-	float spinSpeed;
+        RobotButton *aimButton, *shootButton;
+        float spinSpeed;
 
-public:
-	enum ShooterState {
-		NONE, SPINNING, FIRE, RETRACT
-	};
+    public:
+        enum ShooterState
+        {
+            NONE, AIMING_SPINNING, FIRE, RETRACT
+        };
 
-	ShooterState state;
+        ShooterState state;
 
-	Shooter(Joystick *joystick, Vision *vision, DriveTrain *drive) : IComponent(joystick, new string("Shooter"))
-	{
-		this->vision = vision;
-		this->drive = drive;
+        Shooter(Joystick *joystick, Vision *vision, DriveTrain *drive) :
+                IComponent(joystick, new string("Shooter"))
+        {
+            this->vision = vision;
+            this->drive = drive;
 
-		spinTalon = new CANTalon(9);
-		extend = new Solenoid(5);
+            spinTalon = new CANTalon(9);
+            extend = new Solenoid(5);
 
-		extendTimer = new Timer();
+            extendTimer = new Timer();
 
-		state = ShooterState::NONE;
-		aimButton = new RobotButton(joystick, JOYSTICK_TRIGGER_LEFT);
-		shootButton = new RobotButton(joystick, JOYSTICK_TRIGGER_RIGHT);
-		spinSpeed = 0.0f;
-	}
+            state = ShooterState::NONE;
+            aimButton = new RobotButton(joystick, JOYSTICK_TRIGGER_LEFT);
+            shootButton = new RobotButton(joystick, JOYSTICK_TRIGGER_RIGHT);
+            spinSpeed = 0.0f;
+        }
 
-	void Update(bool teleop);
-	void Dashboard();
+        void Update(bool teleop);
+        void Dashboard();
 
-	void Shoot();
-	bool IsActivated();
+        bool IsActivated();
 };
 
 #endif

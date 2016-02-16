@@ -5,29 +5,37 @@
 
 using namespace std;
 
-class IComponent {
-private:
-	string* name;
+class IComponent
+{
+    private:
+        string* name;
 
-public:
-	Joystick* joystick;
+    public:
+        Joystick* joystick;
 
-	IComponent(Joystick* joystick, string* name)
-	{
-		this->joystick = joystick;
-		this->name = name;
-	}
+        IComponent(Joystick* joystick, string* name)
+        {
+            this->joystick = joystick;
+            this->name = name;
+        }
 
-	void ComponentUpdate(bool teleop)
-	{
-		Update(teleop);
-		Dashboard();
-	}
+        void ComponentUpdate(bool teleop)
+        {
+            Update(teleop);
+            Dashboard();
+        }
 
-	virtual void Update(bool teleop) {}
-	virtual void Dashboard() {}
+        virtual void Update(bool teleop)
+        {
+        }
+        virtual void Dashboard()
+        {
+        }
 
-	inline string* GetName() { return name; }
+        inline string* GetName()
+        {
+            return name;
+        }
 };
 
 #endif

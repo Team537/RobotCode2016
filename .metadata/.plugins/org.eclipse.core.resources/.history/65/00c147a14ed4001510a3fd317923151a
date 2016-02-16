@@ -1,0 +1,71 @@
+#ifndef DRIVEOUTPUT_HPP
+#define DRIVEOUTPUT_HPP
+
+#include <Schematic.hpp>
+#include <PIDOutput.h>
+
+class AngleOutput: public PIDOutput
+{
+    private:
+        float output;
+
+    public:
+        AngleOutput() :
+                PIDOutput()
+        {
+            output = 0;
+        }
+
+        void PIDWrite(float output)
+        {
+            this->output = output;
+        }
+
+        float Get()
+        {
+            return output;
+        }
+};
+
+class AngleSource: public PIDSource
+{
+    private:
+        float target;
+
+    public:
+        AngleSource() :
+                PIDSource()
+        {
+            target = -1;
+        }
+
+        void SetPIDSourceType(PIDSourceType pidSource)
+        {
+            m_pidSource = pidSource;
+        }
+
+        void SetPIDTarget(double center)
+        {
+            this->target = center;
+        }
+
+        double PIDGet()
+        {
+            return target;
+        }
+};
+
+class DriveAngle
+{
+    public:
+        AngleOutput *output;
+        AngleSource *input;
+
+        DriveAngle()
+        {
+            output = new AngleOutput();
+            input = new AngleSource();
+        }
+};
+
+#endif

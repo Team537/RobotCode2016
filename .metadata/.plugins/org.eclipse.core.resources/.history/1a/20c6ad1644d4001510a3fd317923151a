@@ -1,0 +1,18 @@
+#ifndef DRIVEOUTPUT_HPP
+#define DRIVEOUTPUT_HPP
+
+#include <Schematic.hpp>
+#include <PIDOutput.h>
+
+class DriveOutput: public PIDOutput
+{
+    public:
+        DriveOutput() :
+
+                PIDOutput()
+        {
+
+        }
+};
+
+#endif

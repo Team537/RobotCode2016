@@ -2,12 +2,12 @@
 
 bool RobotButton::GetState()
 {
-	return joystick->GetRawButton(key);
+    return joystick->GetRawButton(key);
 }
 
 bool RobotButton::WasDown()
 {
-	bool stillDown = lastState && GetState();
-	lastState = GetState();
-	return lastState == !stillDown;
+    bool stillDown = lastState && GetState();
+    lastState = GetState();
+    return lastState == !stillDown;
 }

@@ -1,0 +1,15 @@
+/*
+ * DriveOutput.cpp
+ *
+ *  Created on: Feb 15, 2016
+ *      Author: code01
+ */
+
+#include <DriveTrain/DriveOutput.hpp>
+
+DriveOutput::DriveOutput()
+{
+    // TODO Auto-generated constructor stub
+
+}
+

@@ -1,0 +1,29 @@
+#ifndef DRIVEOUTPUT_HPP
+#define DRIVEOUTPUT_HPP
+
+#include <Schematic.hpp>
+#include <PIDOutput.h>
+
+class DriveInput: public PIDSource
+{
+    private:
+        float target;
+    public:
+        DriveInput() :
+                PIDOutput()
+        {
+            target = -1;
+        }
+
+        void PIDWrite(float output)
+        {
+            this->output = output;
+        }
+
+        float Get()
+        {
+            return output;
+        }
+};
+
+#endif

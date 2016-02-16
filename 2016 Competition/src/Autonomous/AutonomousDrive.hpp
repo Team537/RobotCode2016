@@ -6,20 +6,20 @@
 
 class AutonomousDrive: public IAutonomous
 {
-private:
-	DriveTrain *driveTrain;
-	int reachState;
+    private:
+        DriveTrain *driveTrain;
+        int reachState;
 
-public:
-	AutonomousDrive(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) : IAutonomous(chooser, defaultChooser, "Reach")
-	{
-		this->driveTrain = driveTrain;
-		reachState = 0;
-	}
+    public:
+        AutonomousDrive(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+                IAutonomous(chooser, defaultChooser, "Drive")
+        {
+            this->driveTrain = driveTrain;
+            reachState = 0;
+        }
 
-	void Start();
-	bool Run(double time);
-	void Stop();
+        void Start();bool Run(double time);
+        void Stop();
 };
 
 #endif
