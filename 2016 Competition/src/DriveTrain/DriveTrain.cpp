@@ -5,7 +5,10 @@ void DriveTrain::Update(bool teleop)
     float output;
     //float target;
     float speedMultiplier;
-
+    float GyroReading;
+    float GyroError;
+    SmartDashboard::PutNumber("Encoder Left", leftDrive4->GetSpeed());
+    SmartDashboard::PutNumber("Encoder Right", rightDrive1->GetSpeed());
     switch (state)
     {
         case (DriveState::AUTO_ANGLE):
@@ -24,6 +27,24 @@ void DriveTrain::Update(bool teleop)
                 SetState(DriveState::NONE);
             }
             return;
+        case (DriveState::CROSSING):
+            GyroReading = gyro->GetYaw();
+        if (GyroReading > 180)
+        {
+            GyroReading = GyroReading
+        }
+            GyroError =   0 - ;
+            leftSpeedCurrent = 250;
+            rightSpeedCurrent = 250;
+            // Set the talon speeds.
+            rightDrive1->Set(-rightSpeedCurrent);
+            leftDrive4->Set(leftSpeedCurrent);
+
+            if (distUntoggle->WasDown())
+            {
+                SetState(DriveState::NONE);
+            }
+            break;
         case (DriveState::TELEOP_CONTROL):
             leftSpeedCurrent = joystick->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
             rightSpeedCurrent = joystick->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y);
@@ -38,6 +59,7 @@ void DriveTrain::Update(bool teleop)
             {
                 rightSpeedCurrent = 0;
             }
+
 
             speedMultiplier = (rockWallToggle->GetState() ? DRIVE_SPEED_ROCK_WALL : roughTerrainToggle->GetState() ? DRIVE_SPEED_ROUGH_TERRAIN : 1.0f);
             leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * speedMultiplier;
@@ -54,7 +76,8 @@ void DriveTrain::Update(bool teleop)
 
             if (distanceToggle->WasDown())
             {
-                AutoDistance(5 * 12.0f);
+                // AutoDistance(5 * 12.0f);
+                Cross();
             }
             else
             {
@@ -104,11 +127,28 @@ void DriveTrain::SetState(DriveState driveState)
     {
         rightDrive1->SetControlMode(CANTalon::ControlMode::kPosition);
         leftDrive4->SetControlMode(CANTalon::ControlMode::kPosition);
+
+        rightDrive1->SetPID(0.085f, 0.0f, 0.0f);
+        leftDrive4->SetPID(0.085f, 0.0f, 0.0f);
+    }
+    else if (state == DriveState::CROSSING)
+    {
+        rightDrive1->SetControlMode(CANTalon::ControlMode::kSpeed);
+        leftDrive4->SetControlMode(CANTalon::ControlMode::kSpeed);
+
+        rightDrive1->SetPID(.24f, 0.0f, 0.0f);
+        rightDrive1->SetF(0.9f);
+
+        leftDrive4->SetPID(.24f, 0.0f, 0.0f);
+        leftDrive4->SetF(0.9f);
     }
     else
     {
         rightDrive1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
         leftDrive4->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+
+        rightDrive1->SetPID(0.0f, 0.0f, 0.0f);
+        leftDrive4->SetPID(0.0f, 0.0f, 0.0f);
     }
 
     rightDrive1->Enable();
@@ -117,7 +157,7 @@ void DriveTrain::SetState(DriveState driveState)
     rightDrive1->SetPosition(0);
     leftDrive4->SetPosition(0);
 
-    if (state == DriveState::AUTO_ANGLE || state == DriveState::AUTO_DISTANCE)
+    if (state == DriveState::AUTO_ANGLE || state == DriveState::AUTO_DISTANCE || state == DriveState::CROSSING)
     {
         Shift(false);
     }
@@ -156,6 +196,12 @@ bool DriveTrain::IsAtAngle()
 bool DriveTrain::IsAtDistance()
 {
     return false; // TODO
+}
+
+void DriveTrain::Cross()
+{
+    SetState(DriveState::CROSSING);
+
 }
 
 float DriveTrain::GetCurrentDraw()

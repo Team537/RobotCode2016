@@ -26,7 +26,7 @@ class DriveTrain: public IComponent
     public:
         enum DriveState
         {
-            AUTO_ANGLE, AUTO_DISTANCE, TELEOP_CONTROL, TELEOP_SHOOT, NONE
+            AUTO_ANGLE, AUTO_DISTANCE, CROSSING, TELEOP_CONTROL, TELEOP_SHOOT, NONE
         };
 
         DriveState state;
@@ -36,11 +36,11 @@ class DriveTrain: public IComponent
         {
             // Right Master.
             rightDrive1 = new CANTalon(1);
-            rightDrive1->SetControlMode(CANTalon::ControlMode::kPosition);//kPercentVbus);
+            rightDrive1->SetControlMode(CANTalon::ControlMode::kPosition);
             rightDrive1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-            rightDrive1->SetPID(0.085f, 0.0f, 0.0f);
             rightDrive1->SetVoltageRampRate(24.0f);
             rightDrive1->Enable();
+            // rightDrive1->ConfigEncoderCodesPerRev(DRIVE_FT_TO_ENCODER);
 
             // Right Slave.
             rightDrive2 = new CANTalon(2);
@@ -56,10 +56,10 @@ class DriveTrain: public IComponent
 
             // Left Master.
             leftDrive4 = new CANTalon(4);
-            leftDrive4->SetControlMode(CANTalon::ControlMode::kPosition);//kPercentVbus);
-            leftDrive4->SetPID(0.085f, 0.0f, 0.0f);
+            leftDrive4->SetControlMode(CANTalon::ControlMode::kPosition);
             leftDrive4->SetVoltageRampRate(24.0f);
             leftDrive4->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            // leftDrive4->ConfigEncoderCodesPerRev(DRIVE_FT_TO_ENCODER);
 
             // Left Slave.
             leftDrive5 = new CANTalon(5);
@@ -103,6 +103,7 @@ class DriveTrain: public IComponent
 
         void AutoAngle(float angleDegrees);
         void AutoDistance(int distanceIn);
+        void Cross();
 
         bool IsWaiting();
         bool IsAtAngle();
