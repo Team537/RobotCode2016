@@ -4,6 +4,7 @@ void DriveTrain::Update(bool teleop)
 {
     float output;
     //float target;
+    float speedMultiplier;
 
     switch (state)
     {
@@ -12,16 +13,13 @@ void DriveTrain::Update(bool teleop)
             leftSpeedCurrent = (output > 0) ? fabs(output) : -fabs(output);
             rightSpeedCurrent = (output > 0) ? -fabs(output) : fabs(output);
 
-            if (IsAtAngle() || teleop)
+            if (IsAtAngle() || distUntoggle->WasDown()) // || teleop
             {
                 SetState(DriveState::NONE);
             }
             break;
         case (DriveState::AUTO_DISTANCE):
-            // leftSpeedCurrent = speedLeftOutput->Get();
-            // rightSpeedCurrent = speedRightOutput->Get();
-
-            if (IsAtDistance() || teleop)
+            if (IsAtDistance() || distUntoggle->WasDown()) // || teleop
             {
                 SetState(DriveState::NONE);
             }
@@ -30,6 +28,21 @@ void DriveTrain::Update(bool teleop)
             leftSpeedCurrent = joystick->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
             rightSpeedCurrent = joystick->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y);
 
+            // Deadband
+            if (fabs(leftSpeedCurrent) < CONTROLLER_DEADBAND)
+            {
+                leftSpeedCurrent = 0;
+            }
+
+            if (fabs(rightSpeedCurrent) < CONTROLLER_DEADBAND)
+            {
+                rightSpeedCurrent = 0;
+            }
+
+            speedMultiplier = (rockWallToggle->GetState() ? DRIVE_SPEED_ROCK_WALL : roughTerrainToggle->GetState() ? DRIVE_SPEED_ROUGH_TERRAIN : 1.0f);
+            leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * speedMultiplier;
+            rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * speedMultiplier;
+
             if (shiftLow->WasDown())
             {
                 Shift(false);
@@ -37,6 +50,17 @@ void DriveTrain::Update(bool teleop)
             else if (shiftHigh->WasDown())
             {
                 Shift(true);
+            }
+
+            if (distanceToggle->WasDown())
+            {
+                AutoDistance(5 * 12.0f);
+            }
+            else
+            {
+                // Set the talon speeds.
+                rightDrive1->Set(-rightSpeedCurrent);
+                leftDrive4->Set(leftSpeedCurrent);
             }
             break;
         case (DriveState::TELEOP_SHOOT):
@@ -51,56 +75,6 @@ void DriveTrain::Update(bool teleop)
             }
             break;
     }
-
-    // Deadband
-    if (fabs(leftSpeedCurrent) < CONTROLLER_DEADBAND)
-    {
-        leftSpeedCurrent = 0;
-    }
-
-    if (fabs(rightSpeedCurrent) < CONTROLLER_DEADBAND)
-    {
-        rightSpeedCurrent = 0;
-    }
-
-    // Ramping.
-    leftSpeedDelta = leftSpeedCurrent - leftSpeedOld;
-    leftSpeedDelta = rightSpeedCurrent - rightSpeedOld;
-    leftDriveSign = leftSpeedCurrent / fabs(leftSpeedCurrent);
-    rightDriveSign = rightSpeedCurrent / fabs(rightSpeedCurrent);
-
-    if (fabs(leftSpeedDelta) > DRIVE_RAMP_SPEED)
-    {
-        leftSpeedCurrent = leftSpeedOld + leftDriveSign * DRIVE_RAMP_SPEED;
-    }
-
-    if (fabs(rightSpeedDelta) > DRIVE_RAMP_SPEED)
-    {
-        rightSpeedCurrent = rightSpeedOld + rightDriveSign * DRIVE_RAMP_SPEED;
-    }
-
-    float speedMultiplier = (rockWallToggle->GetState() ? DRIVE_SPEED_ROCK_WALL : roughTerrainToggle->GetState() ? DRIVE_SPEED_ROUGH_TERRAIN : 1.0f);
-    leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * speedMultiplier;
-    rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * speedMultiplier;
-
-    // Clamping.
-    if (fabs(leftSpeedCurrent) > 1)
-    {
-        leftSpeedCurrent = leftDriveSign;
-    }
-
-    if (fabs(rightSpeedCurrent) > 1)
-    {
-        rightSpeedCurrent = rightDriveSign;
-    }
-
-    // Log the left and right speeds.
-    leftSpeedOld = leftSpeedCurrent;
-    rightSpeedOld = rightSpeedCurrent;
-
-    // Set the talon speeds.
-    //rightDrive1->Set(-rightSpeedCurrent);
-  //  leftDrive4->Set(leftSpeedCurrent);
 }
 
 void DriveTrain::Dashboard()
@@ -109,26 +83,27 @@ void DriveTrain::Dashboard()
     SmartDashboard::PutNumber("Drive Speed Right", rightSpeedCurrent);
     SmartDashboard::PutBoolean("Drive High Gear", shifter->Get());
 
+    SmartDashboard::PutNumber("Drive Right Setpoint", rightDrive1->GetSetpoint());
+    SmartDashboard::PutNumber("Drive Left Setpoint", leftDrive4->GetSetpoint());
+
+    SmartDashboard::PutNumber("Drive Right Encoder", -rightDrive1->GetEncPosition());
+    SmartDashboard::PutNumber("Drive Left Encoder", leftDrive4->GetEncPosition());
+    SmartDashboard::PutNumber("Drive Right Encoder Numbers", -rightDrive1->GetEncPosition());
+    SmartDashboard::PutNumber("Drive Left Encoder Numbers", leftDrive4->GetEncPosition());
+
     SmartDashboard::PutNumber("Drive Draw Average", GetCurrentDraw());
 
-    SmartDashboard::PutString("Drive State",
-            state == TELEOP_SHOOT ? "Teleop Shooter" :
-            state == AUTO_ANGLE ? "Auto Angle" :
-            state == AUTO_DISTANCE ? "Auto Distance" :
-            state == TELEOP_CONTROL ? "Teleop Control" : "None"
-    );
+    SmartDashboard::PutString("Drive State", state == TELEOP_SHOOT ? "Teleop Shooter" : state == AUTO_ANGLE ? "Auto Angle" : state == AUTO_DISTANCE ? "Auto Distance" : state == TELEOP_CONTROL ? "Teleop Control" : "None");
 }
 
 void DriveTrain::SetState(DriveState driveState)
 {
     state = driveState;
 
-    if (state == DriveState::AUTO_DISTANCE)
+    if (state == DriveState::AUTO_DISTANCE || state == DriveState::TELEOP_SHOOT)
     {
         rightDrive1->SetControlMode(CANTalon::ControlMode::kPosition);
         leftDrive4->SetControlMode(CANTalon::ControlMode::kPosition);
-        rightDrive1->Enable();
-        leftDrive4->Enable();
     }
     else
     {
@@ -136,14 +111,11 @@ void DriveTrain::SetState(DriveState driveState)
         leftDrive4->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     }
 
-    if (state == DriveState::AUTO_ANGLE || state == DriveState::TELEOP_SHOOT)
-    {
-        // TODO
-    }
-    else
-    {
-        // TODO
-    }
+    rightDrive1->Enable();
+    leftDrive4->Enable();
+
+    rightDrive1->SetPosition(0);
+    leftDrive4->SetPosition(0);
 
     if (state == DriveState::AUTO_ANGLE || state == DriveState::AUTO_DISTANCE)
     {
@@ -162,24 +134,13 @@ void DriveTrain::AutoAngle(float angleDegrees)
     // TODO
 }
 
-void DriveTrain::distanceTuning()
-{
-    if (distanceToggle)
-    {
-        AutoDistance(454);
-    }
-    else
-    {
-        AutoDistance(0);
-    }
-}
-
-void DriveTrain::AutoDistance(float distanceIn)
+void DriveTrain::AutoDistance(int distanceIn)
 {
     SetState(DriveState::AUTO_DISTANCE);
-    driveDistance = distanceIn;// * ENCODER_SCALAR;
+    driveDistance = round(distanceIn * DRIVE_FT_TO_ENCODER);
+
     rightDrive1->Set(driveDistance);
-    leftDrive4->Set(driveDistance);
+    leftDrive4->Set(-driveDistance);
 }
 
 bool DriveTrain::IsWaiting()
@@ -189,7 +150,7 @@ bool DriveTrain::IsWaiting()
 
 bool DriveTrain::IsAtAngle()
 {
-    return false; // TODO
+    return true; // TODO
 }
 
 bool DriveTrain::IsAtDistance()

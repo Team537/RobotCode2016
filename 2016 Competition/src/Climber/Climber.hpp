@@ -15,7 +15,21 @@ class Climber: public IComponent
         Climber(Joystick *joystick) :
                 IComponent(joystick, new string("Climber"))
         {
-            extenderButton = new RobotButton(joystick, 0), hookButton = new RobotButton(joystick, 0), leftRetracted = new DigitalInput(0), rightRetracted = new DigitalInput(0), leftExtended = new DigitalInput(0), rightExtended = new DigitalInput(0), leftHook = new Solenoid(0), rightHook = new Solenoid(0), backLeftExtender = new Solenoid(0), frontLeftExtender = new Solenoid(0), backRightExtender = new Solenoid(0), frontRightExtender = new Solenoid(0);
+            leftRetracted = new DigitalInput(0);
+            rightRetracted = new DigitalInput(0);
+            leftExtended = new DigitalInput(0);
+            rightExtended = new DigitalInput(0);
+
+            leftHook = new Solenoid(0);
+            rightHook = new Solenoid(0);
+
+            backLeftExtender = new Solenoid(0);
+            frontLeftExtender = new Solenoid(0);
+            backRightExtender = new Solenoid(0);
+            frontRightExtender = new Solenoid(0);
+
+            extenderButton = new RobotButton(joystick, 0);
+            hookButton = new RobotButton(joystick, 0);
         }
 
         void Update(bool teleop);

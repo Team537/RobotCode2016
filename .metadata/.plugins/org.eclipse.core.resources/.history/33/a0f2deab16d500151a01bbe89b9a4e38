@@ -1,0 +1,32 @@
+#include <Collector/Collector.hpp>
+
+void Collector::Update(bool teleop)
+{
+    if (teleop)
+    {
+        if (leftCollectButton->GetState())
+        {
+            CollectLeft();
+        }
+
+        if (rightCollectButton->GetState())
+        {
+            CollectRight();
+        }
+    }
+}
+
+void Collector::Dashboard()
+{
+    SmartDashboard::PutNumber("Collector Left Motor", collectMotor->Get());
+}
+
+void Collector::Reset()
+{
+    collectMotor->Set(0);
+}
+
+void Collector::Collect()
+{
+    collectMotor->Set(0.75f);
+}

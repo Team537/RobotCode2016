@@ -1,0 +1,32 @@
+#ifndef COLLECTOR_HPP
+#define COLLECTOR_HPP
+
+#include <ToolBox/RobotButton.hpp>
+#include <Schematic.hpp>
+
+class Collector: public IComponent
+{
+    private:
+        Victor *collectMotor;
+        RobotButton *CollectButton;
+        float speed;
+
+    public:
+        Collector(Joystick *joystick) :
+                IComponent(joystick, new string("Collector"))
+        {
+            collectMotor = new Victor(2);
+            CollectButton = new RobotButton(joystick, 5);
+            speed = 0;
+        }
+
+        void Update(bool teleop);
+        void Dashboard();
+
+        void Reset();
+        void Collect();
+
+        bool IsExtended();
+};
+
+#endif

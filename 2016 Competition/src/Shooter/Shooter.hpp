@@ -12,8 +12,8 @@ class Shooter: public IComponent
         Vision *vision;
         DriveTrain *drive;
 
-        CANTalon *spinTalon;
-        Solenoid *extend;
+        CANTalon *spinTalon1, *spinTalon2;
+        Solenoid *extendSolenoid;
 
         Timer *extendTimer;
 
@@ -23,7 +23,7 @@ class Shooter: public IComponent
     public:
         enum ShooterState
         {
-            NONE, AIMING_SPINNING, FIRE, RETRACT
+            NONE, AIMING_SPINNING, FIRE
         };
 
         ShooterState state;
@@ -34,12 +34,22 @@ class Shooter: public IComponent
             this->vision = vision;
             this->drive = drive;
 
-            spinTalon = new CANTalon(9);
-            extend = new Solenoid(5);
+            spinTalon1 = new CANTalon(8);
+            spinTalon1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+            spinTalon1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            spinTalon1->Enable();
+
+            spinTalon2 = new CANTalon(9);
+            spinTalon2->SetControlMode(CANTalon::ControlMode::kFollower);
+            spinTalon2->Set(8);
+            spinTalon2->Enable();
+
+            extendSolenoid = new Solenoid(5);
 
             extendTimer = new Timer();
 
             state = ShooterState::NONE;
+
             shootButton = new RobotButton(joystick, JOYSTICK_TRIGGER_RIGHT);
             spinSpeed = 0.0f;
         }

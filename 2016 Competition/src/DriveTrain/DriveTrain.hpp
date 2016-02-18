@@ -16,16 +16,10 @@ class DriveTrain: public IComponent
 
         Vision* vision;
 
-        RobotButton *shiftHigh, *shiftLow, *rockWallToggle, *roughTerrainToggle, *distanceToggle;
+        RobotButton *shiftHigh, *shiftLow, *rockWallToggle, *roughTerrainToggle, *distUntoggle, *distanceToggle;
 
         float leftSpeedCurrent;
         float rightSpeedCurrent;
-        float leftSpeedOld;
-        float rightSpeedOld;
-        float leftSpeedDelta;
-        float rightSpeedDelta;
-        float leftDriveSign;
-        float rightDriveSign;
 
         int driveDistance = 0;
 
@@ -44,6 +38,8 @@ class DriveTrain: public IComponent
             rightDrive1 = new CANTalon(1);
             rightDrive1->SetControlMode(CANTalon::ControlMode::kPosition);//kPercentVbus);
             rightDrive1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            rightDrive1->SetPID(0.085f, 0.0f, 0.0f);
+            rightDrive1->SetVoltageRampRate(24.0f);
             rightDrive1->Enable();
 
             // Right Slave.
@@ -61,6 +57,8 @@ class DriveTrain: public IComponent
             // Left Master.
             leftDrive4 = new CANTalon(4);
             leftDrive4->SetControlMode(CANTalon::ControlMode::kPosition);//kPercentVbus);
+            leftDrive4->SetPID(0.085f, 0.0f, 0.0f);
+            leftDrive4->SetVoltageRampRate(24.0f);
             leftDrive4->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 
             // Left Slave.
@@ -85,6 +83,7 @@ class DriveTrain: public IComponent
             shiftHigh = new RobotButton(joystick, JOYSTICK_BUMPER_RIGHT);
             rockWallToggle = new RobotButton(joystick, JOYSTICK_AXIS_BUTTON_RIGHT);
             roughTerrainToggle = new RobotButton(joystick, JOYSTICK_AXIS_BUTTON_LEFT);
+            distUntoggle = new RobotButton(joystick, JOYSTICK_TRIGGER_LEFT);
             distanceToggle = new RobotButton(joystick, JOYSTICK_TRIGGER_RIGHT);
 
             // Sets up the state;
@@ -93,12 +92,6 @@ class DriveTrain: public IComponent
             // Initial drive speeds.
             leftSpeedCurrent = 0;
             rightSpeedCurrent = 0;
-            leftSpeedOld = 0;
-            rightSpeedOld = 0;
-            leftSpeedDelta = 0;
-            rightSpeedDelta = 0;
-            leftDriveSign = 1;
-            rightDriveSign = 1;
         }
 
         void Update(bool teleop);
@@ -109,11 +102,11 @@ class DriveTrain: public IComponent
         void Shift(bool highGear);
 
         void AutoAngle(float angleDegrees);
-        void AutoDistance(float distanceIn);
+        void AutoDistance(int distanceIn);
 
-        void distanceTuning();
-
-        bool IsWaiting();bool IsAtAngle();bool IsAtDistance();
+        bool IsWaiting();
+        bool IsAtAngle();
+        bool IsAtDistance();
         float GetCurrentDraw();
 };
 

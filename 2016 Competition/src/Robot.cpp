@@ -75,8 +75,8 @@ class Robot: public IterativeRobot
         void ComponentsUpdate()
         {
             bool isTeleop = DriverStation::GetInstance().IsOperatorControl() || DriverStation::GetInstance().IsTest();
-            vision->ComponentUpdate(isTeleop);
-            shooter->ComponentUpdate(isTeleop);
+            // vision->ComponentUpdate(isTeleop);
+            // shooter->ComponentUpdate(isTeleop);
             // climber->ComponentUpdate(isTeleop);
             driveTrain->ComponentUpdate(isTeleop);
             // collector->ComponentUpdate(isTeleop);
@@ -130,7 +130,6 @@ class Robot: public IterativeRobot
         void TeleopPeriodic()
         {
             ComponentsUpdate();
-            driveTrain->distanceTuning();
         }
 
         void TestPeriodic()
@@ -138,7 +137,6 @@ class Robot: public IterativeRobot
             ComponentsUpdate();
             LiveWindow::GetInstance()->Run();
             gameState = State::TEST;
-            driveTrain->distanceTuning();
         }
 };
 
