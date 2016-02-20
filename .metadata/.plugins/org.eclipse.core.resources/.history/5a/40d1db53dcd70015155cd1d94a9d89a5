@@ -19,8 +19,6 @@ class DriveTrain: public IComponent
         RobotButton *shiftHigh, *shiftLow, *rockWallToggle, *roughTerrainToggle, *driveStateUntoggle, *autoCrossToggle;
 
         Timer *crossTime;
-        bool hasCrossed;
-        int crossState;
 
         float leftSpeedCurrent;
         float rightSpeedCurrent;
@@ -113,8 +111,9 @@ class DriveTrain: public IComponent
         bool IsWaiting();
         bool IsAtAngle();
         bool IsAtDistance();
-        bool HasCrossed();
         float GetCurrentDraw();
+        bool hasCrossed;
+        int crossState;
 };
 
 #endif

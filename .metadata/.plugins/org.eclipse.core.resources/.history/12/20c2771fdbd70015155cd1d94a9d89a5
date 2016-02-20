@@ -8,19 +8,17 @@
 class DriveTrain: public IComponent
 {
     private:
-        CANTalon *rightDriveMaster, *rightDriveSlave1, *rightDriveSlave2;
-        CANTalon *leftDriveMaster, *leftDriveSlave1, *leftDriveSlave2;
+        CANTalon *rightDriveMaster, *rightDriveSlave, *rightDrive3;
+        CANTalon *leftDriveMaster, *leftDrive5, *leftDrive6;
 
         Solenoid *shifter;
         AHRS *gyro;
 
         Vision* vision;
 
-        RobotButton *shiftHigh, *shiftLow, *rockWallToggle, *roughTerrainToggle, *driveStateUntoggle, *autoCrossToggle;
+        RobotButton *shiftHigh, *shiftLow, *rockWallToggle, *roughTerrainToggle, *distUntoggle, *distanceToggle;
 
-        Timer *crossTime;
-        bool hasCrossed;
-        int crossState;
+        Timer *CrossTime;
 
         float leftSpeedCurrent;
         float rightSpeedCurrent;
@@ -45,16 +43,16 @@ class DriveTrain: public IComponent
             rightDriveMaster->Enable();
 
             // Right Slave.
-            rightDriveSlave1 = new CANTalon(2);
-            rightDriveSlave1->SetControlMode(CANTalon::ControlMode::kFollower);
-            rightDriveSlave1->Set(1);
-            rightDriveSlave1->Enable();
+            rightDriveSlave = new CANTalon(2);
+            rightDriveSlave->SetControlMode(CANTalon::ControlMode::kFollower);
+            rightDriveSlave->Set(1);
+            rightDriveSlave->Enable();
 
             // Right Slave.
-            rightDriveSlave2 = new CANTalon(3);
-            rightDriveSlave2->SetControlMode(CANTalon::ControlMode::kFollower);
-            rightDriveSlave2->Set(1);
-            rightDriveSlave2->Enable();
+            rightDrive3 = new CANTalon(3);
+            rightDrive3->SetControlMode(CANTalon::ControlMode::kFollower);
+            rightDrive3->Set(1);
+            rightDrive3->Enable();
 
             // Left Master.
             leftDriveMaster = new CANTalon(4);
@@ -62,30 +60,30 @@ class DriveTrain: public IComponent
             leftDriveMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 
             // Left Slave.
-            leftDriveSlave1 = new CANTalon(5);
-            leftDriveSlave1->SetControlMode(CANTalon::ControlMode::kFollower);
-            leftDriveSlave1->Set(4);
-            leftDriveSlave1->Enable();
+            leftDrive5 = new CANTalon(5);
+            leftDrive5->SetControlMode(CANTalon::ControlMode::kFollower);
+            leftDrive5->Set(4);
+            leftDrive5->Enable();
 
             // Left Slave.
-            leftDriveSlave2 = new CANTalon(6);
-            leftDriveSlave2->SetControlMode(CANTalon::ControlMode::kFollower);
-            leftDriveSlave2->Set(4);
-            leftDriveSlave2->Enable();
+            leftDrive6 = new CANTalon(6);
+            leftDrive6->SetControlMode(CANTalon::ControlMode::kFollower);
+            leftDrive6->Set(4);
+            leftDrive6->Enable();
 
             // Other robot objects.
             shifter = new Solenoid(4);
             gyro = ahrs;
             vision = visionTracking;
-            crossTime = new Timer;
+            CrossTime = new Timer;
 
             // Teleop controls.
             shiftLow = new RobotButton(joystick, JOYSTICK_BUMPER_LEFT);
             shiftHigh = new RobotButton(joystick, JOYSTICK_BUMPER_RIGHT);
             rockWallToggle = new RobotButton(joystick, JOYSTICK_AXIS_BUTTON_RIGHT);
             roughTerrainToggle = new RobotButton(joystick, JOYSTICK_AXIS_BUTTON_LEFT);
-            driveStateUntoggle = new RobotButton(joystick, JOYSTICK_TRIGGER_LEFT);
-            autoCrossToggle = new RobotButton(joystick, JOYSTICK_X);
+            distUntoggle = new RobotButton(joystick, JOYSTICK_TRIGGER_LEFT);
+            distanceToggle = new RobotButton(joystick, JOYSTICK_TRIGGER_RIGHT);
 
             // Sets up the state;
             SetState(DriveState::NONE);
@@ -94,8 +92,8 @@ class DriveTrain: public IComponent
             leftSpeedCurrent = 0;
             rightSpeedCurrent = 0;
             driveDistance = 0;
-            crossState = 0;
-            hasCrossed = false;
+            CrossState = 0;
+            haveCrossed = false;
         }
 
         void Update(bool teleop);
@@ -113,8 +111,9 @@ class DriveTrain: public IComponent
         bool IsWaiting();
         bool IsAtAngle();
         bool IsAtDistance();
-        bool HasCrossed();
         float GetCurrentDraw();
+        bool haveCrossed;
+        int CrossState;
 };
 
 #endif

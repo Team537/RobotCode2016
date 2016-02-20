@@ -48,7 +48,7 @@ void DriveTrain::Update(bool teleop)
             rightDriveMaster->Set(rightSpeedCurrent * 500);
             leftDriveMaster->Set(-leftSpeedCurrent * 500);
 
-            if (HasCrossed() || driveStateUntoggle->WasDown())
+            if (driveStateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
@@ -153,9 +153,6 @@ void DriveTrain::SetState(DriveState driveState)
 
         leftDriveMaster->SetPID(0.24f, 0.0f, 0.0f);
         leftDriveMaster->SetF(0.9f);
-
-        hasCrossed = false;
-        crossState = 0;
     }
     else
     {

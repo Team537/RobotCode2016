@@ -28,7 +28,6 @@ void DriveTrain::Update(bool teleop)
             gyroError = gyro->GetYaw();
             rightSpeedCurrent = 1.0f;
             leftSpeedCurrent = 1.0f;
-            DefenceCross();
 
             if (abs(gyroError) > 3)
             {
@@ -48,7 +47,7 @@ void DriveTrain::Update(bool teleop)
             rightDriveMaster->Set(rightSpeedCurrent * 500);
             leftDriveMaster->Set(-leftSpeedCurrent * 500);
 
-            if (HasCrossed() || driveStateUntoggle->WasDown())
+            if (driveStateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
@@ -153,9 +152,6 @@ void DriveTrain::SetState(DriveState driveState)
 
         leftDriveMaster->SetPID(0.24f, 0.0f, 0.0f);
         leftDriveMaster->SetF(0.9f);
-
-        hasCrossed = false;
-        crossState = 0;
     }
     else
     {
@@ -230,11 +226,6 @@ void DriveTrain::Cross()
     gyro->ZeroYaw();
 }
 
-bool DriveTrain::HasCrossed()
-{
-    return hasCrossed;
-}
-
 float DriveTrain::GetCurrentDraw()
 {
     return (rightDriveMaster->GetOutputCurrent() + rightDriveSlave1->GetOutputCurrent() + rightDriveSlave2->GetOutputCurrent() + leftDriveMaster->GetOutputCurrent() + leftDriveSlave1->GetOutputCurrent() + leftDriveSlave2->GetOutputCurrent()) / 6.0f;
@@ -246,7 +237,6 @@ bool DriveTrain::DefenceCross()
     {
         case 0:
             hasCrossed = false;
-
             if (gyro->GetRoll() >= -7.0f)
             {
                 crossState = 1;
@@ -255,28 +245,28 @@ bool DriveTrain::DefenceCross()
         case 1:
             if (gyro->GetRoll() >= 7.0f)
             {
-                crossTime->Reset();
-                crossTime->Start();
+                CrossTime->Start();
                 crossState = 2;
             }
             break;
         case 2:
             if (fabs(gyro->GetRoll()) >= 4)
             {
-                crossTime->Stop();
+                CrossTime->Stop();
+                CrossTime->Reset();
                 crossState = 3;
             }
-
-            if (crossTime->Get() >= 1)
+            if (CrossTime->Get() >= 2)
             {
-                crossTime->Stop();
+                CrossTime->Stop();
+                CrossTime->Reset();
                 crossState = 4;
             }
             break;
         case 3:
             if (fabs(gyro->GetRoll()) <= 4)
             {
-                crossTime->Start();
+                CrossTime->Start();
                 crossState = 2;
             }
             break;
@@ -284,6 +274,5 @@ bool DriveTrain::DefenceCross()
             hasCrossed = true;
             break;
     }
-
     return hasCrossed;
 }

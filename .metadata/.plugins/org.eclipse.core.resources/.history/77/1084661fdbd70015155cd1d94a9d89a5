@@ -3,6 +3,7 @@
 void DriveTrain::Update(bool teleop)
 {
     float output;
+    //float target;
     float speedMultiplier;
     float gyroError;
 
@@ -13,13 +14,13 @@ void DriveTrain::Update(bool teleop)
             leftSpeedCurrent = (output > 0) ? fabs(output) : -fabs(output);
             rightSpeedCurrent = (output > 0) ? -fabs(output) : fabs(output);
 
-            if (IsAtAngle() || driveStateUntoggle->WasDown())
+            if (IsAtAngle() || distUntoggle->WasDown()) // || teleop
             {
                 SetState(DriveState::NONE);
             }
             break;
         case (DriveState::AUTO_DISTANCE):
-            if (IsAtDistance() || driveStateUntoggle->WasDown())
+            if (IsAtDistance() || distUntoggle->WasDown()) // || teleop
             {
                 SetState(DriveState::NONE);
             }
@@ -28,18 +29,17 @@ void DriveTrain::Update(bool teleop)
             gyroError = gyro->GetYaw();
             rightSpeedCurrent = 1.0f;
             leftSpeedCurrent = 1.0f;
-            DefenceCross();
 
             if (abs(gyroError) > 3)
             {
                 if (gyroError > 0)
                 {
-                    leftSpeedCurrent -= gyroError * (1 / 180.0f) * 0.01f;
+                    leftSpeedCurrent -= gyroError * (1/180.0f) * 0.01f;
                     leftSpeedCurrent = leftSpeedCurrent < 0 ? leftSpeedCurrent : 0;
                 }
                 if (gyroError < 0)
                 {
-                    rightSpeedCurrent += gyroError * (1 / 180.0f) * 0.01f;
+                    rightSpeedCurrent += gyroError * (1/180.0f) * 0.01f;
                     rightSpeedCurrent = rightSpeedCurrent < 0 ? rightSpeedCurrent : 0;
                 }
             }
@@ -48,7 +48,7 @@ void DriveTrain::Update(bool teleop)
             rightDriveMaster->Set(rightSpeedCurrent * 500);
             leftDriveMaster->Set(-leftSpeedCurrent * 500);
 
-            if (HasCrossed() || driveStateUntoggle->WasDown())
+            if (distUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
@@ -81,8 +81,9 @@ void DriveTrain::Update(bool teleop)
                 Shift(true);
             }
 
-            if (autoCrossToggle->WasDown())
+            if (distanceToggle->WasDown())
             {
+                // AutoDistance(5 * 12.0f);
                 Cross();
             }
             else
@@ -125,8 +126,8 @@ void DriveTrain::Dashboard()
 
     SmartDashboard::PutNumber("Drive Draw Average", GetCurrentDraw());
 
-    SmartDashboard::PutBoolean("Successful Cross", hasCrossed);
-    SmartDashboard::PutNumber("Crossing State", crossState);
+    SmartDashboard::PutBoolean("Sucsessful Cross", haveCrossed);
+    SmartDashboard::PutNumber("Crossing State",CrossState);
 
     SmartDashboard::PutString("Drive State", state == CROSSING ? "Crossing" : state == TELEOP_SHOOT ? "Teleop Shooter" : state == AUTO_ANGLE ? "Auto Angle" : state == AUTO_DISTANCE ? "Auto Distance" : state == TELEOP_CONTROL ? "Teleop Control" : "None");
 }
@@ -153,9 +154,6 @@ void DriveTrain::SetState(DriveState driveState)
 
         leftDriveMaster->SetPID(0.24f, 0.0f, 0.0f);
         leftDriveMaster->SetF(0.9f);
-
-        hasCrossed = false;
-        crossState = 0;
     }
     else
     {
@@ -216,7 +214,7 @@ bool DriveTrain::IsWaiting()
 
 bool DriveTrain::IsAtAngle()
 {
-    return false; // TODO
+    return true; // TODO
 }
 
 bool DriveTrain::IsAtDistance()
@@ -230,60 +228,52 @@ void DriveTrain::Cross()
     gyro->ZeroYaw();
 }
 
-bool DriveTrain::HasCrossed()
-{
-    return hasCrossed;
-}
-
 float DriveTrain::GetCurrentDraw()
 {
-    return (rightDriveMaster->GetOutputCurrent() + rightDriveSlave1->GetOutputCurrent() + rightDriveSlave2->GetOutputCurrent() + leftDriveMaster->GetOutputCurrent() + leftDriveSlave1->GetOutputCurrent() + leftDriveSlave2->GetOutputCurrent()) / 6.0f;
+    return (rightDriveMaster->GetOutputCurrent() + rightDriveSlave->GetOutputCurrent() + rightDrive3->GetOutputCurrent() + leftDriveMaster->GetOutputCurrent() + leftDrive5->GetOutputCurrent() + leftDrive6->GetOutputCurrent()) / 6.0f;
 }
 
 bool DriveTrain::DefenceCross()
 {
-    switch (crossState)
-    {
+    switch(CrossState){
         case 0:
-            hasCrossed = false;
-
-            if (gyro->GetRoll() >= -7.0f)
+            haveCrossed = false;
+            if(gyro->GetRoll() >= -7.0f)
             {
-                crossState = 1;
+                CrossState = 1;
             }
             break;
         case 1:
-            if (gyro->GetRoll() >= 7.0f)
-            {
-                crossTime->Reset();
-                crossTime->Start();
-                crossState = 2;
-            }
-            break;
+           if(gyro->GetRoll() >= 7.0f)
+           {
+               CrossTime->Start();
+               CrossState = 2;
+           }
+           break;
         case 2:
-            if (fabs(gyro->GetRoll()) >= 4)
+            if(fabs(gyro->GetRoll()) >= 4)
             {
-                crossTime->Stop();
-                crossState = 3;
+                CrossTime->Stop();
+                CrossTime->Reset();
+                CrossState = 3;
             }
-
-            if (crossTime->Get() >= 1)
+            if(CrossTime->Get() >=2)
             {
-                crossTime->Stop();
-                crossState = 4;
+                CrossTime->Stop();
+                CrossTime->Reset();
+                CrossState = 4;
             }
             break;
         case 3:
-            if (fabs(gyro->GetRoll()) <= 4)
+            if(fabs(gyro->GetRoll()) <= 4)
             {
-                crossTime->Start();
-                crossState = 2;
+                CrossTime->Start();
+                CrossState = 2;
             }
             break;
         case 4:
-            hasCrossed = true;
+            haveCrossed = true;
             break;
     }
-
-    return hasCrossed;
+    return haveCrossed;
 }

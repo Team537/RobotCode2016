@@ -153,9 +153,6 @@ void DriveTrain::SetState(DriveState driveState)
 
         leftDriveMaster->SetPID(0.24f, 0.0f, 0.0f);
         leftDriveMaster->SetF(0.9f);
-
-        hasCrossed = false;
-        crossState = 0;
     }
     else
     {

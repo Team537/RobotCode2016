@@ -18,9 +18,7 @@ class DriveTrain: public IComponent
 
         RobotButton *shiftHigh, *shiftLow, *rockWallToggle, *roughTerrainToggle, *driveStateUntoggle, *autoCrossToggle;
 
-        Timer *crossTime;
-        bool hasCrossed;
-        int crossState;
+        Timer *CrossTime;
 
         float leftSpeedCurrent;
         float rightSpeedCurrent;
@@ -77,7 +75,7 @@ class DriveTrain: public IComponent
             shifter = new Solenoid(4);
             gyro = ahrs;
             vision = visionTracking;
-            crossTime = new Timer;
+            CrossTime = new Timer;
 
             // Teleop controls.
             shiftLow = new RobotButton(joystick, JOYSTICK_BUMPER_LEFT);
@@ -113,8 +111,9 @@ class DriveTrain: public IComponent
         bool IsWaiting();
         bool IsAtAngle();
         bool IsAtDistance();
-        bool HasCrossed();
         float GetCurrentDraw();
+        bool hasCrossed;
+        int crossState;
 };
 
 #endif
