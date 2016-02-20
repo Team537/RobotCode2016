@@ -18,10 +18,12 @@ class DriveTrain: public IComponent
 
         RobotButton *shiftHigh, *shiftLow, *rockWallToggle, *roughTerrainToggle, *distUntoggle, *distanceToggle;
 
+        Timer *CrossTime;
+
         float leftSpeedCurrent;
         float rightSpeedCurrent;
 
-        int driveDistance = 0;
+        int driveDistance;
 
     public:
         enum DriveState
@@ -38,9 +40,7 @@ class DriveTrain: public IComponent
             rightDrive1 = new CANTalon(1);
             rightDrive1->SetControlMode(CANTalon::ControlMode::kPosition);
             rightDrive1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-            rightDrive1->SetVoltageRampRate(24.0f);
             rightDrive1->Enable();
-            // rightDrive1->ConfigEncoderCodesPerRev(DRIVE_FT_TO_ENCODER);
 
             // Right Slave.
             rightDrive2 = new CANTalon(2);
@@ -57,9 +57,7 @@ class DriveTrain: public IComponent
             // Left Master.
             leftDrive4 = new CANTalon(4);
             leftDrive4->SetControlMode(CANTalon::ControlMode::kPosition);
-            leftDrive4->SetVoltageRampRate(24.0f);
             leftDrive4->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-            // leftDrive4->ConfigEncoderCodesPerRev(DRIVE_FT_TO_ENCODER);
 
             // Left Slave.
             leftDrive5 = new CANTalon(5);
@@ -77,6 +75,7 @@ class DriveTrain: public IComponent
             shifter = new Solenoid(4);
             gyro = ahrs;
             vision = visionTracking;
+            CrossTime = new Timer;
 
             // Teleop controls.
             shiftLow = new RobotButton(joystick, JOYSTICK_BUMPER_LEFT);
@@ -92,6 +91,9 @@ class DriveTrain: public IComponent
             // Initial drive speeds.
             leftSpeedCurrent = 0;
             rightSpeedCurrent = 0;
+            driveDistance = 0;
+            CrossState = 0;
+            haveCrossed = false;
         }
 
         void Update(bool teleop);
@@ -104,11 +106,14 @@ class DriveTrain: public IComponent
         void AutoAngle(float angleDegrees);
         void AutoDistance(int distanceIn);
         void Cross();
+        bool DefenceCross();
 
         bool IsWaiting();
         bool IsAtAngle();
         bool IsAtDistance();
         float GetCurrentDraw();
+        bool haveCrossed;
+        int CrossState;
 };
 
 #endif
