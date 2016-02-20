@@ -29,8 +29,8 @@ class Robot: public IterativeRobot
         Vision* vision;
         DriveTrain* driveTrain;
         Shooter* shooter;
-        // Climber* climber;
-        // Collector* collector;
+        Climber* climber;
+        Collector* collector;
 
         State gameState;
 
@@ -39,6 +39,7 @@ class Robot: public IterativeRobot
             // Sets up the joysticks.
             joystickPrimary = new Joystick(CONTROLLER_PRIMARY);
             joystickSecondary = new Joystick(CONTROLLER_SECONDARY);
+
             // Sets up robot components.
             compressor = new Compressor();
 
@@ -58,8 +59,8 @@ class Robot: public IterativeRobot
             vision = new Vision();
             driveTrain = new DriveTrain(joystickPrimary, ahrs, vision);
             shooter = new Shooter(joystickPrimary, vision, driveTrain);
-            // climber = new Climber(joystickPrimary);
-            // collector = new Collector(joystickPrimary);
+            climber = new Climber(joystickSecondary);
+            collector = new Collector(joystickPrimary);
 
             // Creates the auto modes.
             selectedAuto = NULL;
@@ -75,7 +76,7 @@ class Robot: public IterativeRobot
         void ComponentsUpdate()
         {
             bool isTeleop = DriverStation::GetInstance().IsOperatorControl() || DriverStation::GetInstance().IsTest();
-            // vision->ComponentUpdate(isTeleop);
+            vision->ComponentUpdate(isTeleop);
             // shooter->ComponentUpdate(isTeleop);
             // climber->ComponentUpdate(isTeleop);
             driveTrain->ComponentUpdate(isTeleop);

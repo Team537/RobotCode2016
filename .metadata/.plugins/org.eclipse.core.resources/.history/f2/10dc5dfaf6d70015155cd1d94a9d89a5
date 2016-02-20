@@ -1,0 +1,33 @@
+#include <Autonomous/AutonomousDrive.hpp>
+
+void AutonomousDrive::Start()
+{
+}
+
+bool AutonomousDrive::Run(double time)
+{
+    switch (reachState)
+    {
+        case (0):
+            driveTrain->AutoDistance(36.0f);
+            reachState++;
+            break;
+        case (1):
+            reachState += driveTrain->IsWaiting() ? 1 : 0;
+            break;
+        case (2):
+            driveTrain->AutoAngle(90.0f);
+            reachState++;
+            break;
+        case (3):
+            reachState += driveTrain->IsWaiting() ? 1 : 0;
+            break;
+    }
+
+    return reachState <= 3;
+}
+
+void AutonomousDrive::Stop()
+{
+    driveTrain->SetState(DriveTrain::DriveState::NONE);
+}

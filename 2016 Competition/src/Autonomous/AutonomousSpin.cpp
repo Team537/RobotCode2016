@@ -13,7 +13,7 @@ bool AutonomousSpin::Run(double time)
             reachState++;
             break;
         case (1):
-            reachState += driveTrain->IsAtAngle() ? 1 : 0;
+            reachState += driveTrain->IsWaiting() ? 1 : 0;
             break;
     }
 

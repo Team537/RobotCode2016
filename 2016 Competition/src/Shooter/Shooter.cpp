@@ -2,7 +2,7 @@
 
 void Shooter::Update(bool teleop)
 {
-    if (teleop) //  && !IsActivated()
+    if (teleop)
     {
         if (shootButton->WasDown())
         {
@@ -18,7 +18,7 @@ void Shooter::Update(bool teleop)
             spinSpeed = 0.62; // TODO: Calculate speed!
             spinTalon1->Set(spinSpeed);
 
-            if (drive->IsAtAngle() && fabs(spinTalon1->GetSpeed()) == fabs(spinSpeed) - SHOOTER_SPEED_DEADBAND) // TODO, Deadband!
+            if (drive->IsWaiting() && fabs(spinTalon1->GetSpeed()) == fabs(spinSpeed) - SHOOTER_SPEED_DEADBAND) // TODO, Deadband!
             {
                 state = ShooterState::FIRE;
             }

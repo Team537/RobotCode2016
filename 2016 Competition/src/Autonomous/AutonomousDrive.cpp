@@ -9,15 +9,29 @@ bool AutonomousDrive::Run(double time)
     switch (reachState)
     {
         case (0):
-            driveTrain->AutoDistance(36.0f);
+            driveTrain->Cross();
             reachState++;
             break;
         case (1):
-            reachState += driveTrain->IsAtDistance() ? 1 : 0;
+            reachState += driveTrain->IsWaiting() ? 1 : 0;
+            break;
+        case (2):
+            driveTrain->AutoDistance(40.0f);
+            reachState++;
+            break;
+        case (3):
+            reachState += driveTrain->IsWaiting() ? 1 : 0;
+            break;
+        case (4):
+            driveTrain->AutoAngle(90.0f);
+            reachState++;
+            break;
+        case (5):
+            reachState += driveTrain->IsWaiting() ? 1 : 0;
             break;
     }
 
-    return reachState <= 1;
+    return reachState <= 5;
 }
 
 void AutonomousDrive::Stop()

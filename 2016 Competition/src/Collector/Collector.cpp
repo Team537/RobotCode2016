@@ -4,11 +4,17 @@ void Collector::Update(bool teleop)
 {
     if (teleop)
     {
-        if (CollectButton->GetState())
+        if (collectInToggle->WasDown())
         {
-            Collect();
+            Collect(false);
         }
-        else
+
+        if (collectOutButton->GetState())
+        {
+            Collect(true);
+        }
+
+        if (collectStop->WasDown())
         {
             Off();
         }
@@ -25,7 +31,7 @@ void Collector::Off()
     collectMotor->Set(0);
 }
 
-void Collector::Collect()
+void Collector::Collect(bool reverse)
 {
-    collectMotor->Set(COLLECTOR_SPEED);
+    collectMotor->Set(COLLECTOR_SPEED * (reverse ? -1.0 : 1.0));
 }
