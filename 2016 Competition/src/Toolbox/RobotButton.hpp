@@ -7,8 +7,7 @@ class RobotButton
 {
     private:
         Joystick *joystick;
-        unsigned int key;
-        bool lastState;
+        unsigned int key;bool lastState;
 
     public:
         RobotButton(Joystick *joystick, unsigned int key)
@@ -18,8 +17,7 @@ class RobotButton
             this->lastState = false;
         }
 
-        bool GetState();
-        bool WasDown();
+        bool GetState();bool WasDown();
 };
 
 #endif

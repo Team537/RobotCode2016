@@ -10,6 +10,7 @@
 #include <IComponent.hpp>
 
 #define PI 3.14159265358
+#define G -9.80665
 
 #define CONTROLLER_PRIMARY 0
 #define CONTROLLER_SECONDARY 1
@@ -25,21 +26,21 @@
 #define GOAL_GROUND_HEIGHT 368.3
 #define GOAL_WIDTH 20.5
 
-#define DRIVE_ANGLE_ERROR 0.05
-#define DRIVE_DISTANCE_ERROR 0.09
-
 #define DRIVE_FT_TO_ENCODER 504.0163 // 1000 Edges Per Revolution: ((ticks / 1rev) * (3rev / 1rev) * (64revs / 20rev) * (1rev / 19.047in))
-#define SHOOTER_SPEED_DEADBAND 0.08
-
-#define COLLECTOR_SPEED 0.75f
-
 #define DRIVE_ANGLE_TOLERENCE 1.25
 #define DRIVE_DISTANCE_TOLERENCE 250
-#define DRIVE_RAMP_SPEED 0.05 // TODO: Better ramp!
 #define DRIVE_SPEED_MULTIPLIER 1.00
-#define DRIVE_DEFENCE_MULTIPLIER 1.00
 #define DRIVE_CLIMBING_MULTIPLIER 0.25
-// Moat, Rock Wall, Rough Terrain, Ramp Parts
+#define DRIVE_DEFENCE_MOAT 1.35
+#define DRIVE_DEFENCE_ROCK_WALL 1.15
+#define DRIVE_DEFENCE_ROUGH_TERRAIN 1.0
+#define DRIVE_DEFENCE_RAMP_PARTS 1.25
+
+#define SHOOTER_SPEED_DEADBAND 0.07
+#define SHOOTER_ANGLE 45 // TODO
+#define MS_TO_SPEED 0.0375 // TODO
+
+#define COLLECTOR_SPEED 0.75f
 
 #define JOYSTICK_X 1
 #define JOYSTICK_A 2

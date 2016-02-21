@@ -7,38 +7,69 @@ void DriveTrain::Update(bool teleop)
     float crossSign;
     float gyroError;
 
+    // Secondary update checks!
+    /*if (!isClimbing)
+    {
+        if (joystickSecondary->GetPOV() != -1.0f)
+        {
+            crossingForward = joystickSecondary->GetPOV() == 0 ? true : joystickSecondary->GetPOV() == 180 ? false : crossingForward;
+        }
+
+        if (joystickSecondary->GetRawButton(JOYSTICK_X))
+        {
+            crossSpeedMultiplier = DRIVE_DEFENCE_MOAT;
+        }
+        else if (joystickSecondary->GetRawButton(JOYSTICK_A))
+        {
+            crossSpeedMultiplier = DRIVE_DEFENCE_ROCK_WALL;
+        }
+        else if (joystickSecondary->GetRawButton(JOYSTICK_B))
+        {
+            crossSpeedMultiplier = DRIVE_DEFENCE_ROUGH_TERRAIN;
+        }
+        else if (joystickSecondary->GetRawButton(JOYSTICK_Y))
+        {
+            crossSpeedMultiplier = DRIVE_DEFENCE_RAMP_PARTS;
+        }
+    }*/
+
     switch (state)
     {
         case (DriveState::AUTO_ANGLE):
-            angleETS->SetInput(gyro->GetYaw());
-            output = angleETS->GetOutput();
+            // Updates the ETC input and grabs the output.
+            angleETC->SetInput(gyro->GetYaw());
+            output = angleETC->GetOutput();
 
+            // Calculated what direction the output want to go.
             leftSpeedCurrent = (output > 0) ? fabs(output) : -fabs(output);
             rightSpeedCurrent = (output > 0) ? -fabs(output) : fabs(output);
 
+            // Drives the master talons.
             rightDriveMaster->Set(-rightSpeedCurrent);
             leftDriveMaster->Set(leftSpeedCurrent);
 
-            if (fabs(angleETS->GetError()) < DRIVE_ANGLE_TOLERENCE || stateUntoggle->WasDown())
+            // If on target or untoggled, go to state NONE.
+            if (fabs(angleETC->GetError()) < DRIVE_ANGLE_TOLERENCE || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
             break;
         case (DriveState::AUTO_DISTANCE):
-            if (fabs(rightDriveMaster->GetEncPosition() - rightDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERENCE ||
-                fabs(leftDriveMaster->GetEncPosition() - leftDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERENCE ||
-                stateUntoggle->WasDown())
+            // If on target or untoggled, go to state NONE.
+            if (fabs(rightDriveMaster->GetEncPosition() - rightDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERENCE || fabs(leftDriveMaster->GetEncPosition() - leftDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERENCE || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
             return;
         case (DriveState::CROSSING):
+            // Update the current readings and errors.
             crossSign = crossReverse ? -1.0f : 1.0f;
             gyroError = gyro->GetYaw();
             rightSpeedCurrent = 1.0f;
             leftSpeedCurrent = 1.0f;
             DefenceCross();
 
+            // Figures out how much to offset drive for gyro angle correction.
             if (abs(gyroError) > 3)
             {
                 if (gyroError > 0)
@@ -54,19 +85,24 @@ void DriveTrain::Update(bool teleop)
                 }
             }
 
-            rightSpeedCurrent *= 500 * crossSign * DRIVE_DEFENCE_MULTIPLIER;
-            leftSpeedCurrent *= -500 * crossSign * DRIVE_DEFENCE_MULTIPLIER;
+            // Swap signs before set.
+            rightSpeedCurrent *= 500 * crossSign * crossSpeedMultiplier;
+            leftSpeedCurrent *= -500 * crossSign * crossSpeedMultiplier;
 
-            // Set the talon speeds.
+            // Drives the master talons.
             rightDriveMaster->Set(crossReverse ? -leftSpeedCurrent : rightSpeedCurrent);
             leftDriveMaster->Set(crossReverse ? -rightSpeedCurrent : leftSpeedCurrent);
 
+            // If has crossed or untoggled, go to state NONE.
             if (hasCrossed || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
+                crossSpeedMultiplier = 1.0f;
+                crossingForward = true;
             }
             break;
         case (DriveState::TELEOP_CONTROL):
+            // Grabs the current speed from the two drive axes.
             leftSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
             rightSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y);
 
@@ -81,9 +117,11 @@ void DriveTrain::Update(bool teleop)
                 rightSpeedCurrent = 0;
             }
 
+            // Multiplies the speed to slow down the bot.
             leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
             rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
 
+            // Shifts the gears.
             if (shiftLow->WasDown())
             {
                 Shift(false);
@@ -93,14 +131,19 @@ void DriveTrain::Update(bool teleop)
                 Shift(true);
             }
 
+            // Gets the auto angle from POV (if down).
             if (joystickPrimary->GetPOV() != -1.0f)
             {
                 AutoAngle(joystickPrimary->GetPOV());
             }
+            // Auto crosses if toggle is down!
             else if (autoCrossToggle->GetState() && fabs(leftSpeedCurrent) > CONTROLLER_DEADBAND)
+            // else if (autoCrossToggle->GetState())
             {
                 Cross(leftSpeedCurrent > CONTROLLER_DEADBAND);
+                // Cross(crossingForward);
             }
+            // Drives the master talons.
             else
             {
                 rightDriveMaster->Set(-rightSpeedCurrent);
@@ -108,17 +151,23 @@ void DriveTrain::Update(bool teleop)
             }
             break;
         case (DriveState::TELEOP_SHOOT):
+            // Gets the goal in view coords of -0.5 to 0.5.
             target = (vision->GetGoalCenterX() / WEBCAM_PIXEL_WIDTH) * 2 - 1;
             visionPIDSource->SetPIDTarget(target);
             visionPID->SetSetpoint(0);
 
+            // Grabs the output direction to turn
             output = visionPIDOutput->GetOutput();
+
+            // Calculated what direction the output want to go.
             leftSpeedCurrent = (output > 0) ? fabs(output) : -fabs(output);
             rightSpeedCurrent = (output > 0) ? -fabs(output) : fabs(output);
 
+            // Drives the master talons.
             rightDriveMaster->Set(-rightSpeedCurrent);
             leftDriveMaster->Set(leftSpeedCurrent);
 
+            // If on vision target or untoggled, go to state NONE.
             if (visionPID->OnTarget() || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
@@ -185,7 +234,7 @@ void DriveTrain::Dashboard()
 {
     SmartDashboard::PutNumber("Drive Speed Left", leftSpeedCurrent);
     SmartDashboard::PutNumber("Drive Speed Right", rightSpeedCurrent);
-    SmartDashboard::PutBoolean("Drive High Gear", shifter->Get());
+    SmartDashboard::PutBoolean("Drive High Gear", shift->Get());
 
     SmartDashboard::PutNumber("Drive Angle Target", visionPIDSource->PIDGet());
     SmartDashboard::PutNumber("Drive Angle PID Out", visionPIDOutput->GetOutput());
@@ -213,6 +262,7 @@ void DriveTrain::SetState(DriveState driveState)
 {
     state = driveState;
 
+    // Sets the talons contol modes.
     if (state == DriveState::AUTO_DISTANCE)
     {
         rightDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
@@ -244,24 +294,7 @@ void DriveTrain::SetState(DriveState driveState)
         leftDriveMaster->SetPID(0.0f, 0.0f, 0.0f);
     }
 
-    if (state == DriveState::TELEOP_SHOOT)
-    {
-        visionPID->Enable();
-    }
-    else
-    {
-        visionPID->Disable();
-    }
-
-    if (state == DriveState::AUTO_ANGLE)
-    {
-        angleETS->Enable();
-    }
-    else
-    {
-        angleETS->Disable();
-    }
-
+    // Sets voltage ramp rates.
     if (state == DriveState::TELEOP_CONTROL)
     {
         rightDriveMaster->SetVoltageRampRate(32.0f);
@@ -273,13 +306,36 @@ void DriveTrain::SetState(DriveState driveState)
         leftDriveMaster->SetVoltageRampRate(24.0f);
     }
 
+    // Sets the vision pid's usage.
+    if (state == DriveState::TELEOP_SHOOT)
+    {
+        visionPID->Enable();
+    }
+    else
+    {
+        visionPID->Disable();
+    }
+
+    // Sets the angle pid's usage.
+    if (state == DriveState::AUTO_ANGLE)
+    {
+        angleETC->Enable();
+    }
+    else
+    {
+        angleETC->Disable();
+    }
+
+    // Enables the talons.
     rightDriveMaster->Enable();
     leftDriveMaster->Enable();
 
+    // Sets the sensor readings to zero.
     rightDriveMaster->SetPosition(0);
     leftDriveMaster->SetPosition(0);
 
-    if (state == DriveState::AUTO_ANGLE || state == DriveState::AUTO_DISTANCE || state == DriveState::CROSSING)
+    // Go's to low gear if not in teleop control.
+    if (state != DriveState::TELEOP_CONTROL)
     {
         Shift(false);
     }
@@ -287,14 +343,17 @@ void DriveTrain::SetState(DriveState driveState)
 
 void DriveTrain::Shift(bool highGear)
 {
-    shifter->Set(highGear);
+    shift->Set(highGear);
 }
 
 void DriveTrain::AutoAngle(float angleDegrees)
 {
+    // Changes the state.
     SetState(DriveState::AUTO_ANGLE);
+    // Resets the gyro.
     gyro->Reset();
 
+    // Change angles from 0 to 360 => -180 to 180.
     float targetAngle = angleDegrees;
 
     if (targetAngle > 180)
@@ -302,13 +361,17 @@ void DriveTrain::AutoAngle(float angleDegrees)
         targetAngle -= 360;
     }
 
-    angleETS->SetTarget(targetAngle);
+    // Sets the angle targets.
+    angleETC->SetTarget(targetAngle);
 }
 
 void DriveTrain::AutoDistance(int distanceIn)
 {
+    // Changes the state.
     SetState(DriveState::AUTO_DISTANCE);
+    // Converts the distance from IN to encoder ticks.
     targetDistance = round(distanceIn * DRIVE_FT_TO_ENCODER);
+    // Sets the distance to drive.
     rightDriveMaster->Set(targetDistance);
     leftDriveMaster->Set(-targetDistance);
 }
@@ -323,11 +386,19 @@ bool DriveTrain::IsWaiting()
     return state == DriveState::NONE;
 }
 
+bool DriveTrain::IsTeleopControl()
+{
+    return state == DriveState::TELEOP_CONTROL;
+}
+
 void DriveTrain::Cross(bool reverse)
 {
+    // Changes the state.
     SetState(DriveState::CROSSING);
+    // Resets the gyro.
+    gyro->Reset();
+    // Sets if its crossing in reverse.
     crossReverse = reverse;
-    gyro->ZeroYaw();
 }
 
 float DriveTrain::GetCurrentDraw()

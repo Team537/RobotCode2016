@@ -27,11 +27,18 @@ class IComponent
             Dashboard();
         }
 
-        virtual void Update(bool teleop) { }
+        virtual void Update(bool teleop)
+        {
+        }
 
-        virtual void Dashboard() { }
+        virtual void Dashboard()
+        {
+        }
 
-        inline string* GetName() { return name; }
+        inline string* GetName()
+        {
+            return name;
+        }
 };
 
 #endif

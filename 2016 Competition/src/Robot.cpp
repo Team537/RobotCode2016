@@ -1,5 +1,6 @@
-#include <Autonomous/AutonomousSpin.hpp>
-#include <Autonomous/AutonomousDrive.hpp>
+#include <Autonomous/AutonomousBall1.hpp>
+#include <Autonomous/AutonomousDemo.hpp>
+#include <Autonomous/AutonomousReach.hpp>
 #include <Climber/Climber.hpp>
 #include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
@@ -65,8 +66,9 @@ class Robot: public IterativeRobot
             // Creates the auto modes.
             selectedAuto = NULL;
             autoChooser = new SendableChooser();
-            new AutonomousSpin(autoChooser, false, driveTrain);
-            new AutonomousDrive(autoChooser, true, driveTrain);
+            new AutonomousBall1(autoChooser, false, driveTrain, shooter);
+            new AutonomousDemo(autoChooser, true, driveTrain);
+            new AutonomousReach(autoChooser, false, driveTrain);
             SmartDashboard::PutData("Auto Modes", autoChooser);
 
             // Sets up the game states.
@@ -83,7 +85,7 @@ class Robot: public IterativeRobot
 
             if (!climber->IsClimbing())
             {
-                // shooter->ComponentUpdate(teleop);
+                shooter->ComponentUpdate(teleop);
                 collector->ComponentUpdate(teleop);
             }
 

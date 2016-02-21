@@ -4,40 +4,43 @@ void Collector::Update(bool teleop)
 {
     if (teleop)
     {
+        // Intakes if the toggle was pressed.
         if (collectInToggle->WasDown())
         {
             Collect(false);
         }
-
-        if (collectStop->WasDown())
+        // Stop collecting if stop toggle was pressed.
+        else if (collectStop->WasDown())
         {
-            Off();
+            TurnOff();
         }
 
+        // Spits out while held down.
         if (collectOutButton->GetState())
         {
-            collectOut = true;
             Collect(true);
+            reverseCollecting = true;
         }
-        else if (collectOut && !collectOutButton->GetState())
+        // Stop collecting if not held down.
+        else if (reverseCollecting && !collectOutButton->GetState())
         {
-            collectOut = false;
-            Off();
+            TurnOff();
+            reverseCollecting = false;
         }
     }
 }
 
 void Collector::Dashboard()
 {
-    SmartDashboard::PutNumber("Collector Motor", collectMaster->Get());
-}
-
-void Collector::Off()
-{
-    collectMaster->Set(0);
+    SmartDashboard::PutNumber("Collector Motor Speed", collectMotor->Get());
 }
 
 void Collector::Collect(bool reverse)
 {
-    collectMaster->Set(COLLECTOR_SPEED * (reverse ? -1.0 : 1.0));
+    collectMotor->Set(COLLECTOR_SPEED * (reverse ? -1.0 : 1.0));
+}
+
+void Collector::TurnOff()
+{
+    collectMotor->Set(0);
 }

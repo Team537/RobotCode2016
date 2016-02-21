@@ -7,32 +7,32 @@
 class Collector: public IComponent
 {
     private:
-        CANTalon *collectMaster;
+        CANTalon *collectMotor;
 
         RobotButton *collectInToggle;
         RobotButton *collectStop;
         RobotButton *collectOutButton;
 
-        bool collectOut;
+        bool reverseCollecting;
 
     public:
         Collector(Joystick* joystickPrimary, Joystick* joystickSecondary) :
                 IComponent(joystickPrimary, joystickSecondary, new string("Collector"))
         {
-            collectMaster = new CANTalon(9);
+            collectMotor = new CANTalon(9);
 
             collectInToggle = new RobotButton(joystickPrimary, JOYSTICK_A);
             collectStop = new RobotButton(joystickPrimary, JOYSTICK_B);
             collectOutButton = new RobotButton(joystickPrimary, JOYSTICK_Y);
 
-            collectOut = false;
+            reverseCollecting = false;
         }
 
         void Update(bool teleop);
         void Dashboard();
 
-        void Off();
         void Collect(bool reverse);
+        void TurnOff();
 };
 
 #endif

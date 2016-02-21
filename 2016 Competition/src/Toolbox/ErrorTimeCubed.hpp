@@ -1,31 +1,33 @@
-#ifndef TAKEBACKHALF_HPP
-#define TAKEBACKHALF_HPP
+#ifndef ERRORTIMECUBED_HPP
+#define ERRORTIMECUBED_HPP
 
 #include <Schematic.hpp>
 
-class ErrorTimeSquared
+class ErrorTimeCubed
 {
     private:
         float target;
         float input;
         float output;
-        float speed;
+        float rampMin;
+        float rampMax;
 
         float rangeMin, rangeMax;
 
-        Timer *rampTimer;
+        Timer *timer;
 
         void Update();
     public:
-        ErrorTimeSquared(float speed, float rangeMin, float rangeMax)
+        ErrorTimeCubed(float rampMin, float rampMax, float rangeMin, float rangeMax)
         {
             target = 0.0f;
             input = 0.0f;
             output = 0.0f;
-            this->speed = speed;
+            this->rampMin = rampMin;
+            this->rampMax = rampMax;
             this->rangeMin = rangeMin;
             this->rangeMax = rangeMax;
-            rampTimer = new Timer();
+            timer = new Timer();
         }
 
         void Enable();
