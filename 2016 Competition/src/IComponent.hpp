@@ -11,11 +11,13 @@ class IComponent
         string* name;
 
     public:
-        Joystick* joystick;
+        Joystick* joystickPrimary;
+        Joystick* joystickSecondary;
 
-        IComponent(Joystick* joystick, string* name)
+        IComponent(Joystick* joystickPrimary, Joystick* joystickSecondary, string* name)
         {
-            this->joystick = joystick;
+            this->joystickPrimary = joystickPrimary;
+            this->joystickSecondary = joystickSecondary;
             this->name = name;
         }
 
@@ -25,17 +27,11 @@ class IComponent
             Dashboard();
         }
 
-        virtual void Update(bool teleop)
-        {
-        }
-        virtual void Dashboard()
-        {
-        }
+        virtual void Update(bool teleop) { }
 
-        inline string* GetName()
-        {
-            return name;
-        }
+        virtual void Dashboard() { }
+
+        inline string* GetName() { return name; }
 };
 
 #endif

@@ -4,7 +4,7 @@ void Shooter::Update(bool teleop)
 {
     if (teleop)
     {
-        if (shootButton->WasDown())
+        if (autoShootButton->WasDown())
         {
             drive->SetState(DriveTrain::DriveState::TELEOP_SHOOT);
             state = ShooterState::NONE;
@@ -16,9 +16,9 @@ void Shooter::Update(bool teleop)
         case (ShooterState::AIMING_SPINNING):
             break;
             spinSpeed = 0.62; // TODO: Calculate speed!
-            spinTalon1->Set(spinSpeed);
+            talonMaster->Set(spinSpeed);
 
-            if (drive->IsWaiting() && fabs(spinTalon1->GetSpeed()) == fabs(spinSpeed) - SHOOTER_SPEED_DEADBAND) // TODO, Deadband!
+            if (drive->IsWaiting() && fabs(talonMaster->GetSpeed()) == fabs(spinSpeed) - SHOOTER_SPEED_DEADBAND) // TODO, Deadband!
             {
                 state = ShooterState::FIRE;
             }
@@ -38,7 +38,7 @@ void Shooter::Update(bool teleop)
             }
             break;
         case (ShooterState::NONE):
-            spinTalon1->Set(0);
+            talonMaster->Set(0);
             extendSolenoid->Set(false);
             break;
     }

@@ -42,6 +42,14 @@
 		<item value="253" key="size.y"/>
 		<item value="355" key="size.x"/>
 	</section>
+	<section name="org.eclipse.cdt.internal.ui.typehierarchy.QuickHierarchy">
+		<item value="350" key="org.eclipse.cdt.internal.ui.typehierarchy.THInformationControlDIALOG_WIDTH"/>
+		<item value="true" key="org.eclipse.cdt.internal.ui.typehierarchy.THInformationControlDIALOG_USE_PERSISTED_SIZE"/>
+		<item value="true" key="org.eclipse.cdt.internal.ui.typehierarchy.THInformationControlDIALOG_USE_PERSISTED_LOCATION"/>
+		<item value="300" key="org.eclipse.cdt.internal.ui.typehierarchy.THInformationControlDIALOG_HEIGHT"/>
+		<item value="642" key="org.eclipse.cdt.internal.ui.typehierarchy.THInformationControlDIALOG_X_ORIGIN"/>
+		<item value="267" key="org.eclipse.cdt.internal.ui.typehierarchy.THInformationControlDIALOG_Y_ORIGIN"/>
+	</section>
 	<section name="org.eclipse.cdt.internal.ui.wizards.classwizard.NewBaseClassSelectionDialogSettings">
 		<item value="false" key="show_enums"/>
 		<item value="false" key="show_unions"/>

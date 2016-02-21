@@ -4,19 +4,14 @@ void DriveTrain::Update(bool teleop)
 {
     float output;
     float target;
+    float crossSign;
     float gyroError;
 
     switch (state)
     {
         case (DriveState::AUTO_ANGLE):
-            gyroError = gyro->GetYaw() - targetAngle;
-            target = gyroError * (1.0f / 360.0f);
-            output = target * (tbhTime->Get() * tbhTime->Get()); // TODO;
-
-            SmartDashboard::PutNumber("Drive TBH Target", targetAngle);
-            SmartDashboard::PutNumber("Drive TBH Input", gyro->GetYaw());
-            SmartDashboard::PutNumber("Drive TBH Error", gyroError);
-            SmartDashboard::PutNumber("Drive TBH Output", output);
+            angleTBH->SetInput(gyro->GetYaw());
+            output = angleTBH->GetOutput();
 
             leftSpeedCurrent = (output > 0) ? fabs(output) : -fabs(output);
             rightSpeedCurrent = (output > 0) ? -fabs(output) : fabs(output);
@@ -24,7 +19,7 @@ void DriveTrain::Update(bool teleop)
             rightDriveMaster->Set(-rightSpeedCurrent);
             leftDriveMaster->Set(leftSpeedCurrent);
 
-            if (fabs(gyroError) < DRIVE_ANGLE_TOLERENCE || driveStateUntoggle->WasDown())
+            if (fabs(angleTBH->GetError()) < DRIVE_ANGLE_TOLERENCE || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
@@ -32,12 +27,13 @@ void DriveTrain::Update(bool teleop)
         case (DriveState::AUTO_DISTANCE):
             if (fabs(rightDriveMaster->GetEncPosition() - rightDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERENCE ||
                 fabs(leftDriveMaster->GetEncPosition() - leftDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERENCE ||
-                driveStateUntoggle->WasDown())
+                stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
             return;
         case (DriveState::CROSSING):
+            crossSign = crossReverse ? -1.0f : 1.0f;
             gyroError = gyro->GetYaw();
             rightSpeedCurrent = 1.0f;
             leftSpeedCurrent = 1.0f;
@@ -47,28 +43,32 @@ void DriveTrain::Update(bool teleop)
             {
                 if (gyroError > 0)
                 {
-                    leftSpeedCurrent -= gyroError * (1 / 180.0f) * 0.01f;
+                    leftSpeedCurrent -= gyroError * (1.0f / 180.0f) * 0.01f;
                     leftSpeedCurrent = leftSpeedCurrent < 0 ? leftSpeedCurrent : 0;
                 }
+
                 if (gyroError < 0)
                 {
-                    rightSpeedCurrent += gyroError * (1 / 180.0f) * 0.01f;
+                    rightSpeedCurrent += gyroError * (1.0f / 180.0f) * 0.01f;
                     rightSpeedCurrent = rightSpeedCurrent < 0 ? rightSpeedCurrent : 0;
                 }
             }
 
-            // Set the talon speeds.
-            rightDriveMaster->Set(rightSpeedCurrent * 500);
-            leftDriveMaster->Set(-leftSpeedCurrent * 500);
+            rightSpeedCurrent *= 500 * crossSign * DRIVE_DEFENCE_MULTIPLIER;
+            leftSpeedCurrent *= -500 * crossSign * DRIVE_DEFENCE_MULTIPLIER;
 
-            if (hasCrossed || driveStateUntoggle->WasDown())
+            // Set the talon speeds.
+            rightDriveMaster->Set(crossReverse ? -leftSpeedCurrent : rightSpeedCurrent);
+            leftDriveMaster->Set(crossReverse ? -rightSpeedCurrent : leftSpeedCurrent);
+
+            if (hasCrossed || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
             break;
         case (DriveState::TELEOP_CONTROL):
-            leftSpeedCurrent = joystick->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
-            rightSpeedCurrent = joystick->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y);
+            leftSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
+            rightSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y);
 
             // Deadband
             if (fabs(leftSpeedCurrent) < CONTROLLER_DEADBAND)
@@ -81,8 +81,8 @@ void DriveTrain::Update(bool teleop)
                 rightSpeedCurrent = 0;
             }
 
-            leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER;
-            rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER;
+            leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
+            rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
 
             if (shiftLow->WasDown())
             {
@@ -93,13 +93,13 @@ void DriveTrain::Update(bool teleop)
                 Shift(true);
             }
 
-            if (joystick->GetPOV() != -1.0f)
+            if (joystickPrimary->GetPOV() != -1.0f)
             {
-                AutoAngle(joystick->GetPOV());
+                AutoAngle(joystickPrimary->GetPOV());
             }
-            else if (autoCrossToggle->WasDown())
+            else if (autoCrossToggle->GetState() && fabs(leftSpeedCurrent) > CONTROLLER_DEADBAND)
             {
-                Cross();
+                Cross(leftSpeedCurrent > CONTROLLER_DEADBAND);
             }
             else
             {
@@ -119,7 +119,7 @@ void DriveTrain::Update(bool teleop)
             rightDriveMaster->Set(-rightSpeedCurrent);
             leftDriveMaster->Set(leftSpeedCurrent);
 
-            if (visionPID->OnTarget() || driveStateUntoggle->WasDown())
+            if (visionPID->OnTarget() || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
@@ -189,7 +189,6 @@ void DriveTrain::Dashboard()
 
     SmartDashboard::PutNumber("Drive Angle Target", visionPIDSource->PIDGet());
     SmartDashboard::PutNumber("Drive Angle PID Out", visionPIDOutput->GetOutput());
-    SmartDashboard::PutNumber("Drive Angle Error", gyro->GetYaw());
 
     SmartDashboard::PutNumber("Drive Setpoint Right", rightDriveMaster->GetSetpoint());
     SmartDashboard::PutNumber("Drive Setpoint Left", leftDriveMaster->GetSetpoint());
@@ -202,8 +201,8 @@ void DriveTrain::Dashboard()
 
     SmartDashboard::PutNumber("Drive Draw Average", GetCurrentDraw());
 
-    SmartDashboard::PutBoolean("Successful Cross", hasCrossed);
-    SmartDashboard::PutNumber("Crossing State", crossState);
+    SmartDashboard::PutBoolean("Drive Cross Successful", hasCrossed);
+    SmartDashboard::PutNumber("Drive Cross State", crossState);
 
     SmartDashboard::PutString("Drive State", state == CROSSING ? "Crossing" : state == TELEOP_SHOOT ? "Teleop Shooter" : state == AUTO_ANGLE ? "Auto Angle" : state == AUTO_DISTANCE ? "Auto Distance" : state == TELEOP_CONTROL ? "Teleop Control" : "None");
 
@@ -256,12 +255,11 @@ void DriveTrain::SetState(DriveState driveState)
 
     if (state == DriveState::AUTO_ANGLE)
     {
-        tbhTime->Reset();
-        tbhTime->Start();
+        angleTBH->Enable();
     }
     else
     {
-        tbhTime->Stop();
+        angleTBH->Disable();
     }
 
     if (state == DriveState::TELEOP_CONTROL)
@@ -297,12 +295,14 @@ void DriveTrain::AutoAngle(float angleDegrees)
     SetState(DriveState::AUTO_ANGLE);
     gyro->Reset();
 
-    targetAngle = angleDegrees;
+    float targetAngle = angleDegrees;
 
     if (targetAngle > 180)
     {
         targetAngle -= 360;
     }
+
+    angleTBH->SetTarget(targetAngle);
 }
 
 void DriveTrain::AutoDistance(int distanceIn)
@@ -313,14 +313,20 @@ void DriveTrain::AutoDistance(int distanceIn)
     leftDriveMaster->Set(-targetDistance);
 }
 
+void DriveTrain::SetCrossing(bool crossing)
+{
+    isClimbing = crossing;
+}
+
 bool DriveTrain::IsWaiting()
 {
     return state == DriveState::NONE;
 }
 
-void DriveTrain::Cross()
+void DriveTrain::Cross(bool reverse)
 {
     SetState(DriveState::CROSSING);
+    crossReverse = reverse;
     gyro->ZeroYaw();
 }
 

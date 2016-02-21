@@ -1,0 +1,15 @@
+/*
+ * TakeBackHalf.hpp
+ *
+ *  Created on: Feb 20, 2016
+ *      Author: code01
+ */
+
+#ifndef SRC_TOOLBOX_TAKEBACKHALF_HPP_
+#define SRC_TOOLBOX_TAKEBACKHALF_HPP_
+
+class TakeBackHalf
+{
+};
+
+#endif /* SRC_TOOLBOX_TAKEBACKHALF_HPP_ */

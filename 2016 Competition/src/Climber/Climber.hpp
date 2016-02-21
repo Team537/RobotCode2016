@@ -10,10 +10,11 @@ class Climber: public IComponent
         DigitalInput *leftRetracted, *rightRetracted, *leftExtended, *rightExtended;
         Solenoid *leftHook, *rightHook, *backLeftExtender, *frontLeftExtender, *backRightExtender, *frontRightExtender;
         RobotButton *extenderButton, *hookButton;
+        bool climbing;
 
     public:
-        Climber(Joystick *joystick) :
-                IComponent(joystick, new string("Climber"))
+        Climber(Joystick* joystickPrimary, Joystick* joystickSecondary) :
+                IComponent(joystickPrimary, joystickSecondary, new string("Climber"))
         {
             leftRetracted = new DigitalInput(0);
             rightRetracted = new DigitalInput(0);
@@ -28,8 +29,10 @@ class Climber: public IComponent
             backRightExtender = new Solenoid(0);
             frontRightExtender = new Solenoid(0);
 
-            extenderButton = new RobotButton(joystick, 0);
-            hookButton = new RobotButton(joystick, 0);
+            extenderButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_LEFT);
+            hookButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
+
+            climbing = false;
         }
 
         void Update(bool teleop);
@@ -39,7 +42,9 @@ class Climber: public IComponent
         void Extend();
         void Hook();
 
-        bool IsExtended();bool IsHooked();
+        bool IsClimbing();
+        bool IsExtended();
+        bool IsHooked();
 };
 
 #endif

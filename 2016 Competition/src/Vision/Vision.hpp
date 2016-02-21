@@ -18,7 +18,7 @@ class Vision: public IComponent
 
     public:
         Vision() :
-                IComponent(NULL, new string("Vision"))
+                IComponent(NULL, NULL, new string("Vision"))
         {
             goalImageTable = NetworkTable::GetTable("GRIP/myContoursReport");
             goalArea = 0;

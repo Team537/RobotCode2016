@@ -14,14 +14,14 @@ class Collector: public IComponent
         RobotButton *collectOutButton;
 
     public:
-        Collector(Joystick *joystick) :
-                IComponent(joystick, new string("Collector"))
+        Collector(Joystick* joystickPrimary, Joystick* joystickSecondary) :
+                IComponent(joystickPrimary, joystickSecondary, new string("Collector"))
         {
             collectMotor = new CANTalon(0);
 
-            collectInToggle = new RobotButton(joystick, JOYSTICK_A);
-            collectStop = new RobotButton(joystick, JOYSTICK_B);
-            collectOutButton = new RobotButton(joystick, JOYSTICK_Y);
+            collectInToggle = new RobotButton(joystickPrimary, JOYSTICK_A);
+            collectStop = new RobotButton(joystickPrimary, JOYSTICK_B);
+            collectOutButton = new RobotButton(joystickPrimary, JOYSTICK_Y);
         }
 
         void Update(bool teleop);

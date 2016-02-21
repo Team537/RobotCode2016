@@ -30,6 +30,7 @@ void Climber::Reset()
     frontRightExtender->Set(0);
     leftHook->Set(0);
     rightHook->Set(0);
+    climbing = false;
 }
 
 void Climber::Extend()
@@ -38,12 +39,14 @@ void Climber::Extend()
     frontLeftExtender->Set(!frontLeftExtender->Get());
     backRightExtender->Set(!backRightExtender->Get());
     backRightExtender->Set(!backRightExtender->Get());
+    climbing = true;
 }
 
 void Climber::Hook()
 {
     leftHook->Set(!leftHook->Get());
     rightHook->Set(!rightHook->Get());
+    climbing = true;
 }
 
 bool Climber::IsExtended()
@@ -54,4 +57,9 @@ bool Climber::IsExtended()
 bool Climber::IsHooked()
 {
     return leftHook->Get() && rightHook->Get();
+}
+
+bool Climber::IsClimbing()
+{
+    return climbing;
 }

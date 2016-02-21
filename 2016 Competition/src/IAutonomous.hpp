@@ -54,21 +54,13 @@ class IAutonomous
             SmartDashboard::PutBoolean("Autonomous Enabled", started);
         }
 
-        virtual void Start()
-        {
-        }
-        virtual bool Run(double time)
-        {
-            return false;
-        }
-        virtual void Stop()
-        {
-        }
+        virtual void Start() { }
 
-        inline string GetName()
-        {
-            return name;
-        }
+        virtual bool Run(double time) { return false; }
+
+        virtual void Stop() { }
+
+        inline string GetName() { return name; }
 };
 
 #endif

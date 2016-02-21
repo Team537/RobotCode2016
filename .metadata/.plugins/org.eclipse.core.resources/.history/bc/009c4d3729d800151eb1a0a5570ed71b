@@ -1,0 +1,24 @@
+/*
+ * TakeBackHalf.cpp
+ *
+ *  Created on: Feb 20, 2016
+ *      Author: code01
+ */
+
+#include <Toolbox/TakeBackHalf.hpp>
+
+void TakeBackHalf::Update()
+{
+}
+
+float TakeBackHalf::GetInput()
+{
+}
+
+void TakeBackHalf::SetInput(float input)
+{
+}
+
+float TakeBackHalf::GetOutput()
+{
+}

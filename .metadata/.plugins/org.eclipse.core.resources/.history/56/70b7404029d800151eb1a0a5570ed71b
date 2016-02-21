@@ -1,0 +1,26 @@
+#ifndef TAKEBACKHALF_HPP
+#define TAKEBACKHALF_HPP
+
+#include <Schematic.hpp>
+
+class TakeBackHalf
+{
+    private:
+        float input;
+        float output;
+
+        void Update();
+    public:
+        TakeBackHalf()
+        {
+            input = 0.0f;
+            output = 0.0f;
+        }
+
+        float GetInput();
+        void SetInput(float input);
+
+        float GetOutput();
+};
+
+#endif

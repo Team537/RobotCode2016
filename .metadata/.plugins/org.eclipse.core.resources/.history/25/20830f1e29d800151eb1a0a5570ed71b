@@ -1,0 +1,10 @@
+#ifndef TAKEBACKHALF_HPP
+#define TAKEBACKHALF_HPP
+
+#include <Schematic.hpp>
+
+class TakeBackHalf
+{
+};
+
+#endif

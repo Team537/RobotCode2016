@@ -12,13 +12,13 @@ class Shooter: public IComponent
         Vision *vision;
         DriveTrain *drive;
 
-        CANTalon *spinTalon1, *spinTalon2;
+        CANTalon *talonMaster, *talonSlave;
         Solenoid *extendSolenoid;
 
         Timer *extendTimer;
-
-        RobotButton *shootButton;
         float spinSpeed;
+
+        RobotButton *autoShootButton, *manualAimButton, *manualShootButton;
 
     public:
         enum ShooterState
@@ -28,30 +28,31 @@ class Shooter: public IComponent
 
         ShooterState state;
 
-        Shooter(Joystick *joystick, Vision *vision, DriveTrain *drive) :
-                IComponent(joystick, new string("Shooter"))
+        Shooter(Joystick* joystickPrimary, Joystick* joystickSecondary, Vision *vision, DriveTrain *drive) :
+                IComponent(joystickPrimary, joystickSecondary, new string("Shooter"))
         {
             this->vision = vision;
             this->drive = drive;
 
-            spinTalon1 = new CANTalon(8);
-            spinTalon1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-            spinTalon1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-            spinTalon1->Enable();
+            talonMaster = new CANTalon(8);
+            talonMaster->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+            talonMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            talonMaster->Enable();
 
-            spinTalon2 = new CANTalon(9);
-            spinTalon2->SetControlMode(CANTalon::ControlMode::kFollower);
-            spinTalon2->Set(8);
-            spinTalon2->Enable();
+            talonSlave = new CANTalon(9);
+            talonSlave->SetControlMode(CANTalon::ControlMode::kFollower);
+            talonSlave->Set(8);
+            talonSlave->Enable();
 
             extendSolenoid = new Solenoid(5);
 
             extendTimer = new Timer();
-
             state = ShooterState::NONE;
-
-            shootButton = new RobotButton(joystick, JOYSTICK_TRIGGER_RIGHT);
             spinSpeed = 0.0f;
+
+            autoShootButton = new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_LEFT);
+            manualAimButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
+            manualShootButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
         }
 
         void Update(bool teleop);
