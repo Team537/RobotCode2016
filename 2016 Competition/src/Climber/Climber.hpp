@@ -18,7 +18,7 @@ class Climber: public IComponent
     public:
         enum ClimberState
         {
-            RETRACT, EXTEND_HALF, EXTEND_FULL, PULL_UP
+            NONE, RETRACT, EXTEND_HALF, EXTEND_FULL, PULL_UP
         };
 
         ClimberState state;

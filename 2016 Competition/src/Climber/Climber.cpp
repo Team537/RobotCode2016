@@ -41,6 +41,8 @@ void Climber::Update(bool teleop)
 
     switch (state)
     {
+        case NONE:
+            break;
         case RETRACT:
             // If any are extended start the retract!
             if ((deployStage1->Get() || deployStage2->Get() || extendStage3->Get()) && timer->Get() == 0.0f)
@@ -52,7 +54,9 @@ void Climber::Update(bool teleop)
             {
                 timer->Stop();
                 timer->Reset();
-                // Sit in this state...
+                // Case switch out point!
+                targetState = targetState == ClimberState::RETRACT ? ClimberState::NONE : targetState;
+                state = targetState;
             }
 
             // Retract the extended stage 3 and/or stage 2.
@@ -69,12 +73,19 @@ void Climber::Update(bool teleop)
             }
             break;
         case EXTEND_HALF:
-            // Everything is where is should be at this point.
-            if (deployStage1->Get() && !deployStage2->Get() && !extendStage3->Get())
+            // Extends stage 1 and retract all others.
+            if (!deployStage1->Get() && deployStage2->Get() && extendStage3->Get())
             {
+                timer->Reset();
+                timer->Start();
+            }
+            else
+            {
+                timer->Stop();
+                timer->Reset();
                 // Case switch out point!
+                targetState = targetState == ClimberState::EXTEND_HALF ? ClimberState::NONE : targetState;
                 state = targetState;
-                targetState = ClimberState::RETRACT;
             }
 
             // Extend stage 1 if not already extended!
@@ -91,19 +102,19 @@ void Climber::Update(bool teleop)
             }
             break;
         case EXTEND_FULL:
-            // If any are not extended, extend!
+            // Extend all stages if they are not alredy extended!
             if ((!deployStage1->Get() || !deployStage2->Get() || !extendStage3->Get()) && timer->Get() == 0.0f)
             {
+                timer->Reset();
                 timer->Start();
             }
             else
             {
                 timer->Stop();
                 timer->Reset();
-
                 // Case switch out point!
+                targetState = targetState == ClimberState::EXTEND_FULL ? ClimberState::NONE : targetState;
                 state = targetState;
-                targetState = ClimberState::RETRACT;
             }
 
             // Extend stage 1.
