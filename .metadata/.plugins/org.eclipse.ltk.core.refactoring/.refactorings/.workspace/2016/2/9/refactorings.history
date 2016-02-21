@@ -1,4 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Delete 2 resources" deleteContents="false" description="Delete 2 resources" element1="/2016 Competition/src/Toolbox/TakeBackHalf.cpp" element2="/2016 Competition/src/Toolbox/TakeBackHalf.hpp" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="2" stamp="1456018099103"/>
+<session version="1.0">&#x0A;<refactoring comment="Delete 2 resources" deleteContents="false" description="Delete 2 resources" element1="/2016 Competition/src/Toolbox/TakeBackHalf.cpp" element2="/2016 Competition/src/Toolbox/TakeBackHalf.hpp" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="2" stamp="1456018099103"/>&#x0A;<refactoring comment="Delete resource &apos;VladyVision&apos;" deleteContents="true" description="Delete resource &apos;VladyVision&apos;" element1="/VladyVision" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1456091249649"/>
 </session>

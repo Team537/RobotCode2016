@@ -8,11 +8,7 @@ void DriveTrain::Update(bool teleop)
     float gyroError;
 
     // Secondary update checks!
-<<<<<<< HEAD
-    /*if (!isClimbing)
-=======
     if (!isClimbing)
->>>>>>> cdc456a5b622ec8b365d3a6cafb3321718227ea9
     {
         if (joystickSecondary->GetPOV() != -1.0f)
         {
@@ -35,11 +31,7 @@ void DriveTrain::Update(bool teleop)
         {
             crossSpeedMultiplier = DRIVE_DEFENCE_RAMP_PARTS;
         }
-<<<<<<< HEAD
-    }*/
-=======
     }
->>>>>>> cdc456a5b622ec8b365d3a6cafb3321718227ea9
 
     switch (state)
     {
@@ -145,17 +137,11 @@ void DriveTrain::Update(bool teleop)
                 AutoAngle(joystickPrimary->GetPOV());
             }
             // Auto crosses if toggle is down!
-<<<<<<< HEAD
             else if (autoCrossToggle->GetState() && fabs(leftSpeedCurrent) > CONTROLLER_DEADBAND)
             // else if (autoCrossToggle->GetState())
             {
                 Cross(leftSpeedCurrent > CONTROLLER_DEADBAND);
                 // Cross(crossingForward);
-=======
-            else if (autoCrossToggle->GetState()) //  && fabs(leftSpeedCurrent) > CONTROLLER_DEADBAND
-            {
-                Cross(crossingForward); // leftSpeedCurrent > CONTROLLER_DEADBAND
->>>>>>> cdc456a5b622ec8b365d3a6cafb3321718227ea9
             }
             // Drives the master talons.
             else
