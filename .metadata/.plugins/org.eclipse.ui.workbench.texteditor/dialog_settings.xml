@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
+		<item value="AutonomousBall1" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="AutonomousReach"/>
 			<item value="DefenceCross"/>
 			<item value="DRIVE_SPEED_MULTIPLIER"/>
 			<item value="speedMultiplier"/>
@@ -15,9 +16,9 @@
 			<item value="distanceToggle"/>
 			<item value="cross"/>
 			<item value="crossing"/>
-			<item value="AutoDistance"/>
 		</list>
 		<list key="replacehistory">
+			<item value="AutonomousBall1"/>
 			<item value="rightMotor"/>
 			<item value="leftMotor"/>
 			<item value="Extender"/>

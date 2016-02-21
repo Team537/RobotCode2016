@@ -82,8 +82,7 @@ class DriveTrain: public IComponent
         float leftSpeedCurrent;
         float rightSpeedCurrent;
 
-        int targetDistance;
-        bool crossReverse;
+        int targetDistance;bool crossReverse;
 
     public:
         enum DriveState

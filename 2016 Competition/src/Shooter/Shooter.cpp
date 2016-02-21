@@ -32,11 +32,16 @@ void Shooter::Update(bool teleop)
             // Once targeted advance / pause.
             if (drive->IsWaiting() || drive->IsTeleopControl() || gotoNoneButton->WasDown())
             {
+<<<<<<< HEAD
                 state = autoAdvance ? ShooterState::SPINNING : ShooterState::NONE;
+=======
+                state = autoAdvance ? ShooterState::FIRE : ShooterState::NONE;
+>>>>>>> cdc456a5b622ec8b365d3a6cafb3321718227ea9
             }
             break;
         case ShooterState::SPINNING:
             // Start spinning up the fly wheels.
+<<<<<<< HEAD
             {
                 double sqrtTop = G * pow((vision->GetGoalDistance() * 0.0254), 2);
                 double sqrtBottom = 2 * ((GOAL_GROUND_HEIGHT * 0.0254) - (tan(SHOOTER_ANGLE) * (vision->GetGoalDistance() * 0.0254)));
@@ -44,6 +49,10 @@ void Shooter::Update(bool teleop)
             }
 
             talonMaster->Set(spinSpeed * MS_TO_SPEED);
+=======
+            spinSpeed = 0.62; // TODO: Calculate speed!
+            talonMaster->Set(spinSpeed);
+>>>>>>> cdc456a5b622ec8b365d3a6cafb3321718227ea9
 
             // Waits until ramped up!
             if ((fabs(talonMaster->GetSpeed()) < fabs(spinSpeed) + SHOOTER_SPEED_DEADBAND && fabs(talonMaster->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_DEADBAND) || gotoNoneButton->WasDown())
