@@ -1,0 +1,26 @@
+#include <Climber/Climber.hpp>
+
+void Climber::Update(bool teleop)
+{
+    if (teleop)
+    {
+        if (retractButton->WasDown())
+        {
+            Extend();
+        }
+
+        if (halfDeployButton->WasDown())
+        {
+            Hook();
+        }
+    }
+}
+
+void Climber::Dashboard()
+{
+}
+
+bool Climber::IsClimbing()
+{
+    return climbing;
+}

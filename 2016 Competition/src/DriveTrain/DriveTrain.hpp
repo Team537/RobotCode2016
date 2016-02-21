@@ -3,7 +3,7 @@
 
 #include <Schematic.hpp>
 #include <Toolbox/RobotButton.hpp>
-#include <Toolbox/TakeBackHalf.hpp>
+#include <Toolbox/ErrorTimeSquared.hpp>
 #include <Vision/Vision.hpp>
 
 class DrivePIDSource: public PIDSource
@@ -67,7 +67,7 @@ class DriveTrain: public IComponent
         DrivePIDOutput *visionPIDOutput;
         PIDController *visionPID;
 
-        TakeBackHalf *angleTBH;
+        ErrorTimeSquared *angleETS;
 
         Timer *crossTime;
         bool hasCrossed;
@@ -143,7 +143,7 @@ class DriveTrain: public IComponent
             // visionPID->SetAbsoluteTolerance(0.05);
             visionPID->Disable();
 
-            angleTBH = new TakeBackHalf(1.75f, -180.0f, 180.0f);
+            angleETS = new ErrorTimeSquared(60.00f, -180.0f, 180.0f);
 
             // Crossing timers.
             crossTime = new Timer();

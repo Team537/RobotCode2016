@@ -76,7 +76,7 @@ class Robot: public IterativeRobot
         void ComponentsUpdate(bool teleop)
         {
             vision->ComponentUpdate(teleop);
-            // climber->ComponentUpdate(teleop);
+            climber->ComponentUpdate(teleop);
 
             driveTrain->SetCrossing(climber->IsClimbing());
             driveTrain->ComponentUpdate(teleop);
@@ -84,7 +84,7 @@ class Robot: public IterativeRobot
             if (!climber->IsClimbing())
             {
                 // shooter->ComponentUpdate(teleop);
-                // collector->ComponentUpdate(teleop);
+                collector->ComponentUpdate(teleop);
             }
 
             SmartDashboard::PutNumber("NavX Angle", ahrs->GetAngle());

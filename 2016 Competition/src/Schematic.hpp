@@ -29,7 +29,7 @@
 #define DRIVE_DISTANCE_ERROR 0.09
 
 #define DRIVE_FT_TO_ENCODER 504.0163 // 1000 Edges Per Revolution: ((ticks / 1rev) * (3rev / 1rev) * (64revs / 20rev) * (1rev / 19.047in))
-#define SHOOTER_SPEED_DEADBAND 0.10
+#define SHOOTER_SPEED_DEADBAND 0.08
 
 #define COLLECTOR_SPEED 0.75f
 

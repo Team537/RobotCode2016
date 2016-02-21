@@ -2,61 +2,67 @@
 
 void Climber::Update(bool teleop)
 {
+    // TODO: Check before a bot is broken!
+
     if (teleop)
     {
-        if (extenderButton->WasDown())
+        if (startClimbing->WasDown())
         {
-            Extend();
+            climbing = !climbing;
         }
 
-        if (hookButton->WasDown())
+        if (halfDeployButton->WasDown())
         {
-            Hook();
+            deployStage1->Set(true);
         }
+
+        if (fullDeployButton->WasDown())
+        {
+            deployStage1->Set(true);
+            deployStage2->Set(true);
+            climberExtend->Set(true);
+        }
+
+        if (retractButton->WasDown())
+        {
+            deployStage1->Set(false);
+            deployStage2->Set(false);
+            climberExtend->Set(false);
+        }
+
+        if (pullUpButton->WasDown())
+        {
+            deployStage1->Set(false);
+            deployStage2->Set(false);
+            climberExtend->Set(true);
+        }
+
+        switch(state)
+        {
+            case RETRACTED:
+                break;
+            case DEPLOYED_HALF:
+                break;
+            case DEPLOYED_FULL:
+                break;
+            case PULL_UP:
+                break;
+        }
+    }
+
+    if (!climbing)
+    {
+        deployStage1->Set(false);
+        deployStage2->Set(false);
+        climberExtend->Set(false);
     }
 }
 
 void Climber::Dashboard()
 {
-    SmartDashboard::PutBoolean("Climber Extended", IsExtended());
-    SmartDashboard::PutBoolean("Climber Hooked", IsHooked());
-}
-
-void Climber::Reset()
-{
-    backLeftExtender->Set(0);
-    frontLeftExtender->Set(0);
-    backRightExtender->Set(0);
-    frontRightExtender->Set(0);
-    leftHook->Set(0);
-    rightHook->Set(0);
-    climbing = false;
-}
-
-void Climber::Extend()
-{
-    backLeftExtender->Set(!backLeftExtender->Get());
-    frontLeftExtender->Set(!frontLeftExtender->Get());
-    backRightExtender->Set(!backRightExtender->Get());
-    backRightExtender->Set(!backRightExtender->Get());
-    climbing = true;
-}
-
-void Climber::Hook()
-{
-    leftHook->Set(!leftHook->Get());
-    rightHook->Set(!rightHook->Get());
-    climbing = true;
-}
-
-bool Climber::IsExtended()
-{
-    return backLeftExtender->Get() && backRightExtender->Get();
-}
-
-bool Climber::IsHooked()
-{
-    return leftHook->Get() && rightHook->Get();
+    SmartDashboard::PutBoolean("Climber Stage 1", deployStage1->Get());
+    SmartDashboard::PutBoolean("Climber Stage 2", deployStage2->Get());
+    SmartDashboard::PutBoolean("Climber Extender", climberExtend->Get());
 }
 
 bool Climber::IsClimbing()

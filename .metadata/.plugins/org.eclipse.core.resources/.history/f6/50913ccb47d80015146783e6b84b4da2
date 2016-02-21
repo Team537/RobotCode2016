@@ -1,0 +1,45 @@
+#include <Climber/Climber.hpp>
+
+void Climber::Update(bool teleop)
+{
+    if (teleop)
+    {
+        if (startClimbing->WasDown())
+        {
+            climbing = !climbing;
+        }
+
+        if (retractButton->WasDown())
+        {
+            deployStage1->Set(false);
+            deployStage2->Set(false);
+        }
+
+        if (halfDeployButton->WasDown())
+        {
+            deployStage1->Set(true);
+        }
+
+        if (fullDeployButton->WasDown())
+        {
+            deployStage1->Set(true);
+            deployStage2->Set(true);
+        }
+    }
+
+    if (!climbing)
+    {
+        deployStage1->Set(false);
+        deployStage2->Set(false);
+        climberExtend->Set(false);
+    }
+}
+
+void Climber::Dashboard()
+{
+}
+
+bool Climber::IsClimbing()
+{
+    return climbing;
+}

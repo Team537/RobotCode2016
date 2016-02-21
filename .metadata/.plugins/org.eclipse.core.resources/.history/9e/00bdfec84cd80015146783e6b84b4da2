@@ -1,0 +1,56 @@
+#ifndef CLIMBER_HPP
+#define CLIMBER_HPP
+
+#include <Schematic.hpp>
+#include <Toolbox/RobotButton.hpp>
+
+class Climber: public IComponent
+{
+    private:
+        DigitalInput *deployRight1, *deployRight2, *deployLeft1, *deployLeft2, *extendLeft, *extendRight;
+        Solenoid *deployStage1, *deployStage2, *climberExtend;
+
+        RobotButton *startClimbing, *retractButton, *halfDeployButton, *fullDeployButton, *pullUpButton;
+
+        bool climbing;
+
+    public:
+        enum ClimberStates
+        {
+            RETRACTED, DEPLOYED_HALF, DEPLOYED_FULL, PULL_UP
+        };
+
+        ClimberStates state;
+
+        Climber(Joystick* joystickPrimary, Joystick* joystickSecondary) :
+                IComponent(joystickPrimary, joystickSecondary, new string("Climber"))
+        {
+            deployRight1 = new DigitalInput(0);
+            deployRight2 = new DigitalInput(1);
+            deployLeft1 = new DigitalInput(2);
+            deployLeft2 = new DigitalInput(3);
+            extendLeft = new DigitalInput(4);
+            extendRight = new DigitalInput(5);
+
+            deployStage1 = new Solenoid(2);
+            deployStage2 = new Solenoid(3);
+            climberExtend = new Solenoid(4);
+
+            state = ClimberStates::RETRACTED;
+
+            startClimbing = new RobotButton(joystickSecondary, JOYSTICK_START);
+            retractButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
+            halfDeployButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
+            fullDeployButton = new RobotButton(joystickSecondary, JOYSTICK_Y);
+            pullUpButton = new RobotButton(joystickSecondary, JOYSTICK_A);
+
+            climbing = false;
+        }
+
+        void Update(bool teleop);
+        void Dashboard();
+
+        bool IsClimbing();
+};
+
+#endif

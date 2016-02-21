@@ -10,8 +10,8 @@ void DriveTrain::Update(bool teleop)
     switch (state)
     {
         case (DriveState::AUTO_ANGLE):
-            angleTBH->SetInput(gyro->GetYaw());
-            output = angleTBH->GetOutput();
+            angleETS->SetInput(gyro->GetYaw());
+            output = angleETS->GetOutput();
 
             leftSpeedCurrent = (output > 0) ? fabs(output) : -fabs(output);
             rightSpeedCurrent = (output > 0) ? -fabs(output) : fabs(output);
@@ -19,7 +19,7 @@ void DriveTrain::Update(bool teleop)
             rightDriveMaster->Set(-rightSpeedCurrent);
             leftDriveMaster->Set(leftSpeedCurrent);
 
-            if (fabs(angleTBH->GetError()) < DRIVE_ANGLE_TOLERENCE || stateUntoggle->WasDown())
+            if (fabs(angleETS->GetError()) < DRIVE_ANGLE_TOLERENCE || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
@@ -255,11 +255,11 @@ void DriveTrain::SetState(DriveState driveState)
 
     if (state == DriveState::AUTO_ANGLE)
     {
-        angleTBH->Enable();
+        angleETS->Enable();
     }
     else
     {
-        angleTBH->Disable();
+        angleETS->Disable();
     }
 
     if (state == DriveState::TELEOP_CONTROL)
@@ -302,7 +302,7 @@ void DriveTrain::AutoAngle(float angleDegrees)
         targetAngle -= 360;
     }
 
-    angleTBH->SetTarget(targetAngle);
+    angleETS->SetTarget(targetAngle);
 }
 
 void DriveTrain::AutoDistance(int distanceIn)

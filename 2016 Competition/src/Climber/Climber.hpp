@@ -7,30 +7,43 @@
 class Climber: public IComponent
 {
     private:
-        DigitalInput *leftRetracted, *rightRetracted, *leftExtended, *rightExtended;
-        Solenoid *leftHook, *rightHook, *backLeftExtender, *frontLeftExtender, *backRightExtender, *frontRightExtender;
-        RobotButton *extenderButton, *hookButton;
+        DigitalInput *deployRight1, *deployRight2, *deployLeft1, *deployLeft2, *extendLeft, *extendRight;
+        Solenoid *deployStage1, *deployStage2, *climberExtend;
+
+        RobotButton *startClimbing, *retractButton, *halfDeployButton, *fullDeployButton, *pullUpButton;
+
         bool climbing;
+        Timer
 
     public:
+        enum ClimberStates
+        {
+            RETRACTED, DEPLOYED_HALF, DEPLOYED_FULL, PULL_UP
+        };
+
+        ClimberStates state;
+
         Climber(Joystick* joystickPrimary, Joystick* joystickSecondary) :
                 IComponent(joystickPrimary, joystickSecondary, new string("Climber"))
         {
-            leftRetracted = new DigitalInput(0);
-            rightRetracted = new DigitalInput(0);
-            leftExtended = new DigitalInput(0);
-            rightExtended = new DigitalInput(0);
+            deployRight1 = new DigitalInput(0);
+            deployRight2 = new DigitalInput(1);
+            deployLeft1 = new DigitalInput(2);
+            deployLeft2 = new DigitalInput(3);
+            extendLeft = new DigitalInput(4);
+            extendRight = new DigitalInput(5);
 
-            leftHook = new Solenoid(0);
-            rightHook = new Solenoid(0);
+            deployStage1 = new Solenoid(2);
+            deployStage2 = new Solenoid(3);
+            climberExtend = new Solenoid(4);
 
-            backLeftExtender = new Solenoid(0);
-            frontLeftExtender = new Solenoid(0);
-            backRightExtender = new Solenoid(0);
-            frontRightExtender = new Solenoid(0);
+            state = ClimberStates::RETRACTED;
 
-            extenderButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_LEFT);
-            hookButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
+            startClimbing = new RobotButton(joystickSecondary, JOYSTICK_START);
+            retractButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
+            halfDeployButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
+            fullDeployButton = new RobotButton(joystickSecondary, JOYSTICK_Y);
+            pullUpButton = new RobotButton(joystickSecondary, JOYSTICK_A);
 
             climbing = false;
         }
@@ -38,13 +51,7 @@ class Climber: public IComponent
         void Update(bool teleop);
         void Dashboard();
 
-        void Reset();
-        void Extend();
-        void Hook();
-
         bool IsClimbing();
-        bool IsExtended();
-        bool IsHooked();
 };
 
 #endif

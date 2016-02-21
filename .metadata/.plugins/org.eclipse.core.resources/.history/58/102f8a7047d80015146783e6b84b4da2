@@ -1,0 +1,65 @@
+#include <Climber/Climber.hpp>
+
+void Climber::Update(bool teleop)
+{
+    if (teleop)
+    {
+        if (retractButton->WasDown())
+        {
+            Extend();
+        }
+
+        if (halfDeployButton->WasDown())
+        {
+            Hook();
+        }
+    }
+}
+
+void Climber::Dashboard()
+{
+    SmartDashboard::PutBoolean("Climber Extended", IsExtended());
+    SmartDashboard::PutBoolean("Climber Hooked", IsHooked());
+}
+
+void Climber::Reset()
+{
+    climberExtend->Set(0);
+    frontLeftExtender->Set(0);
+    backRightExtender->Set(0);
+    frontRightExtender->Set(0);
+    deployStage1->Set(0);
+    deployStage2->Set(0);
+    climbing = false;
+}
+
+void Climber::Extend()
+{
+    climberExtend->Set(!climberExtend->Get());
+    frontLeftExtender->Set(!frontLeftExtender->Get());
+    backRightExtender->Set(!backRightExtender->Get());
+    backRightExtender->Set(!backRightExtender->Get());
+    climbing = true;
+}
+
+void Climber::Hook()
+{
+    deployStage1->Set(!deployStage1->Get());
+    deployStage2->Set(!deployStage2->Get());
+    climbing = true;
+}
+
+bool Climber::IsExtended()
+{
+    return climberExtend->Get() && backRightExtender->Get();
+}
+
+bool Climber::IsHooked()
+{
+    return deployStage1->Get() && deployStage2->Get();
+}
+
+bool Climber::IsClimbing()
+{
+    return climbing;
+}

@@ -9,13 +9,19 @@ void Collector::Update(bool teleop)
             Collect(false);
         }
 
-        if (collectOutButton->GetState())
-        {
-            Collect(true);
-        }
-
         if (collectStop->WasDown())
         {
+            Off();
+        }
+
+        if (collectOutButton->GetState())
+        {
+            collectOut = true;
+            Collect(true);
+        }
+        else if (collectOut && !collectOutButton->GetState())
+        {
+            collectOut = false;
             Off();
         }
     }
@@ -23,15 +29,15 @@ void Collector::Update(bool teleop)
 
 void Collector::Dashboard()
 {
-    SmartDashboard::PutNumber("Collector Motor", collectMotor->Get());
+    SmartDashboard::PutNumber("Collector Motor", collectMaster->Get());
 }
 
 void Collector::Off()
 {
-    collectMotor->Set(0);
+    collectMaster->Set(0);
 }
 
 void Collector::Collect(bool reverse)
 {
-    collectMotor->Set(COLLECTOR_SPEED * (reverse ? -1.0 : 1.0));
+    collectMaster->Set(COLLECTOR_SPEED * (reverse ? -1.0 : 1.0));
 }

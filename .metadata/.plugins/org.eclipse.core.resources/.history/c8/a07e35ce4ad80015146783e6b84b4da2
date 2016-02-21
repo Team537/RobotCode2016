@@ -1,0 +1,72 @@
+#ifndef SHOOTER_HPP
+#define SHOOTER_HPP
+
+#include <Schematic.hpp>
+#include <DriveTrain/DriveTrain.hpp>
+#include <Toolbox/RobotButton.hpp>
+#include <Vision/Vision.hpp>
+
+class Shooter: public IComponent
+{
+    private:
+        Vision *vision;
+        DriveTrain *drive;
+
+        CANTalon *talonMaster, *talonSlave;
+        Solenoid *extendSolenoid;
+
+        Timer *extendTimer;
+        float spinSpeed;
+
+        RobotButton *autoShootButton, *manualAimButton, *manualShootButton, *exitShootButton;
+
+    public:
+        enum ShootType
+        {
+            NONE, AUTO, AIM, SHOOT
+        };
+
+        enum ShooterState
+        {
+            DISABLED, AIMING_SPINNING, FIRE
+        };
+
+        ShooterState state;
+        ShootType type;
+
+        Shooter(Joystick* joystickPrimary, Joystick* joystickSecondary, Vision *vision, DriveTrain *drive) :
+                IComponent(joystickPrimary, joystickSecondary, new string("Shooter"))
+        {
+            this->vision = vision;
+            this->drive = drive;
+
+            talonMaster = new CANTalon(7);
+            talonMaster->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+            talonMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            talonMaster->Enable();
+
+            talonSlave = new CANTalon(8);
+            talonSlave->SetControlMode(CANTalon::ControlMode::kFollower);
+            talonSlave->Set(7);
+            talonSlave->Enable();
+
+            extendSolenoid = new Solenoid(7);
+
+            extendTimer = new Timer();
+            state = ShooterState::DISABLED;
+            type = ShootType::DISABLED;
+            spinSpeed = 0.0f;
+
+            autoShootButton = new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_LEFT);
+            manualAimButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
+            manualShootButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
+            exitShootButton = new RobotButton(joystickSecondary, JOYSTICK_BACK);
+        }
+
+        void Update(bool teleop);
+        void Dashboard();
+
+        bool IsActivated();
+};
+
+#endif

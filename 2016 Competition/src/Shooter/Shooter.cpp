@@ -6,40 +6,69 @@ void Shooter::Update(bool teleop)
     {
         if (autoShootButton->WasDown())
         {
-            drive->SetState(DriveTrain::DriveState::TELEOP_SHOOT);
+            state = ShooterState::AIMING_SPINNING;
+            autoCycle = true;
+        }
+
+        if (manualAimButton->WasDown())
+        {
+            state = ShooterState::AIM;
+            autoCycle = false;
+        }
+
+        if (manualShootButton->WasDown())
+        {
+            state = ShooterState::FIRE;
+            autoCycle = false;
+        }
+
+        if (exitShootButton->WasDown())
+        {
             state = ShooterState::NONE;
+            autoCycle = false;
         }
     }
 
     switch (state)
     {
-        case (ShooterState::AIMING_SPINNING):
-            break;
-            spinSpeed = 0.62; // TODO: Calculate speed!
-            talonMaster->Set(spinSpeed);
+        case (ShooterState::AIM):
+            drive->SetState(DriveTrain::DriveState::TELEOP_SHOOT);
 
-            if (drive->IsWaiting() && fabs(talonMaster->GetSpeed()) == fabs(spinSpeed) - SHOOTER_SPEED_DEADBAND) // TODO, Deadband!
+            if (drive->IsWaiting() && autoCycle)
             {
-                state = ShooterState::FIRE;
+                state = ShooterState::SPIN;
             }
             break;
         case (ShooterState::FIRE):
-            if (extendTimer->Get())
+            spinSpeed = 0.62; // TODO: Calculate speed!
+            talonMaster->Set(spinSpeed);
+
+            if (fabs(talonMaster->GetSpeed()) < fabs(spinSpeed) + SHOOTER_SPEED_DEADBAND &&
+                fabs(talonMaster->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_DEADBAND)
             {
-                extendSolenoid->Set(true);
-                extendTimer->Start();
+                spunUp = true;
             }
 
-            if (1.0f - extendTimer->Get() < 0)
+            if (spunUp)
             {
-                extendTimer->Stop();
-                extendTimer->Reset();
-                state = ShooterState::NONE;
+                if (extendTimer->Get() == 0.0f)
+                {
+                    extendSolenoid->Set(true);
+                    extendTimer->Start();
+                }
+
+                if (extendTimer->Get() > 1.25f)
+                {
+                    extendTimer->Stop();
+                    extendTimer->Reset();
+                    state = ShooterState::NONE;
+                }
             }
             break;
         case (ShooterState::NONE):
             talonMaster->Set(0);
             extendSolenoid->Set(false);
+            spunUp = false;
             break;
     }
 }
