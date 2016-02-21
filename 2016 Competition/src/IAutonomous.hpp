@@ -8,8 +8,7 @@ using namespace std;
 class IAutonomous
 {
     private:
-        string name;
-        bool started;
+        string name;bool started;
 
     public:
         IAutonomous(SendableChooser *chooser, bool defaultChooser, string autoName)
@@ -54,13 +53,23 @@ class IAutonomous
             SmartDashboard::PutBoolean("Autonomous Enabled", started);
         }
 
-        virtual void Start() { }
+        virtual void Start()
+        {
+        }
 
-        virtual bool Run(double time) { return false; }
+        virtual bool Run(double time)
+        {
+            return false;
+        }
 
-        virtual void Stop() { }
+        virtual void Stop()
+        {
+        }
 
-        inline string GetName() { return name; }
+        inline string GetName()
+        {
+            return name;
+        }
 };
 
 #endif

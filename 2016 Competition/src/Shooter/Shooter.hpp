@@ -17,13 +17,14 @@ class Shooter: public IComponent
 
         Timer *extendTimer;
         float spinSpeed;
+        bool autoAdvance;
 
-        RobotButton *autoShootButton, *manualAimButton, *manualShootButton;
+        RobotButton *gotoNoneButton, *autoShootButton, *manualAimButton, *manualFireButton;
 
     public:
         enum ShooterState
         {
-            NONE, AIMING_SPINNING, FIRE
+            NONE, AIMING, SPINNING, FIRE
         };
 
         ShooterState state;
@@ -37,6 +38,7 @@ class Shooter: public IComponent
             talonMaster = new CANTalon(8);
             talonMaster->SetControlMode(CANTalon::ControlMode::kPercentVbus);
             talonMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            talonMaster->SetVoltageRampRate(32.0f);
             talonMaster->Enable();
 
             talonSlave = new CANTalon(9);
@@ -49,10 +51,12 @@ class Shooter: public IComponent
             extendTimer = new Timer();
             state = ShooterState::NONE;
             spinSpeed = 0.0f;
+            autoAdvance = false;
 
+            gotoNoneButton = new RobotButton(joystickPrimary, JOYSTICK_BACK);
             autoShootButton = new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_LEFT);
             manualAimButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
-            manualShootButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
+            manualFireButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
         }
 
         void Update(bool teleop);

@@ -18,8 +18,7 @@ class AutonomousDrive: public IAutonomous
             reachState = 0;
         }
 
-        void Start();
-        bool Run(double time);
+        void Start();bool Run(double time);
         void Stop();
 };
 
