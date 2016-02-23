@@ -16,8 +16,7 @@ class Shooter: public IComponent
         Solenoid *extendSolenoid;
 
         Timer *extendTimer;
-        float spinSpeed;
-        bool autoAdvance;
+        float spinSpeed;bool autoAdvance;
 
         RobotButton *gotoNoneButton, *autoShootButton, *manualAimButton, *manualFireButton;
 

@@ -12,8 +12,7 @@ class Climber: public IComponent
 
         RobotButton *toggleClimbMode, *retractButton, *deployHalfButton, *deployFullButton, *pullUpButton;
 
-        Timer *timer;
-        bool climbing;
+        Timer *timer;bool climbing;
 
     public:
         enum ClimberState

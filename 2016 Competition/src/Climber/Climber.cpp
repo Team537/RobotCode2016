@@ -102,11 +102,7 @@ void Climber::Update(bool teleop)
             }
             break;
         case EXTEND_FULL:
-<<<<<<< HEAD
             // Extend all stages if they are not already extended!
-=======
-            // Extend all stages if they are not alredy extended!
->>>>>>> cdc456a5b622ec8b365d3a6cafb3321718227ea9
             if ((!deployStage1->Get() || !deployStage2->Get() || !extendStage3->Get()) && timer->Get() == 0.0f)
             {
                 timer->Reset();
