@@ -2,18 +2,27 @@
 
 void Vision::Update(bool teleop)
 {
-    /* Area. */
+	/* Gets the data from the network table. */
     ArrayRef<double> areaData = goalImageTable->GetNumberArray("area", ArrayRef<double>());
+    ArrayRef<double> centerXData = goalImageTable->GetNumberArray("centerX", ArrayRef<double>());
+    ArrayRef<double> widthData = goalImageTable->GetNumberArray("width", ArrayRef<double>());
+    ArrayRef<double> heightData = goalImageTable->GetNumberArray("height", ArrayRef<double>());
+
+	/* Get the pointer. */
     int pointer = 0;
 
-    for (int i = 0; i < areaData.size(); i++)
+    for (unsigned int i = 0; i < areaData.size(); i++)
     {
-        if (areaData[i] > areaData[pointer])
+        if ((widthData[i] / heightData[i]) > 0.5f || (widthData[i] / heightData[i]) < 1.6f)
         {
-            pointer = i;
+            if (areaData[i] > areaData[pointer])
+            {
+                pointer = i;
+            }
         }
     }
 
+    /* Area. */
     if (!areaData.empty())
     {
         goalArea = areaData[pointer];
@@ -24,8 +33,6 @@ void Vision::Update(bool teleop)
     }
 
     /* Center X. */
-    ArrayRef<double> centerXData = goalImageTable->GetNumberArray("centerX", ArrayRef<double>());
-
     if (!centerXData.empty())
     {
         goalCenterX = centerXData[pointer];
@@ -36,8 +43,6 @@ void Vision::Update(bool teleop)
     }
 
     /* Width. */
-    ArrayRef<double> widthData = goalImageTable->GetNumberArray("width", ArrayRef<double>());
-
     if (!widthData.empty())
     {
         goalWidth = widthData[pointer];
@@ -48,8 +53,6 @@ void Vision::Update(bool teleop)
     }
 
     /* Height. */
-    ArrayRef<double> heightData = goalImageTable->GetNumberArray("height", ArrayRef<double>());
-
     if (!heightData.empty())
     {
         goalHeight = heightData[pointer];

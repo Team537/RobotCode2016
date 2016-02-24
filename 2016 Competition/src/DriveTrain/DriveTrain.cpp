@@ -86,8 +86,8 @@ void DriveTrain::Update(bool teleop)
             }
 
             // Swap signs before set.
-            rightSpeedCurrent *= 500 * crossSign * crossSpeedMultiplier;
-            leftSpeedCurrent *= -500 * crossSign * crossSpeedMultiplier;
+            rightSpeedCurrent *= 1000 * crossSign * crossSpeedMultiplier;
+            leftSpeedCurrent *= -1000 * crossSign * crossSpeedMultiplier;
 
             // Drives the master talons.
             rightDriveMaster->Set(crossReverse ? -leftSpeedCurrent : rightSpeedCurrent);
@@ -277,10 +277,10 @@ void DriveTrain::SetState(DriveState driveState)
         leftDriveMaster->SetControlMode(CANTalon::ControlMode::kSpeed);
 
         rightDriveMaster->SetPID(0.24f, 0.0f, 0.0f);
-        rightDriveMaster->SetF(0.9f);
+        rightDriveMaster->SetF(1.8f);
 
         leftDriveMaster->SetPID(0.24f, 0.0f, 0.0f);
-        leftDriveMaster->SetF(0.9f);
+        leftDriveMaster->SetF(1.8f);
 
         hasCrossed = false;
         crossState = 0;

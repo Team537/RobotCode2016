@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <plugin>
 	<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
-		<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="-845356508338773731" id="org.eclipse.cdt.managedbuilder.core.GCCBuiltinSpecsDetector" keep-relative-paths="false" name="CDT GCC Built-in Compiler Settings" parameter="${COMMAND} ${FLAGS} -E -P -v -dD &quot;${INPUTS}&quot;">
+		<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="-22879380441781917" id="org.eclipse.cdt.managedbuilder.core.GCCBuiltinSpecsDetector" keep-relative-paths="false" name="CDT GCC Built-in Compiler Settings" parameter="${COMMAND} ${FLAGS} -E -P -v -dD &quot;${INPUTS}&quot;">
 			<language-scope id="org.eclipse.cdt.core.gcc"/>
 			<language-scope id="org.eclipse.cdt.core.g++"/>
 			<language id="org.eclipse.cdt.core.gcc">
-				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.9.3/include">
+				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.8.1/include">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="includePath" name="C:/MinGW/include">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.9.3/include-fixed">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
-				<entry kind="includePath" name="C:/MinGW/mingw32/include">
+				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.8.1/include-fixed">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="WIN32" value="1">
@@ -287,19 +284,13 @@
 				<entry kind="macro" name="__GCC_HAVE_SYNC_COMPARE_AND_SWAP_8" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__GCC_IEC_559" value="2">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
-				<entry kind="macro" name="__GCC_IEC_559_COMPLEX" value="2">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
 				<entry kind="macro" name="__GNUC_GNU_INLINE__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__GNUC_MINOR__" value="9">
+				<entry kind="macro" name="__GNUC_MINOR__" value="8">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__GNUC_PATCHLEVEL__" value="3">
+				<entry kind="macro" name="__GNUC_PATCHLEVEL__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="__GNUC__" value="4">
@@ -656,7 +647,7 @@
 				<entry kind="macro" name="__USER_LABEL_PREFIX__" value="_">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__VERSION__" value="&quot;4.9.3&quot;">
+				<entry kind="macro" name="__VERSION__" value="&quot;4.8.1&quot;">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="__WCHAR_MAX__" value="65535">
@@ -701,28 +692,22 @@
 				<entry kind="macro" name="__fastcall" value="__attribute__((__fastcall__))">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__has_include(STR)" value="__has_include__(STR)">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
-				<entry kind="macro" name="__has_include_next(STR)" value="__has_include_next__(STR)">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
 				<entry kind="macro" name="__i386" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="__i386__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__i586" value="1">
+				<entry kind="macro" name="__i686" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__i586__" value="1">
+				<entry kind="macro" name="__i686__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__pentium" value="1">
+				<entry kind="macro" name="__pentiumpro" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__pentium__" value="1">
+				<entry kind="macro" name="__pentiumpro__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="__stdcall" value="__attribute__((__stdcall__))">
@@ -748,25 +733,22 @@
 				</entry>
 			</language>
 			<language id="org.eclipse.cdt.core.g++">
-				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.9.3/include/c++">
+				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.9.3/include/c++/mingw32">
+				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++/mingw32">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.9.3/include/c++/backward">
+				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++/backward">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.9.3/include">
+				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.8.1/include">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="includePath" name="C:/MinGW/include">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.9.3/include-fixed">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
-				<entry kind="includePath" name="C:/MinGW/mingw32/include">
+				<entry kind="includePath" name="C:/MinGW/lib/gcc/mingw32/4.8.1/include-fixed">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="WIN32" value="1">
@@ -1045,19 +1027,13 @@
 				<entry kind="macro" name="__GCC_HAVE_SYNC_COMPARE_AND_SWAP_8" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__GCC_IEC_559" value="2">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
-				<entry kind="macro" name="__GCC_IEC_559_COMPLEX" value="2">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
 				<entry kind="macro" name="__GNUC_GNU_INLINE__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__GNUC_MINOR__" value="9">
+				<entry kind="macro" name="__GNUC_MINOR__" value="8">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__GNUC_PATCHLEVEL__" value="3">
+				<entry kind="macro" name="__GNUC_PATCHLEVEL__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="__GNUC__" value="4">
@@ -1423,7 +1399,7 @@
 				<entry kind="macro" name="__USER_LABEL_PREFIX__" value="_">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__VERSION__" value="&quot;4.9.3&quot;">
+				<entry kind="macro" name="__VERSION__" value="&quot;4.8.1&quot;">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="__WCHAR_MAX__" value="65535">
@@ -1468,19 +1444,10 @@
 				<entry kind="macro" name="__cplusplus" value="199711L">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__cpp_binary_literals" value="201304">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
 				<entry kind="macro" name="__declspec(x)" value="__attribute__((x))">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="__fastcall" value="__attribute__((__fastcall__))">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
-				<entry kind="macro" name="__has_include(STR)" value="__has_include__(STR)">
-					<flag value="BUILTIN|READONLY"/>
-				</entry>
-				<entry kind="macro" name="__has_include_next(STR)" value="__has_include_next__(STR)">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="__i386" value="1">
@@ -1489,16 +1456,16 @@
 				<entry kind="macro" name="__i386__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__i586" value="1">
+				<entry kind="macro" name="__i686" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__i586__" value="1">
+				<entry kind="macro" name="__i686__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__pentium" value="1">
+				<entry kind="macro" name="__pentiumpro" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
-				<entry kind="macro" name="__pentium__" value="1">
+				<entry kind="macro" name="__pentiumpro__" value="1">
 					<flag value="BUILTIN|READONLY"/>
 				</entry>
 				<entry kind="macro" name="__stdcall" value="__attribute__((__stdcall__))">

@@ -4,6 +4,9 @@ void Shooter::Update(bool teleop)
 {
     if (teleop)
     {
+		// talonMaster->Set(joystickSecondary->GetRawAxis(JOYSTICK_AXIS_LEFT_Y));
+        // extendSolenoid->Set(joystickSecondary->GetRawButton(JOYSTICK_B));
+		
         if (autoShootButton->WasDown())
         {
             autoAdvance = true;
@@ -61,8 +64,8 @@ void Shooter::Update(bool teleop)
                 extendTimer->Start();
             }
 
-            // Wait one second before continuing.
-            if (extendTimer->Get() > 1.0f || gotoNoneButton->WasDown())
+            // Wait half second before continuing.
+            if (extendTimer->Get() > 0.5f || gotoNoneButton->WasDown())
             {
                 extendTimer->Stop();
                 extendTimer->Reset();
