@@ -13,7 +13,7 @@ void Vision::Update(bool teleop)
 
     for (unsigned int i = 0; i < areaData.size(); i++)
     {
-        if ((widthData[i] / heightData[i]) > 0.5f || (widthData[i] / heightData[i]) < 1.6f)
+        if ((widthData[i] / heightData[i]) > 0.6f || (widthData[i] / heightData[i]) < 1.5f)
         {
             if (areaData[i] > areaData[pointer])
             {

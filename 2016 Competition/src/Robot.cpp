@@ -33,7 +33,11 @@ class Robot: public IterativeRobot
         Climber* climber;
         Collector* collector;
 
+        AnalogOutput* pressureSensor;
+
         State gameState;
+
+        float pressure = 0;
 
         void RobotInit()
         {
@@ -62,6 +66,7 @@ class Robot: public IterativeRobot
             shooter = new Shooter(joystickPrimary, joystickSecondary, vision, driveTrain);
             climber = new Climber(joystickPrimary, joystickSecondary);
             collector = new Collector(joystickPrimary, joystickSecondary);
+            pressureSensor = new AnalogOutput(1);
 
             // Creates the auto modes.
             selectedAuto = NULL;
@@ -89,6 +94,8 @@ class Robot: public IterativeRobot
                 collector->ComponentUpdate(teleop);
             }
 
+            pressure = (250 * (pressureSensor->GetVoltage() / 5)) - 25;
+
             SmartDashboard::PutNumber("NavX Angle", ahrs->GetAngle());
             SmartDashboard::PutNumber("NavX Angle Pitch", ahrs->GetPitch());
             SmartDashboard::PutNumber("NavX Angle Yaw", ahrs->GetYaw());
@@ -96,6 +103,7 @@ class Robot: public IterativeRobot
             SmartDashboard::PutNumber("NavX Velocity X", ahrs->GetVelocityX());
             SmartDashboard::PutNumber("NavX Velocity Y", ahrs->GetVelocityY());
             SmartDashboard::PutNumber("NavX Velocity Z", ahrs->GetVelocityZ());
+            SmartDashboard::PutNumber("Pressure", pressure);
         }
 
         void AutonomousInit()

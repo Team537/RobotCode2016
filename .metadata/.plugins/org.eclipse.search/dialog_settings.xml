@@ -61,6 +61,9 @@
 			<item value="org.eclipse.jdt.ui.JavaSearchPage"/>
 		</list>
 	</section>
+	<section name="org.eclipse.cdt.ui.pdomSearchViewPage">
+		<item value="true" key="showEnclosingDefinitions"/>
+	</section>
 	<section name="SearchDialog">
 		<item value="org.eclipse.search.internal.ui.text.TextSearchPage" key="PREVIOUS_PAGE"/>
 	</section>

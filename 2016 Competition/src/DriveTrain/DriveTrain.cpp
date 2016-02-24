@@ -49,14 +49,14 @@ void DriveTrain::Update(bool teleop)
             leftDriveMaster->Set(leftSpeedCurrent);
 
             // If on target or untoggled, go to state NONE.
-            if (fabs(angleETC->GetError()) < DRIVE_ANGLE_TOLERENCE || stateUntoggle->WasDown())
+            if (fabs(angleETC->GetError()) < DRIVE_ANGLE_TOLERANCE || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }
             break;
         case (DriveState::AUTO_DISTANCE):
             // If on target or untoggled, go to state NONE.
-            if (fabs(rightDriveMaster->GetEncPosition() - rightDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERENCE || fabs(leftDriveMaster->GetEncPosition() - leftDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERENCE || stateUntoggle->WasDown())
+            if (fabs(rightDriveMaster->GetEncPosition() - rightDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERANCE || fabs(leftDriveMaster->GetEncPosition() - leftDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERANCE || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
             }

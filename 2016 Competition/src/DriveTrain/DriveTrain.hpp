@@ -69,17 +69,21 @@ class DriveTrain: public IComponent
 
         ErrorTimeCubed *angleETC;
 
-        Timer *crossTime;bool hasCrossed;
-        int crossState;bool isClimbing;
+        Timer *crossTime;
+        bool hasCrossed;
+        int crossState;
+        bool isClimbing;
 
         RobotButton *shiftHigh, *shiftLow, *stateUntoggle, *autoCrossToggle;
 
-        float crossSpeedMultiplier;bool crossingForward;
+        float crossSpeedMultiplier;
+        bool crossingForward;
 
         float leftSpeedCurrent;
         float rightSpeedCurrent;
 
-        int targetDistance;bool crossReverse;
+        int targetDistance;
+        bool crossReverse;
 
     public:
         enum DriveState

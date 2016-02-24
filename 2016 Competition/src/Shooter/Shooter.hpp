@@ -16,7 +16,8 @@ class Shooter: public IComponent
         Solenoid *extendSolenoid;
 
         Timer *extendTimer;
-        float spinSpeed;bool autoAdvance;
+        float spinSpeed;
+        bool autoAdvance;
 
         RobotButton *gotoNoneButton, *autoShootButton, *manualAimButton, *manualFireButton;
 
@@ -35,7 +36,7 @@ class Shooter: public IComponent
             this->drive = drive;
 
             talonMaster = new CANTalon(7);
-            talonMaster->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+            talonMaster->SetControlMode(CANTalon::ControlMode::kSpeed);
             talonMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
             talonMaster->SetVoltageRampRate(32.0f);
             talonMaster->Enable();
@@ -45,7 +46,7 @@ class Shooter: public IComponent
             talonSlave->Set(7);
             talonSlave->Enable();
 
-            extendSolenoid = new Solenoid(7);
+            extendSolenoid = new Solenoid(1);
 
             extendTimer = new Timer();
             state = ShooterState::NONE;

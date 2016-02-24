@@ -40,16 +40,17 @@ void Shooter::Update(bool teleop)
             break;
         case ShooterState::SPINNING:
             // Start spinning up the fly wheels.
-        {
-            double sqrtTop = G * pow((vision->GetGoalDistance() * 0.0254), 2);
-            double sqrtBottom = 2 * ((GOAL_GROUND_HEIGHT * 0.0254) - (tan(SHOOTER_ANGLE) * (vision->GetGoalDistance() * 0.0254)));
-            spinSpeed = sqrt(sqrtTop / sqrtBottom) / cos(SHOOTER_ANGLE);
-        }
+            {
+                double sqrtTop = G * pow((vision->GetGoalDistance() * 0.0254), 2);
+                double sqrtBottom = 2 * ((GOAL_GROUND_HEIGHT * 0.0254) - (tan(SHOOTER_ANGLE) * (vision->GetGoalDistance() * 0.0254)));
+                spinSpeed = sqrt(sqrtTop / sqrtBottom) / cos(SHOOTER_ANGLE);
+                spinSpeed *= SHOOTER_MS_TO_ENCODER;
+            }
 
-            talonMaster->Set(spinSpeed * MS_TO_SPEED);
+            talonMaster->Set(spinSpeed);
 
             // Waits until ramped up!
-            if ((fabs(talonMaster->GetSpeed()) < fabs(spinSpeed) + SHOOTER_SPEED_DEADBAND && fabs(talonMaster->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_DEADBAND) || gotoNoneButton->WasDown())
+            if ((fabs(talonMaster->GetEncVel()) < fabs(spinSpeed) + SHOOTER_SPEED_TOLERANCE && fabs(talonMaster->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_TOLERANCE) || gotoNoneButton->WasDown())
             {
                 state = ShooterState::FIRE;
                 extendTimer->Reset();
@@ -84,6 +85,7 @@ void Shooter::Dashboard()
 {
     SmartDashboard::PutBoolean("Shooter Activated", IsActivated());
     SmartDashboard::PutBoolean("Shooter Speed", spinSpeed);
+    SmartDashboard::PutBoolean("Shooter Encoder", spinSpeed);
 }
 
 void Shooter::SetState(ShooterState shooterState)
