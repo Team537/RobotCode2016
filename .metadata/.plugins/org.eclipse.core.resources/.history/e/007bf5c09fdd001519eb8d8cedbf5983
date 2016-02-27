@@ -36,7 +36,7 @@ class Shooter: public IComponent
             this->drive = drive;
 
             talonMaster = new CANTalon(7);
-            talonMaster->SetControlMode(CANTalon::ControlMode::kSpeed);
+            talonMaster->SetControlMode(CANTalon::ControlMode::kPercentVbus);
             talonMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
             talonMaster->SetVoltageRampRate(32.0f);
             talonMaster->Enable();

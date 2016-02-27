@@ -56,11 +56,14 @@ void Shooter::Update(bool teleop)
         case ShooterState::SPINNING:
             // Start spinning up the fly wheels.
         {
-            double velocity = ((vision->GetGoalDistance() * 0.0254) / cos(WEBCAM_BOT_ANGLE)) * sqrt(G / (2 * (((GOAL_GROUND_HEIGHT - WEBCAM_BOT_HEIGHT) * 0.0254) - (((vision->GetGoalDistance() * 0.0254) * cos(WEBCAM_BOT_ANGLE)) * tan(SHOOTER_ANGLE)))));
+            double velocity =
+                    ((vision->GetGoalDistance() * 0.0254) / cos(WEBCAM_BOT_ANGLE)) *
+                    sqrt(G / (2 * (((GOAL_GROUND_HEIGHT - WEBCAM_BOT_HEIGHT) * 0.0254) - (((vision->GetGoalDistance() * 0.0254) * cos(WEBCAM_BOT_ANGLE)) * tan(SHOOTER_ANGLE)))));
             spinSpeed = (velocity * (2 * PI * (0.1 / 2.0)) * 1000.0); // 0.1m diameter, 256 ticks/revolution * 4
+            spinSpeed = 1.0f; // TODO
         }
 
-            drive->SetState(DriveTrain::DriveState::NONE);
+        drive->SetState(DriveTrain::DriveState::NONE);
 
             talonMaster->Set(spinSpeed);
 
