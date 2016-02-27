@@ -137,11 +137,13 @@ void DriveTrain::Update(bool teleop)
                 AutoAngle(joystickPrimary->GetPOV());
             }
             // Auto crosses if toggle is down!
-            else if (autoCrossToggle->GetState() && fabs(leftSpeedCurrent) > CONTROLLER_DEADBAND)
-            // else if (autoCrossToggle->GetState())
+#if NEW_JOYSTICK
+            else if (joystickPrimary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_RIGHT) > CONTROLLER_DEADBAND)
+#else
+            else if (autoCrossToggle->GetState())
+#endif
             {
-                Cross(leftSpeedCurrent > CONTROLLER_DEADBAND);
-                // Cross(crossingForward);
+                Cross(crossingForward, crossSpeedMultiplier);
             }
             // Drives the master talons.
             else
@@ -235,6 +237,9 @@ void DriveTrain::Dashboard()
     SmartDashboard::PutNumber("Drive Speed Left", leftSpeedCurrent);
     SmartDashboard::PutNumber("Drive Speed Right", rightSpeedCurrent);
     SmartDashboard::PutBoolean("Drive High Gear", shift->Get());
+
+    SmartDashboard::PutBoolean("Drive Cross Forward", crossingForward);
+    SmartDashboard::PutNumber("Drive Cross Multiplier", crossSpeedMultiplier);
 
     SmartDashboard::PutNumber("Drive Angle Target", visionPIDSource->PIDGet());
     SmartDashboard::PutNumber("Drive Angle PID Out", visionPIDOutput->GetOutput());
@@ -391,7 +396,7 @@ bool DriveTrain::IsTeleopControl()
     return state == DriveState::TELEOP_CONTROL;
 }
 
-void DriveTrain::Cross(bool reverse)
+void DriveTrain::Cross(bool reverse, float speed)
 {
     // Changes the state.
     SetState(DriveState::CROSSING);
@@ -399,6 +404,7 @@ void DriveTrain::Cross(bool reverse)
     gyro->Reset();
     // Sets if its crossing in reverse.
     crossReverse = reverse;
+    crossSpeedMultiplier = speed;
 }
 
 float DriveTrain::GetCurrentDraw()

@@ -159,7 +159,12 @@ class DriveTrain: public IComponent
             shiftLow = new RobotButton(joystickPrimary, JOYSTICK_BUMPER_LEFT);
             shiftHigh = new RobotButton(joystickPrimary, JOYSTICK_BUMPER_RIGHT);
             stateUntoggle = new RobotButton(joystickPrimary, JOYSTICK_BACK);
+
+#if NEW_JOYSTICK
+            autoCrossToggle = NULL;
+#else
             autoCrossToggle = new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_RIGHT);
+#endif
 
             // Sets up the state;
             SetState(DriveState::NONE);
@@ -183,7 +188,7 @@ class DriveTrain: public IComponent
 
         void AutoAngle(float angleDegrees);
         void AutoDistance(int distanceIn);
-        void Cross(bool reverse);
+        void Cross(bool reverse, float speed);
         void SetCrossing(bool crossing);
 
         bool IsWaiting();

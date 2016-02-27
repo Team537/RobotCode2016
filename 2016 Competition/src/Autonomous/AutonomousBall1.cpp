@@ -9,7 +9,7 @@ bool AutonomousBall1::Run(double time)
     switch (reachState)
     {
         case (0):
-            driveTrain->Cross(false);
+            driveTrain->Cross(false, DRIVE_DEFENCE_ROCK_WALL);
             reachState++;
             break;
         case (1):

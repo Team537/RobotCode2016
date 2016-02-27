@@ -90,8 +90,8 @@ class Robot: public IterativeRobot
 
             if (!climber->IsClimbing())
             {
-                shooter->ComponentUpdate(teleop);
                 collector->ComponentUpdate(teleop);
+                shooter->ComponentUpdate(teleop);
             }
 
             pressure = (250 * (pressureSensor->GetVoltage() / 5)) - 25;

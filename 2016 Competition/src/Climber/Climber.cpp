@@ -7,35 +7,49 @@ void Climber::Update(bool teleop)
         // This will cause other robot functions to slow down / stop!
         if (toggleClimbMode->WasDown())
         {
+            state = ClimberState::NONE;
             climbing = !climbing;
         }
 
         // If climbing update controls.
         if (climbing)
         {
-            if (retractButton->WasDown())
+            if (gotoNoneButton->WasDown())
             {
-                targetState = ClimberState::RETRACT;
+                state = ClimberState::NONE;
             }
 
-            if (deployHalfButton->WasDown())
+#if NEW_JOYSTICK
+            if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_LEFT) > CONTROLLER_DEADBAND)
+#else
+            if (retractButton->WasDown())
+#endif
             {
-                targetState = ClimberState::EXTEND_HALF;
+                state = ClimberState::RETRACT;
+            }
+
+#if NEW_JOYSTICK
+            if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_RIGHT) > CONTROLLER_DEADBAND)
+#else
+            if (deployHalfButton->WasDown())
+#endif
+            {
+                state = ClimberState::EXTEND_HALF;
             }
 
             if (deployFullButton->WasDown())
             {
-                targetState = ClimberState::EXTEND_FULL;
+                state = ClimberState::EXTEND_FULL;
             }
 
             if (pullUpButton->WasDown())
             {
-                targetState = ClimberState::PULL_UP;
+                state = ClimberState::PULL_UP;
             }
         }
         else
         {
-            targetState = ClimberState::RETRACT;
+            state = ClimberState::RETRACT;
         }
     }
 
@@ -44,94 +58,21 @@ void Climber::Update(bool teleop)
         case NONE:
             break;
         case RETRACT:
-            // If any are extended start the retract!
-            if ((deployStage1->Get() || deployStage2->Get() || extendStage3->Get()) && timer->Get() == 0.0f)
-            {
-                timer->Reset();
-                timer->Start();
-            }
-            else
-            {
-                timer->Stop();
-                timer->Reset();
-                // Case switch out point!
-                targetState = targetState == ClimberState::RETRACT ? ClimberState::NONE : targetState;
-                state = targetState;
-            }
-
-            // Retract the extended stage 3 and/or stage 2.
-            if (extendStage3->Get() || deployStage2->Get())
-            {
-                ToggleExtend(false);
-                ToggleStage2(false);
-            }
-
-            // Retract stage 1 after 1.5 seconds.
-            if (deployStage1->Get() && timer->Get() > 1.5f)
-            {
-                ToggleStage1(false);
-            }
+            ToggleExtend(false);
+            ToggleStage2(false);
+            ToggleStage1(false);
             break;
         case EXTEND_HALF:
-            // Extends stage 1 and retract all others.
-            if (!deployStage1->Get() && deployStage2->Get() && extendStage3->Get())
-            {
-                timer->Reset();
-                timer->Start();
-            }
-            else
-            {
-                timer->Stop();
-                timer->Reset();
-                // Case switch out point!
-                targetState = targetState == ClimberState::EXTEND_HALF ? ClimberState::NONE : targetState;
-                state = targetState;
-            }
-
-            // Extend stage 1 if not already extended!
-            if (!deployStage1->Get())
-            {
-                ToggleStage1(true);
-            }
-
-            // Retract all stages but stage 1.
-            if (deployStage2->Get() || extendStage3->Get())
-            {
-                ToggleStage2(false);
-                ToggleExtend(false);
-            }
+            ToggleStage1(true);
+            ToggleStage2(false);
+            ToggleExtend(false);
             break;
         case EXTEND_FULL:
-            // Extend all stages if they are not already extended!
-            if ((!deployStage1->Get() || !deployStage2->Get() || !extendStage3->Get()) && timer->Get() == 0.0f)
-            {
-                timer->Reset();
-                timer->Start();
-            }
-            else
-            {
-                timer->Stop();
-                timer->Reset();
-                // Case switch out point!
-                targetState = targetState == ClimberState::EXTEND_FULL ? ClimberState::NONE : targetState;
-                state = targetState;
-            }
-
-            // Extend stage 1.
-            if (!deployStage1->Get())
-            {
-                ToggleStage1(true);
-            }
-
-            // Extend stage 2 and extend 3 after 1.25 seconds.
-            if (!deployStage2->Get() && timer->Get() > 1.25f)
-            {
-                ToggleStage2(true);
-                ToggleExtend(true);
-            }
+            ToggleStage1(true);
+            ToggleStage2(true);
+            ToggleExtend(true);
             break;
         case PULL_UP:
-            // Keep the hooks out, but pull back the other solenoids.
             ToggleStage1(false);
             ToggleStage2(false);
             ToggleExtend(true);
@@ -141,6 +82,7 @@ void Climber::Update(bool teleop)
 
 void Climber::Dashboard()
 {
+    SmartDashboard::PutString("Climber State", state == RETRACT ? "Retract" : state == EXTEND_HALF ? "Extended Half" : state == EXTEND_FULL ? "Extended Fully" : state == PULL_UP ? "Pulled Up" : "None");
     SmartDashboard::PutBoolean("Climber Stage 1", deployStage1->Get());
     SmartDashboard::PutBoolean("Climber Stage 2", deployStage2->Get());
     SmartDashboard::PutBoolean("Climber Stage Extend", extendStage3->Get());

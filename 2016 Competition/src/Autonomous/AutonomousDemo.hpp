@@ -12,7 +12,7 @@ class AutonomousDemo: public IAutonomous
 
     public:
         AutonomousDemo(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
-                IAutonomous(chooser, defaultChooser, "Drive")
+                IAutonomous(chooser, defaultChooser, "Demo")
         {
             this->driveTrain = driveTrain;
             reachState = 0;

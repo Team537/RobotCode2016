@@ -14,7 +14,7 @@ class AutonomousBall1: public IAutonomous
 
     public:
         AutonomousBall1(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Shooter *shooter) :
-                IAutonomous(chooser, defaultChooser, "Reach")
+                IAutonomous(chooser, defaultChooser, "Ball1")
         {
             this->driveTrain = driveTrain;
             this->shooter = shooter;
