@@ -43,7 +43,7 @@
 
 #define COLLECTOR_SPEED 0.75f
 
-#define NEW_JOYSTICK false
+#define NEW_JOYSTICK true
 
 #if NEW_JOYSTICK
 #define JOYSTICK_A 1

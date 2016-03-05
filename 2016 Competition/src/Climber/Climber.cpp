@@ -63,12 +63,12 @@ void Climber::Update(bool teleop)
         case NONE:
             break;
         case RETRACT:
-            ToggleExtend(false);
-            ToggleStage2(false);
             ToggleStage1(true);
+            ToggleStage2(false);
+            ToggleExtend(false);
             break;
         case EXTEND_HALF:
-            ToggleStage1(false); //false = extended for stage 1
+            ToggleStage1(false); // false = extended for stage 1
             ToggleStage2(false);
             ToggleExtend(false);
             break;
@@ -88,7 +88,7 @@ void Climber::Update(bool teleop)
 void Climber::Dashboard()
 {
     SmartDashboard::PutString("Climber State", stateNames[state]);
-    SmartDashboard::PutBoolean("Climber Stage 1", deployStage1->Get());
+    SmartDashboard::PutBoolean("Climber Stage 1", !deployStage1->Get());
     SmartDashboard::PutBoolean("Climber Stage 2", deployStage2->Get());
     SmartDashboard::PutBoolean("Climber Stage Extend", extendStage3->Get());
 }

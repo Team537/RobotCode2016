@@ -9,14 +9,14 @@ bool AutonomousDemo::Run(double time)
     switch (reachState)
     {
         case (0):
-            driveTrain->Cross(false, DRIVE_DEFENCE_ROCK_WALL);
+            driveTrain->AutoDistance(45.0f);
             reachState++;
             break;
         case (1):
             reachState += driveTrain->IsWaiting() ? 1 : 0;
             break;
         case (2):
-            driveTrain->AutoDistance(45.0f);
+            driveTrain->Cross(false, DRIVE_DEFENCE_ROCK_WALL);
             reachState++;
             break;
         case (3):

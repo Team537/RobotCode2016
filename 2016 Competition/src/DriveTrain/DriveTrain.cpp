@@ -55,7 +55,7 @@ void DriveTrain::Update(bool teleop)
             }
             break;
         case (DriveState::AUTO_DISTANCE):
-            // If on target or untoggled, go to state NONE.
+            // If at target or untoggled, go to state NONE.
             if (fabs(rightDriveMaster->GetEncPosition() - rightDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERANCE || fabs(leftDriveMaster->GetEncPosition() - leftDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERANCE || stateUntoggle->WasDown())
             {
                 SetState(DriveState::NONE);
@@ -63,7 +63,7 @@ void DriveTrain::Update(bool teleop)
             return;
         case (DriveState::CROSSING):
             // Update the current readings and errors.
-            crossSign = crossReverse ? -1.0f : 1.0f;
+            crossSign = crossReverse ? 1.0f : -1.0f;
             gyroError = gyro->GetYaw();
             rightSpeedCurrent = 1.0f;
             leftSpeedCurrent = 1.0f;
@@ -72,13 +72,13 @@ void DriveTrain::Update(bool teleop)
             // Figures out how much to offset drive for gyro angle correction.
             if (abs(gyroError) > 3)
             {
-                if (gyroError > 0)
+                if (gyroError < 0)
                 {
                     leftSpeedCurrent -= gyroError * (1.0f / 180.0f) * 0.01f;
                     leftSpeedCurrent = leftSpeedCurrent < 0 ? leftSpeedCurrent : 0;
                 }
 
-                if (gyroError < 0)
+                if (gyroError > 0)
                 {
                     rightSpeedCurrent += gyroError * (1.0f / 180.0f) * 0.01f;
                     rightSpeedCurrent = rightSpeedCurrent < 0 ? rightSpeedCurrent : 0;
@@ -86,8 +86,8 @@ void DriveTrain::Update(bool teleop)
             }
 
             // Swap signs before set.
-            rightSpeedCurrent *= 1000 * crossSign * crossSpeedMultiplier;
-            leftSpeedCurrent *= -1000 * crossSign * crossSpeedMultiplier;
+            rightSpeedCurrent *= 350 * crossSign * crossSpeedMultiplier;
+            leftSpeedCurrent *= -350 * crossSign * crossSpeedMultiplier;
 
             // Drives the master talons.
             rightDriveMaster->Set(crossReverse ? -leftSpeedCurrent : rightSpeedCurrent);
@@ -302,13 +302,13 @@ void DriveTrain::SetState(DriveState driveState)
     // Sets voltage ramp rates.
     if (state == DriveState::TELEOP_CONTROL)
     {
-        rightDriveMaster->SetVoltageRampRate(32.0f);
-        leftDriveMaster->SetVoltageRampRate(32.0f);
+        rightDriveMaster->SetVoltageRampRate(36.0f);
+        leftDriveMaster->SetVoltageRampRate(36.0f);
     }
     else
     {
-        rightDriveMaster->SetVoltageRampRate(24.0f);
-        leftDriveMaster->SetVoltageRampRate(24.0f);
+        rightDriveMaster->SetVoltageRampRate(22.0f);
+        leftDriveMaster->SetVoltageRampRate(22.0f);
     }
 
     // Sets the vision pid's usage.
