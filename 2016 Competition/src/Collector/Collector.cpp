@@ -37,7 +37,7 @@ void Collector::Dashboard()
 
 void Collector::Collect(bool reverse)
 {
-    collectMotor->Set(COLLECTOR_SPEED * (reverse ? -1.0 : 1.0));
+    collectMotor->Set(COLLECTOR_SPEED * (reverse ? 1.0 : -1.0));
 }
 
 void Collector::TurnOff()

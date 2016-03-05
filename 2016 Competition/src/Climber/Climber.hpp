@@ -10,15 +10,16 @@ class Climber: public IComponent
         DigitalInput *deployStage1Right, *deployStage2Right, *deployStage1Left, *deployStage2Left, *extendLeft, *extendRight;
         Solenoid *deployStage1, *deployStage2, *extendStage3;
 
-        RobotButton *gotoNoneButton, *toggleClimbMode, *retractButton, *deployHalfButton, *deployFullButton, *pullUpButton;
+        RobotButton *gotoNoneButton, *toggleClimbMode, *retractButton, *deployHalfButton, *deployFullButton, *deployHooksButton, *pullUpButton;
 
         Timer *timer;
         bool climbing;
+        string stateNames[6] = {"None", "Retract", "Extend Half", "Extend Full", "Extend Hooks", "Pull Up"};
 
     public:
         enum ClimberState
         {
-            NONE, RETRACT, EXTEND_HALF, EXTEND_FULL, PULL_UP
+            NONE, RETRACT, EXTEND_HALF, EXTEND_FULL, EXTEND_HOOKS, PULL_UP
         };
 
         ClimberState state;
@@ -50,6 +51,7 @@ class Climber: public IComponent
 #endif
 
             deployFullButton = new RobotButton(joystickSecondary, JOYSTICK_Y);
+            deployHooksButton = new RobotButton(joystickSecondary, JOYSTICK_X);
             pullUpButton = new RobotButton(joystickSecondary, JOYSTICK_A);
 
             timer = new Timer();

@@ -2,4 +2,8 @@
 <section name="Workbench">
 	<section name="RemoteSearchPage">
 	</section>
+	<section name="org.eclipse.rse.ui.wizards.newconnection.RSEMainNewConnectionWizard">
+		<section name="org.eclipse.rse.ui.wizards.newconnection.RSENewConnectionWizardSelectionPage">
+		</section>
+	</section>
 </section>

@@ -20,6 +20,7 @@ class Collector: public IComponent
                 IComponent(joystickPrimary, joystickSecondary, new string("Collector"))
         {
             collectMotor = new CANTalon(9);
+            collectMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 
             collectInToggle = new RobotButton(joystickPrimary, JOYSTICK_A);
             collectStop = new RobotButton(joystickPrimary, JOYSTICK_B);

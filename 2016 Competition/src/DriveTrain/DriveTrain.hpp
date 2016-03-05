@@ -84,11 +84,12 @@ class DriveTrain: public IComponent
 
         int targetDistance;
         bool crossReverse;
+        string stateNames[6] = {"None", "Auto Angle", "Auto Distance", "Crossing", "Teleop Control", "Teleop Shoot"};
 
     public:
         enum DriveState
         {
-            AUTO_ANGLE, AUTO_DISTANCE, CROSSING, TELEOP_CONTROL, TELEOP_SHOOT, NONE
+            NONE, AUTO_ANGLE, AUTO_DISTANCE, CROSSING, TELEOP_CONTROL, TELEOP_SHOOT
         };
 
         DriveState state;

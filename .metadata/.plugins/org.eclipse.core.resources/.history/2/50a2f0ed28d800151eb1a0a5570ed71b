@@ -1,8 +1,0 @@
-#ifndef TAKEBACKHALF_HPP
-#define TAKEBACKHALF_HPP
-
-class TakeBackHalf
-{
-};
-
-#endif

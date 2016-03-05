@@ -42,6 +42,11 @@ void Climber::Update(bool teleop)
                 state = ClimberState::EXTEND_FULL;
             }
 
+            if (deployHooksButton->WasDown())
+            {
+                state = ClimberState::EXTEND_HOOKS;
+            }
+
             if (pullUpButton->WasDown())
             {
                 state = ClimberState::PULL_UP;
@@ -60,29 +65,29 @@ void Climber::Update(bool teleop)
         case RETRACT:
             ToggleExtend(false);
             ToggleStage2(false);
-            ToggleStage1(false);
+            ToggleStage1(true);
             break;
         case EXTEND_HALF:
-            ToggleStage1(true);
+            ToggleStage1(false); //false = extended for stage 1
             ToggleStage2(false);
             ToggleExtend(false);
             break;
         case EXTEND_FULL:
-            ToggleStage1(true);
+            ToggleStage1(false);
             ToggleStage2(true);
+            break;
+        case EXTEND_HOOKS:
             ToggleExtend(true);
             break;
         case PULL_UP:
-            ToggleStage1(false);
-            ToggleStage2(false);
-            ToggleExtend(true);
+            ToggleExtend(false);
             break;
     }
 }
 
 void Climber::Dashboard()
 {
-    SmartDashboard::PutString("Climber State", state == RETRACT ? "Retract" : state == EXTEND_HALF ? "Extended Half" : state == EXTEND_FULL ? "Extended Fully" : state == PULL_UP ? "Pulled Up" : "None");
+    SmartDashboard::PutString("Climber State", stateNames[state]);
     SmartDashboard::PutBoolean("Climber Stage 1", deployStage1->Get());
     SmartDashboard::PutBoolean("Climber Stage 2", deployStage2->Get());
     SmartDashboard::PutBoolean("Climber Stage Extend", extendStage3->Get());
