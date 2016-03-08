@@ -21,9 +21,9 @@ void Shooter::Update(bool teleop)
         }
 
 #if NEW_JOYSTICK
-        if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_LEFT) > CONTROLLER_DEADBAND)
+        if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_LEFT) > CONTROLLER_DEADBAND && state != ShooterState::MANUAL)
 #else
-        if (manualAimButton->WasDown())
+        if (manualAimButton->WasDown() && state != ShooterState::MANUAL)
 #endif
         {
             autoAdvance = false;
@@ -31,13 +31,13 @@ void Shooter::Update(bool teleop)
         }
 
 #if NEW_JOYSTICK
-        if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_RIGHT) > CONTROLLER_DEADBAND)
+        if (joystickSecondary->GetRawAxis(JOYSTICK_BACK) > CONTROLLER_DEADBAND)
 #else
-        if (manualFireButton->WasDown())
+        if (flywheelButton->WasDown() && state != ShooterState::MANUAL)
 #endif
         {
-            autoAdvance = false;
-            state = ShooterState::SPINNING;
+            state = ShooterState::MANUAL;
+            spinSpeed = 50;
         }
     }
 
@@ -62,10 +62,11 @@ void Shooter::Update(bool teleop)
 
             drive->SetState(DriveTrain::DriveState::NONE);
 
-            talonMaster->Set(spinSpeed);
+            talon1->Set(spinSpeed);
+            //talon2->Set(spinSpeed);
 
             // Waits until ramped up!
-            if ((fabs(talonMaster->GetEncVel()) < fabs(spinSpeed) + SHOOTER_SPEED_TOLERANCE && fabs(talonMaster->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_TOLERANCE))
+            if ((fabs(talon1->GetEncVel()) < fabs(spinSpeed) + SHOOTER_SPEED_TOLERANCE))// && fabs(talon2->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_TOLERANCE) && (fabs(talon2->GetEncVel()) < fabs(spinSpeed) + SHOOTER_SPEED_TOLERANCE && fabs(talon2->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_TOLERANCE))
             {
                 state = ShooterState::FIRE;
                 extendTimer->Reset();
@@ -88,17 +89,68 @@ void Shooter::Update(bool teleop)
                 state = ShooterState::NONE;
             }
             break;
+        case ShooterState::MANUAL:
+            talon1->Set(manualSpeed);
+            //talon2->Set(manualSpeed);
+        #if NEW_JOYSTICK
+            if (joystickSecondary->GetRawAxis(JOYSTICK_BUMPER_RIGHT) > CONTROLLER_DEADBAND)
+        #else
+            if (speedUpButton->WasDown())
+        #endif
+            {
+                manualSpeed += .1;
+            }
+        #if NEW_JOYSTICK
+            if (joystickSecondary->GetRawAxis(JOYSTICK_BUMPER_LEFT) > CONTROLLER_DEADBAND)
+        #else
+            if (speedDownButton->WasDown())
+        #endif
+            {
+                manualSpeed -= .1;
+            }
+        #if NEW_JOYSTICK
+            if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_RIGHT) > CONTROLLER_DEADBAND)
+        #else
+            if (manualFireButton->WasDown())
+        #endif
+            {
+                extendSolenoid->Set(true);
+                extendSolenoid->Set(false);
+            }
+            if (manualSpeed > 1)
+            {
+                manualSpeed = 1;
+            }
+            if (manualSpeed < 0)
+            {
+                manualSpeed = 0;
+            }
+            if (flywheelButton->WasDown())
+            {
+                state = ShooterState::NONE;
+            }
+            break;
         case ShooterState::NONE:
             // Returns to states before.
-            talonMaster->Set(0);
+            talon1->Set(0);
+            //talon2->Set(0);
             extendSolenoid->Set(false);
             break;
+    }
+
+    if (spinSpeed > 1)
+    {
+        spinSpeed = 1;
+    }
+    if (spinSpeed < 0)
+    {
+        spinSpeed = 0;
     }
 }
 
 void Shooter::Dashboard()
 {
-    SmartDashboard::PutString("Shooter State", state == AIMING ? "Aiming" : state == SPINNING ? "Spinning" : state == FIRE ? "Firing" : "None");
+    SmartDashboard::PutString("Shooter State", state == AIMING ? "Aiming" : state == SPINNING ? "Spinning" : state == FIRE ? "Firing" : state == MANUAL ? "Manual" : "None");
     SmartDashboard::PutBoolean("Shooter Activated", IsActivated());
     SmartDashboard::PutBoolean("Shooter Speed", spinSpeed);
     SmartDashboard::PutBoolean("Shooter Encoder", spinSpeed);

@@ -8,7 +8,8 @@ using namespace std;
 class IAutonomous
 {
     private:
-        string name;bool started;
+        string name;
+        bool started;
 
     public:
         IAutonomous(SendableChooser *chooser, bool defaultChooser, string autoName)

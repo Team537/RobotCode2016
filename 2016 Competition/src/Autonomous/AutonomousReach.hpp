@@ -12,7 +12,7 @@ class AutonomousReach: public IAutonomous
 
     public:
         AutonomousReach(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
-                IAutonomous(chooser, defaultChooser, "Reach")
+                IAutonomous(chooser, defaultChooser, "Cross")
         {
             this->driveTrain = driveTrain;
             reachState = 0;

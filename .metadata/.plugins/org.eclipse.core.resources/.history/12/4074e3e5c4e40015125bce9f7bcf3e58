@@ -1,0 +1,26 @@
+#ifndef AUTONOMOUSCROSS_HPP
+#define AUTONOMOUSCROSS_HPP
+
+#include <DriveTrain/DriveTrain.hpp>
+#include <Schematic.hpp>
+
+class AutonomousCross: public IAutonomous
+{
+    private:
+        DriveTrain *driveTrain;
+        int reachState;
+
+    public:
+        AutonomousCross(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+                IAutonomous(chooser, defaultChooser, "Reach")
+        {
+            this->driveTrain = driveTrain;
+            reachState = 0;
+        }
+
+        void Start();
+        bool Run(double time);
+        void Stop();
+};
+
+#endif

@@ -12,19 +12,19 @@ class Shooter: public IComponent
         Vision *vision;
         DriveTrain *drive;
 
-        CANTalon *talonMaster, *talonSlave;
+        CANTalon *talon1, *talon2;
         Solenoid *extendSolenoid;
 
         Timer *extendTimer;
-        float spinSpeed;
+        float spinSpeed, manualSpeed;
         bool autoAdvance;
 
-        RobotButton *gotoNoneButton0, *gotoNoneButton1, *autoShootButton, *manualAimButton, *manualFireButton;
+        RobotButton *gotoNoneButton0, *gotoNoneButton1, *autoShootButton, *manualAimButton, *manualFireButton, *flywheelButton, *speedUpButton, *speedDownButton;
 
     public:
         enum ShooterState
         {
-            NONE, AIMING, SPINNING, FIRE
+            NONE, AIMING, SPINNING, FIRE, MANUAL
         };
 
         ShooterState state;
@@ -35,22 +35,25 @@ class Shooter: public IComponent
             this->vision = vision;
             this->drive = drive;
 
-            talonMaster = new CANTalon(7);
-            talonMaster->SetControlMode(CANTalon::ControlMode::kSpeed);
-            talonMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-            talonMaster->SetVoltageRampRate(32.0f);
-            talonMaster->Enable();
+            talon1 = new CANTalon(7);
+            talon1->SetControlMode(CANTalon::ControlMode::kSpeed);
+            talon1->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            talon1->SetVoltageRampRate(32.0f);
+            talon1->Enable();
 
-            talonSlave = new CANTalon(8);
-            talonSlave->SetControlMode(CANTalon::ControlMode::kFollower);
-            talonSlave->Set(7);
-            talonSlave->Enable();
+            talon2 = new CANTalon(8);
+            talon2->SetControlMode(CANTalon::ControlMode::kFollower);//kSpeed);
+            //talon2->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            talon2->SetVoltageRampRate(32.0f);
+            talon2->Enable();
+            talon2->Set(7);
 
             extendSolenoid = new Solenoid(1);
 
             extendTimer = new Timer();
             state = ShooterState::NONE;
-            spinSpeed = 0.0f;
+            spinSpeed = 50.0f;
+            manualSpeed = 50.0f;
             autoAdvance = false;
 
             gotoNoneButton0 = new RobotButton(joystickPrimary, JOYSTICK_BACK);
@@ -60,10 +63,15 @@ class Shooter: public IComponent
             autoShootButton = NULL;
             manualAimButton = NULL;
             manualFireButton = NULL;
+            flywheelButton = NULL;
 #else
             autoShootButton = new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_LEFT);
             manualAimButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
             manualFireButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
+            flywheelButton = new RobotButton(joystickSecondary, JOYSTICK_BACK);
+            speedUpButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_RIGHT);
+            speedDownButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_LEFT);
+
 #endif
         }
 

@@ -1,3 +1,4 @@
+
 #ifndef CLIMBER_HPP
 #define CLIMBER_HPP
 
@@ -45,14 +46,16 @@ class Climber: public IComponent
 #if NEW_JOYSTICK
             retractButton = NULL;
             deployHalfButton = NULL;
+            pullUpButton = NULL;
+            deployHooksButton = NULL;
 #else
             retractButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
             deployHalfButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
+            pullUpButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_LEFT);
+            deployHooksButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_RIGHT);
 #endif
 
             deployFullButton = new RobotButton(joystickSecondary, JOYSTICK_Y);
-            deployHooksButton = new RobotButton(joystickSecondary, JOYSTICK_X);
-            pullUpButton = new RobotButton(joystickSecondary, JOYSTICK_A);
 
             timer = new Timer();
             climbing = false;

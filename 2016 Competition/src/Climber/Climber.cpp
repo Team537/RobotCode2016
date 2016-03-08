@@ -41,13 +41,19 @@ void Climber::Update(bool teleop)
             {
                 state = ClimberState::EXTEND_FULL;
             }
-
+# if NEW_JOYSTICK
+            if (joystickSecondary->GetRawAxis(JOYSTICK_BUMPER_RIGHT))
+#else
             if (deployHooksButton->WasDown())
+#endif
             {
                 state = ClimberState::EXTEND_HOOKS;
             }
-
+#if NEW_JOYSTICK
+            if (joystickSecondary->GetRawAxis(JOYSTICK_BUMPER_LEFT))
+#else
             if (pullUpButton->WasDown())
+#endif
             {
                 state = ClimberState::PULL_UP;
             }
