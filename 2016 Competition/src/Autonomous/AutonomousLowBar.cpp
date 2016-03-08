@@ -9,7 +9,7 @@ bool AutonomousLowBar::Run(double time)
     switch (CrossState)
     {
         case (0):
-            driveTrain->Cross(false, DRIVE_DEFENCE_LOW_BAR);
+            driveTrain->Cross(false, DRIVE_DEFENSE_LOW_BAR);
             CrossState++;
             break;
         case (1):

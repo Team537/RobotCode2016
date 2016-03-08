@@ -1,6 +1,9 @@
 #include <Autonomous/AutonomousDemo.hpp>
 #include <Autonomous/AutonomousLowBar.hpp>
 #include <Autonomous/AutonomousRockWall.hpp>
+#include <Autonomous/AutonomousRoughTerrain.hpp>
+#include <Autonomous/AutonomousRampParts.hpp>
+#include <Autonomous/AutonomousMoat.hpp>
 #include <Climber/Climber.hpp>
 #include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
@@ -72,8 +75,11 @@ class Robot: public IterativeRobot
             selectedAuto = NULL;
             autoChooser = new SendableChooser();
             new AutonomousLowBar(autoChooser, false, driveTrain, shooter);
+            new AutonomousRockWall(autoChooser, false, driveTrain, shooter);
+            new AutonomousRoughTerrain(autoChooser, false, driveTrain, shooter);
+            new AutonomousRampParts(autoChooser, false, driveTrain, shooter);
+            new AutonomousMoat(autoChooser, false, driveTrain, shooter);
             new AutonomousDemo(autoChooser, true, driveTrain);
-            new AutonomousRockWall(autoChooser, false, driveTrain);
             SmartDashboard::PutData("Auto Modes", autoChooser);
 
             // Sets up the game states.
@@ -91,7 +97,7 @@ class Robot: public IterativeRobot
             if (!climber->IsClimbing())
             {
                 collector->ComponentUpdate(teleop);
-            //    shooter->ComponentUpdate(teleop);
+                shooter->ComponentUpdate(teleop);
             }
 
             pressure = (250 * (pressureSensor->GetVoltage() / 5)) - 25;

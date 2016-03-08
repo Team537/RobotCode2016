@@ -17,19 +17,19 @@ void DriveTrain::Update(bool teleop)
 
         if (joystickSecondary->GetRawButton(JOYSTICK_X))
         {
-            crossSpeedMultiplier = DRIVE_DEFENCE_MOAT;
+            crossSpeedMultiplier = DRIVE_DEFENSE_MOAT;
         }
         else if (joystickSecondary->GetRawButton(JOYSTICK_A))
         {
-            crossSpeedMultiplier = DRIVE_DEFENCE_ROCK_WALL;
+            crossSpeedMultiplier = DRIVE_DEFENSE_ROCK_WALL;
         }
         else if (joystickSecondary->GetRawButton(JOYSTICK_B))
         {
-            crossSpeedMultiplier = DRIVE_DEFENCE_ROUGH_TERRAIN;
+            crossSpeedMultiplier = DRIVE_DEFENSE_ROUGH_TERRAIN;
         }
         else if (joystickSecondary->GetRawButton(JOYSTICK_Y))
         {
-            crossSpeedMultiplier = DRIVE_DEFENCE_RAMP_PARTS;
+            crossSpeedMultiplier = DRIVE_DEFENSE_RAMP_PARTS;
         }
     }
 

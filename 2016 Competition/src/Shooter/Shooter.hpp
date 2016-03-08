@@ -19,7 +19,7 @@ class Shooter: public IComponent
         float spinSpeed, manualSpeed;
         bool autoAdvance;
 
-        RobotButton *gotoNoneButton0, *gotoNoneButton1, *autoShootButton, *manualAimButton, *manualFireButton, *flywheelButton, *speedUpButton, *speedDownButton;
+        RobotButton *gotoNoneButton0, *autoShootButton, *manualAimButton, *manualFireButton, *flywheelButton, *speedUpButton, *speedDownButton;
 
     public:
         enum ShooterState
@@ -53,22 +53,20 @@ class Shooter: public IComponent
             extendTimer = new Timer();
             state = ShooterState::NONE;
             spinSpeed = 50.0f;
-            manualSpeed = 50.0f;
+            manualSpeed = 0.5f;
             autoAdvance = false;
 
             gotoNoneButton0 = new RobotButton(joystickPrimary, JOYSTICK_BACK);
-            gotoNoneButton1 = new RobotButton(joystickSecondary, JOYSTICK_BACK);
+            flywheelButton = new RobotButton(joystickSecondary, JOYSTICK_BACK);
 
 #if NEW_JOYSTICK
             autoShootButton = NULL;
             manualAimButton = NULL;
             manualFireButton = NULL;
-            flywheelButton = NULL;
 #else
             autoShootButton = new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_LEFT);
             manualAimButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
             manualFireButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
-            flywheelButton = new RobotButton(joystickSecondary, JOYSTICK_BACK);
             speedUpButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_RIGHT);
             speedDownButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_LEFT);
 
