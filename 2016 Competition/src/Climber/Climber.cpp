@@ -97,6 +97,10 @@ void Climber::Dashboard()
     SmartDashboard::PutBoolean("Climber Stage 1", !deployStage1->Get());
     SmartDashboard::PutBoolean("Climber Stage 2", deployStage2->Get());
     SmartDashboard::PutBoolean("Climber Stage Extend", extendStage3->Get());
+    SmartDashboard::PutBoolean("Deploy Right One Read Switch", deployStage1Right->Get());
+    SmartDashboard::PutBoolean("Deploy Left One Read Switch", deployStage1Left->Get());
+    SmartDashboard::PutBoolean("Deploy Right Two Read Switch", deployStage2Right->Get());
+    SmartDashboard::PutBoolean("Deploy Left Two Read Switch", deployStage2Left->Get());
 }
 
 void Climber::ToggleStage1(bool extend)

@@ -8,7 +8,7 @@
 class Climber: public IComponent
 {
     private:
-        DigitalInput *deployStage1Right, *deployStage2Right, *deployStage1Left, *deployStage2Left, *extendLeft, *extendRight;
+        DigitalInput *deployStage1Right, *deployStage2Right, *deployStage1Left, *deployStage2Left;
         Solenoid *deployStage1, *deployStage2, *extendStage3;
 
         RobotButton *gotoNoneButton, *toggleClimbMode, *retractButton, *deployHalfButton, *deployFullButton, *deployHooksButton, *pullUpButton;
@@ -32,8 +32,6 @@ class Climber: public IComponent
             deployStage2Right = new DigitalInput(1);
             deployStage1Left = new DigitalInput(2);
             deployStage2Left = new DigitalInput(3);
-            extendLeft = new DigitalInput(4);
-            extendRight = new DigitalInput(5);
 
             deployStage1 = new Solenoid(2);
             deployStage2 = new Solenoid(3);
