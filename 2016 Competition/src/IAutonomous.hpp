@@ -29,21 +29,21 @@ class IAutonomous
 
         bool AutonomousUpdate(double time)
         {
-            if (!started)
-            {
-                Start();
-                started = true;
-            }
-            else
-            {
-                bool running = Run(time);
-
-                if ((time > 15 || started) ? !Run(1000) : false || !running)
-                {
-                    Stop();
-                    return (started = false);
-                }
-            }
+            //if (!started)
+            //{
+//               Start();
+//                started = true;
+//            }
+//            else
+//            {
+//                bool running = Run(time);
+//
+//                if ((time > 15 || started) ? !Run(1000) : false || !running)
+//                {
+//                    Stop();
+//                    return (started = false);
+//                }
+//            }
 
             return true;
         }

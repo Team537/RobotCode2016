@@ -2,7 +2,14 @@
 
 bool RobotButton::GetState()
 {
-    return joystick->GetRawButton(key);
+    if (axis)
+    {
+        return joystick->GetRawAxis(key) > CONTROLLER_DEADBAND;
+    }
+    else
+    {
+        return joystick->GetRawButton(key);
+    }
 }
 
 bool RobotButton::WasDown()

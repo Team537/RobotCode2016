@@ -74,6 +74,9 @@ class DriveTrain: public IComponent
         int crossState;
         bool isClimbing;
 
+        Timer *driveTime;
+        int timedDriveState;
+
         RobotButton *shiftHigh, *shiftLow, *stateUntoggle, *autoCrossToggle;
 
         float crossSpeedMultiplier;
@@ -84,12 +87,12 @@ class DriveTrain: public IComponent
 
         int targetDistance;
         bool crossReverse;
-        string stateNames[6] = {"None", "Auto Angle", "Auto Distance", "Crossing", "Teleop Control", "Teleop Shoot"};
+        string stateNames[7] = {"None", "Auto Angle", "Auto Distance", "Crossing", "Teleop Control", "Teleop Shoot", "Auto_Timed"};
 
     public:
         enum DriveState
         {
-            NONE, AUTO_ANGLE, AUTO_DISTANCE, CROSSING, TELEOP_CONTROL, TELEOP_SHOOT
+            NONE, AUTO_ANGLE, AUTO_DISTANCE, CROSSING, TELEOP_CONTROL, TELEOP_SHOOT, AUTO_TIMED
         };
 
         DriveState state;
@@ -133,7 +136,7 @@ class DriveTrain: public IComponent
             rightDriveSlave2->Set(2);
 
             // Other robot objects.
-            shift = new Solenoid(0);
+            shift = new Solenoid(4);
             gyro = ahrs;
             vision = visionTracking;
 
@@ -156,15 +159,19 @@ class DriveTrain: public IComponent
             crossState = 0;
             isClimbing = true;
 
+            //AutoTimed timer
+            driveTime = new Timer();
+            timedDriveState = 0;
+
             // Teleop controls.
-            shiftLow = new RobotButton(joystickPrimary, JOYSTICK_BUMPER_LEFT);
-            shiftHigh = new RobotButton(joystickPrimary, JOYSTICK_BUMPER_RIGHT);
-            stateUntoggle = new RobotButton(joystickPrimary, JOYSTICK_BACK);
+            shiftLow = new RobotButton(joystickPrimary, JOYSTICK_BUMPER_LEFT, false);
+            shiftHigh = new RobotButton(joystickPrimary, JOYSTICK_BUMPER_RIGHT, false);
+            stateUntoggle = new RobotButton(joystickPrimary, JOYSTICK_BACK, false);
 
 #if NEW_JOYSTICK
-            autoCrossToggle = NULL;
+            autoCrossToggle = new RobotButton(joystickPrimary, JOYSTICK_AXIS_TRIGGER_RIGHT, true);
 #else
-            autoCrossToggle = new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_RIGHT);
+            autoCrossToggle = new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_RIGHT, false);
 #endif
 
             // Sets up the state;
@@ -189,6 +196,7 @@ class DriveTrain: public IComponent
 
         void AutoAngle(float angleDegrees);
         void AutoDistance(int distanceIn);
+        void AutoTimed();
         void Cross(bool reverse, float speed);
         void SetCrossing(bool crossing);
 

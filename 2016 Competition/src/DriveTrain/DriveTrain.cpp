@@ -61,6 +61,10 @@ void DriveTrain::Update(bool teleop)
                 SetState(DriveState::NONE);
             }
             return;
+        case (DriveState::AUTO_TIMED):
+            rightDriveMaster->Set(-1 * DRIVE_TIMED_SPEED);
+            leftDriveMaster->Set(1 * DRIVE_TIMED_SPEED);
+            break;
         case (DriveState::CROSSING):
             // Update the current readings and errors.
             crossSign = crossReverse ? 1.0f : -1.0f;
@@ -103,8 +107,8 @@ void DriveTrain::Update(bool teleop)
             break;
         case (DriveState::TELEOP_CONTROL):
             // Grabs the current speed from the two drive axes.
-            leftSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
-            rightSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y);
+            leftSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y);
+            rightSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
 
             // Deadband
             if (fabs(leftSpeedCurrent) < CONTROLLER_DEADBAND)
@@ -137,19 +141,17 @@ void DriveTrain::Update(bool teleop)
                 AutoAngle(joystickPrimary->GetPOV());
             }
             // Auto crosses if toggle is down!
-#if NEW_JOYSTICK
-            else if (joystickPrimary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_RIGHT) > CONTROLLER_DEADBAND)
-#else
+
             else if (autoCrossToggle->GetState())
-#endif
             {
                 Cross(crossingForward, crossSpeedMultiplier);
             }
             // Drives the master talons.
             else
             {
-                rightDriveMaster->Set(-rightSpeedCurrent);
-                leftDriveMaster->Set(leftSpeedCurrent);
+                // motors inverted during normal driving
+                rightDriveMaster->Set(rightSpeedCurrent);
+                leftDriveMaster->Set(-leftSpeedCurrent);
             }
             break;
         case (DriveState::TELEOP_SHOOT):
@@ -179,6 +181,11 @@ void DriveTrain::Update(bool teleop)
             if (teleop)
             {
                 SetState(DriveState::TELEOP_CONTROL);
+            }
+            else
+            {
+                rightDriveMaster->Set(0);
+                leftDriveMaster->Set(0);
             }
             break;
     }
@@ -296,6 +303,8 @@ void DriveTrain::SetState(DriveState driveState)
         leftDriveMaster->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 
         rightDriveMaster->SetPID(0.0f, 0.0f, 0.0f);
+        rightDriveMaster->SetF(0.0f);
+        leftDriveMaster->SetF(0.0f);
         leftDriveMaster->SetPID(0.0f, 0.0f, 0.0f);
     }
 
@@ -375,10 +384,16 @@ void DriveTrain::AutoDistance(int distanceIn)
     // Changes the state.
     SetState(DriveState::AUTO_DISTANCE);
     // Converts the distance from IN to encoder ticks.
-    targetDistance = round(distanceIn * DRIVE_FT_TO_ENCODER);
+    targetDistance = round(distanceIn * DRIVE_IN_TO_ENCODER);
     // Sets the distance to drive.
     rightDriveMaster->Set(targetDistance);
     leftDriveMaster->Set(-targetDistance);
+}
+
+// TODO: Finish this shit
+void DriveTrain::AutoTimed()
+{
+    SetState(DriveState::AUTO_TIMED);
 }
 
 void DriveTrain::SetCrossing(bool crossing)

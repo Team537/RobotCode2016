@@ -16,7 +16,7 @@ bool AutonomousReach::Run(double time)
             reachState += driveTrain->IsWaiting() ? 1 : 0;
             break;
         case (2):
-            driveTrain->AutoDistance(32.0f);
+            driveTrain->AutoDistance(50.0f);
             reachState++;
             break;
         case (3):

@@ -19,20 +19,12 @@ void Climber::Update(bool teleop)
                 state = ClimberState::NONE;
             }
 
-#if NEW_JOYSTICK
-            if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_LEFT) > CONTROLLER_DEADBAND)
-#else
             if (retractButton->WasDown())
-#endif
             {
                 state = ClimberState::RETRACT;
             }
 
-#if NEW_JOYSTICK
-            if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_RIGHT) > CONTROLLER_DEADBAND)
-#else
             if (deployHalfButton->WasDown())
-#endif
             {
                 state = ClimberState::EXTEND_HALF;
             }
@@ -41,19 +33,13 @@ void Climber::Update(bool teleop)
             {
                 state = ClimberState::EXTEND_FULL;
             }
-# if NEW_JOYSTICK
-            if (joystickSecondary->GetRawAxis(JOYSTICK_BUMPER_RIGHT))
-#else
+
             if (deployHooksButton->WasDown())
-#endif
             {
                 state = ClimberState::EXTEND_HOOKS;
             }
-#if NEW_JOYSTICK
-            if (joystickSecondary->GetRawAxis(JOYSTICK_BUMPER_LEFT))
-#else
+
             if (pullUpButton->WasDown())
-#endif
             {
                 state = ClimberState::PULL_UP;
             }
@@ -94,6 +80,7 @@ void Climber::Update(bool teleop)
 void Climber::Dashboard()
 {
     SmartDashboard::PutString("Climber State", stateNames[state]);
+    SmartDashboard::PutBoolean("Is Climbing", climbing);
     SmartDashboard::PutBoolean("Climber Stage 1", !deployStage1->Get());
     SmartDashboard::PutBoolean("Climber Stage 2", deployStage2->Get());
     SmartDashboard::PutBoolean("Climber Stage Extend", extendStage3->Get());
@@ -121,4 +108,10 @@ void Climber::ToggleExtend(bool extend)
 bool Climber::IsClimbing()
 {
     return climbing;
+}
+
+void Climber::Init()
+{
+    climbing = false;
+    state = RETRACT;
 }

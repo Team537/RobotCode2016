@@ -28,7 +28,7 @@
 #define GOAL_GROUND_HEIGHT 368.3
 #define GOAL_WIDTH 20.5
 
-#define DRIVE_FT_TO_ENCODER 504.0163 // 1000 Edges Per Revolution: ((ticks / 1rev) * (3rev / 1rev) * (64revs / 20rev) * (1rev / 19.047in))
+#define DRIVE_IN_TO_ENCODER 504.0163 // 1000 Edges Per Revolution: ((ticks / 1rev) * (3rev / 1rev) * (64revs / 20rev) * (1rev / 19.047in))
 #define DRIVE_ANGLE_TOLERANCE 1.25
 #define DRIVE_DISTANCE_TOLERANCE 250
 #define DRIVE_SPEED_MULTIPLIER 1.00
@@ -38,6 +38,7 @@
 #define DRIVE_DEFENSE_ROCK_WALL 1.15
 #define DRIVE_DEFENSE_ROUGH_TERRAIN 1.0
 #define DRIVE_DEFENSE_RAMP_PARTS 1.25
+#define DRIVE_TIMED_SPEED 0.5
 
 #define SHOOTER_SPEED_TOLERANCE 50
 #define SHOOTER_ANGLE 45 // TODO

@@ -1,0 +1,15 @@
+#include <Autonomous/AutonomousTimed.hpp>
+
+void AutonomousTimed::Start()
+{
+}
+
+bool AutonomousTimed::Run(double time)
+{
+    driveTrain->AutoTimed(2);
+}
+
+void AutonomousTimed::Stop()
+{
+    driveTrain->SetState(DriveTrain::DriveState::NONE);
+}

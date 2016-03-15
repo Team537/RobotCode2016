@@ -4,6 +4,9 @@
 #include <Autonomous/AutonomousRoughTerrain.hpp>
 #include <Autonomous/AutonomousRampParts.hpp>
 #include <Autonomous/AutonomousMoat.hpp>
+#include <Autonomous/AutonomousReach.hpp>
+#include <Autonomous/AutonomousTimed.hpp>
+#include <Autonomous/AutonomousNone.hpp>
 #include <Climber/Climber.hpp>
 #include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
@@ -18,7 +21,7 @@ class Robot: public IterativeRobot
 {
         enum State
         {
-            STOPED, AUTO, TELEOP, TEST
+            STOPPED, AUTO, TELEOP, TEST
         };
 
     private:
@@ -80,10 +83,13 @@ class Robot: public IterativeRobot
             new AutonomousRampParts(autoChooser, false, driveTrain, shooter);
             new AutonomousMoat(autoChooser, false, driveTrain, shooter);
             new AutonomousDemo(autoChooser, true, driveTrain);
+            new AutonomousReach(autoChooser, true, driveTrain);
+            new AutonomousTimed(autoChooser, true, driveTrain);
+            new AutonomousNone(autoChooser, true, driveTrain, shooter);
             SmartDashboard::PutData("Auto Modes", autoChooser);
 
             // Sets up the game states.
-            gameState = State::STOPED;
+            gameState = State::STOPPED;
         }
 
         void ComponentsUpdate(bool teleop)
@@ -117,6 +123,8 @@ class Robot: public IterativeRobot
             selectedAuto = (IAutonomous*) autoChooser->GetSelected();
             ahrs->Reset();
             gameState = State::AUTO;
+            climber->Init();
+            selectedAuto->Start();
         }
 
         void AutonomousPeriodic()
@@ -126,14 +134,15 @@ class Robot: public IterativeRobot
             if (selectedAuto != NULL)
             {
                 double time = DriverStation::GetInstance().GetMatchTime();
-                bool autoRunning = selectedAuto->AutonomousUpdate(time);
+                // bool autoRunning = selectedAuto->AutonomousUpdate(time);
                 selectedAuto->AutonomousDashboard();
+                selectedAuto->Run(time);
                 ComponentsUpdate(false);
 
-                if (!autoRunning)
-                {
-                    selectedAuto = NULL;
-                }
+//                if (!autoRunning)
+//                {
+//                    selectedAuto = NULL;
+//                }
             }
         }
 
@@ -147,6 +156,7 @@ class Robot: public IterativeRobot
 
             ahrs->Reset();
             gameState = State::TELEOP;
+            climber->Init();
         }
 
         void TeleopPeriodic()

@@ -1,0 +1,21 @@
+#include <Autonomous/AutonomousNone.hpp>
+
+void AutonomousNone::Start()
+{
+}
+
+bool AutonomousNone::Run(double time)
+{
+    switch (CrossState)
+    {
+        case (0):
+            break;
+    }
+
+    return CrossState <= 5;
+}
+
+void AutonomousNone::Stop()
+{
+
+}

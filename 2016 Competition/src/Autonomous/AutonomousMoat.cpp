@@ -16,7 +16,7 @@ bool AutonomousMoat::Run(double time)
             CrossState += driveTrain->IsWaiting() ? 1 : 0;
             break;
         case (2):
-            driveTrain->AutoDistance(12.0f);
+            driveTrain->AutoDistance(84.0f);
             CrossState++;
             break;
         case (3):

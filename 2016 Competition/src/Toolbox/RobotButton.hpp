@@ -7,13 +7,14 @@ class RobotButton
 {
     private:
         Joystick *joystick;
-        unsigned int key;bool lastState;
+        unsigned int key;bool lastState;bool axis;
 
     public:
-        RobotButton(Joystick *joystick, unsigned int key)
+        RobotButton(Joystick *joystick, unsigned int key, bool axis)
         {
             this->joystick = joystick;
             this->key = key;
+            this->axis = axis;
             this->lastState = false;
         }
 

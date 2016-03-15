@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="Moat" key="selection"/>
+		<item value="Timed" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="RampParts"/>
-			<item value="RockWall"/>
-			<item value="DEFENCE"/>
-			<item value="Ball1"/>
-			<item value="BALL1"/>
-			<item value="deployhooks"/>
-			<item value="cross()"/>
-			<item value="cross"/>
+			<item value="RoughTerrain"/>
+			<item value="AUTO_TIMED"/>
+			<item value="new solenoid"/>
+			<item value="new solenokid"/>
+			<item value="climbing"/>
+			<item value="set"/>
+			<item value="master"/>
+			<item value="autodistance"/>
 		</list>
 		<list key="replacehistory">
+			<item value="Timed"/>
+			<item value="None"/>
 			<item value="Moat"/>
 			<item value="RampParts"/>
 			<item value="RoughTerrain"/>
 			<item value="DEFENSE"/>
 			<item value="LowBar"/>
 			<item value="LOWBAR"/>
-			<item value="AutonomousCross"/>
-			<item value="2"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="257" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="377" key="DIALOG_HEIGHT"/>
-		<item value="543" key="DIALOG_X_ORIGIN"/>
-		<item value="215" key="DIALOG_Y_ORIGIN"/>
+		<item value="824" key="DIALOG_X_ORIGIN"/>
+		<item value="359" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

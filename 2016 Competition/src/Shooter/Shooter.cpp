@@ -10,39 +10,32 @@ void Shooter::Update(bool teleop)
             state = ShooterState::NONE;
         }
 
-#if NEW_JOYSTICK
-        if (joystickPrimary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_LEFT) > CONTROLLER_DEADBAND)
-#else
         if (autoShootButton->WasDown())
-#endif
         {
             autoAdvance = true;
             state = ShooterState::AIMING;
         }
 
-#if NEW_JOYSTICK
-        if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_LEFT) > CONTROLLER_DEADBAND && state != ShooterState::MANUAL)
-#else
         if (manualAimButton->WasDown() && state != ShooterState::MANUAL)
-#endif
         {
             autoAdvance = false;
             state = ShooterState::AIMING;
         }
 
 
-        if (flywheelButton->WasDown() && state != ShooterState::MANUAL)
+        if (manualOnButton->WasDown() && state != ShooterState::MANUAL)
         {
             state = ShooterState::MANUAL;
             talon1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
             talon2->SetControlMode(CANTalon::ControlMode::kPercentVbus);
         }
-        if (joystickSecondary->GetRawButton(9)   && state == ShooterState::MANUAL)
+        if (manualOffButton->WasDown()   && state == ShooterState::MANUAL)
         {
             state = ShooterState::NONE;
             talon1->SetControlMode(CANTalon::ControlMode::kSpeed);
             talon2->SetControlMode(CANTalon::ControlMode::kFollower);
         }
+
 }
 
     switch (state)
@@ -66,11 +59,11 @@ void Shooter::Update(bool teleop)
 
             drive->SetState(DriveTrain::DriveState::NONE);
 
-            talon1->Set(spinSpeed);
-            //talon2->Set(spinSpeed);
+            talon1->Set(-spinSpeed);
+            talon2->Set(spinSpeed);
 
             // Waits until ramped up!
-            if ((fabs(talon1->GetEncVel()) < fabs(spinSpeed) + SHOOTER_SPEED_TOLERANCE))// && fabs(talon2->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_TOLERANCE) && (fabs(talon2->GetEncVel()) < fabs(spinSpeed) + SHOOTER_SPEED_TOLERANCE && fabs(talon2->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_TOLERANCE))
+            if ((fabs(talon1->GetEncVel()) < fabs(spinSpeed) + SHOOTER_SPEED_TOLERANCE) && (fabs(talon2->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_TOLERANCE) && (fabs(talon2->GetEncVel()) < fabs(spinSpeed) + SHOOTER_SPEED_TOLERANCE && fabs(talon2->GetSpeed()) > fabs(spinSpeed) - SHOOTER_SPEED_TOLERANCE))
             {
                 state = ShooterState::FIRE;
                 extendTimer->Reset();
@@ -94,22 +87,22 @@ void Shooter::Update(bool teleop)
             }
             break;
         case ShooterState::MANUAL:
-           talon1->Set(-manualSpeed);
-           talon2->Set(manualSpeed);
-           if (joystickSecondary->GetRawButton(JOYSTICK_BUMPER_RIGHT))
+           talon1->Set(manualSpeed);
+           talon2->Set(-manualSpeed);
+           if (manualFireButton->WasDown())
             {
                 extendSolenoid->Set(true);
             }
-            if (joystickSecondary->GetRawButton(JOYSTICK_BUMPER_LEFT))
+            if (manualRetractButton->WasDown())
             {
                 extendSolenoid->Set(false);
             }
 
-            if (joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_RIGHT) > CONTROLLER_DEADBAND)
+            if (speedUpButton->WasDown())
             {
                 manualSpeed +=.05;
             }
-            if(joystickSecondary->GetRawAxis(JOYSTICK_AXIS_TRIGGER_LEFT) > CONTROLLER_DEADBAND){
+            if(speedDownButton->WasDown()){
                 manualSpeed -=.05;
             }
 
@@ -121,29 +114,16 @@ void Shooter::Update(bool teleop)
             {
                 manualSpeed = 0;
             }
-            if (flywheelButton->WasDown() )//&& state == ShooterState::MANUAL)
-            {
-                state = ShooterState::NONE;
-                talon1->SetControlMode(CANTalon::ControlMode::kSpeed);
-                talon2->SetControlMode(CANTalon::ControlMode::kFollower);
-            }
+
             break;
         case ShooterState::NONE:
             // Returns to states before.
             talon1->Set(0);
-            //talon2->Set(0);
+            talon2->Set(0);
             extendSolenoid->Set(false);
             break;
     }
 
-    if (spinSpeed > 1)
-    {
-        spinSpeed = 1;
-    }
-    if (spinSpeed < 1)
-    {
-        spinSpeed = 1;
-    }
 }
 
 void Shooter::Dashboard()
@@ -153,6 +133,7 @@ void Shooter::Dashboard()
     SmartDashboard::PutBoolean("Shooter Speed", spinSpeed);
     SmartDashboard::PutBoolean("Shooter Encoder", spinSpeed);
     SmartDashboard::PutNumber("Shooter Flywheel Speed", manualSpeed);
+    SmartDashboard::PutNumber("Shooter encoder", talon1->GetEncVel());
 }
 
 void Shooter::SetState(ShooterState shooterState)
@@ -170,3 +151,4 @@ bool Shooter::IsActivated()
 {
     return state != ShooterState::NONE;
 }
+

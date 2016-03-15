@@ -35,25 +35,24 @@ class Climber: public IComponent
 
             deployStage1 = new Solenoid(2);
             deployStage2 = new Solenoid(3);
-            extendStage3 = new Solenoid(4);
+            extendStage3 = new Solenoid(0);
 
-            toggleClimbMode = new RobotButton(joystickSecondary, JOYSTICK_START);
+            toggleClimbMode = new RobotButton(joystickSecondary, JOYSTICK_START, false);
 
-            gotoNoneButton = new RobotButton(joystickSecondary, JOYSTICK_BACK);
+            gotoNoneButton = new RobotButton(joystickSecondary, JOYSTICK_BACK, false);
+            pullUpButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_LEFT, false);
+            deployHooksButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_RIGHT, false);
 
 #if NEW_JOYSTICK
-            retractButton = NULL;
-            deployHalfButton = NULL;
-            pullUpButton = NULL;
-            deployHooksButton = NULL;
+            retractButton = new RobotButton(joystickSecondary, JOYSTICK_AXIS_TRIGGER_LEFT, true);
+            deployHalfButton = new RobotButton(joystickSecondary, JOYSTICK_AXIS_TRIGGER_RIGHT, true);
+            deployFullButton = new RobotButton(joystickSecondary, JOYSTICK_AXIS_TRIGGER_LEFT, true);
 #else
-            retractButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT);
-            deployHalfButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT);
-            pullUpButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_LEFT);
-            deployHooksButton = new RobotButton(joystickSecondary, JOYSTICK_BUMPER_RIGHT);
+            retractButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT, false);
+            deployHalfButton = new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT, false);
+            deployFullButton = new RobotButton(joystickSecondary, JOYSTICK__TRIGGER_LEFT, false);
 #endif
 
-            deployFullButton = new RobotButton(joystickSecondary, JOYSTICK_Y);
 
             timer = new Timer();
             climbing = false;
@@ -67,7 +66,7 @@ class Climber: public IComponent
         void ToggleStage1(bool extend);
         void ToggleStage2(bool extend);
         void ToggleExtend(bool extend);
-
+        void Init();
         bool IsClimbing();
 };
 
