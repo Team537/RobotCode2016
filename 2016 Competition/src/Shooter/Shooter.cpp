@@ -1,6 +1,6 @@
 #include <Shooter/Shooter.hpp>
 
-void Shooter::Update(bool teleop)
+void Shooter::Update(const bool& teleop)
 {
     if (teleop)
     {

@@ -1,6 +1,6 @@
 #include <DriveTrain/DriveTrain.hpp>
 
-void DriveTrain::Update(bool teleop)
+void DriveTrain::Update(const bool& teleop)
 {
     float output;
     float target;
@@ -369,12 +369,12 @@ void DriveTrain::SetState(DriveState driveState)
     }
 }
 
-void DriveTrain::Shift(bool highGear)
+void DriveTrain::Shift(const bool& highGear)
 {
     shift->Set(highGear);
 }
 
-void DriveTrain::AutoAngle(float angleDegrees)
+void DriveTrain::AutoAngle(const float& angleDegrees)
 {
     // Changes the state.
     SetState(DriveState::AUTO_ANGLE);
@@ -393,7 +393,7 @@ void DriveTrain::AutoAngle(float angleDegrees)
     angleETC->SetTarget(targetAngle);
 }
 
-void DriveTrain::AutoDistance(int distanceIn)
+void DriveTrain::AutoDistance(const int& distanceIn)
 {
     // Changes the state.
     SetState(DriveState::AUTO_DISTANCE);
@@ -404,13 +404,13 @@ void DriveTrain::AutoDistance(int distanceIn)
     leftDriveMaster->Set(-targetDistance);
 }
 
-// TODO: Finish this shit
+// TODO: Finish timed auto drive.
 void DriveTrain::AutoTimed()
 {
     SetState(DriveState::AUTO_TIMED);
 }
 
-void DriveTrain::SetCrossing(bool crossing)
+void DriveTrain::SetCrossing(const bool& crossing)
 {
     isClimbing = crossing;
 }
@@ -425,7 +425,7 @@ bool DriveTrain::IsTeleopControl()
     return state == DriveState::TELEOP_CONTROL;
 }
 
-void DriveTrain::Cross(bool reverse, float speed)
+void DriveTrain::Cross(const bool& reverse, const float& speed)
 {
     // Changes the state.
     SetState(DriveState::CROSSING);

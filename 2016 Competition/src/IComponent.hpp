@@ -1,5 +1,4 @@
-#ifndef ICOMPONENT_HPP
-#define ICOMPONENT_HPP
+#pragma once
 
 #include <Schematic.hpp>
 
@@ -25,13 +24,13 @@ class IComponent
         {
         }
 
-        void ComponentUpdate(const double& teleop)
+        void ComponentUpdate(const bool& teleop)
         {
             Update(teleop);
             Dashboard();
         }
 
-        virtual void Update(const double& teleop)
+        virtual void Update(const bool& teleop)
         {
         }
 
@@ -41,5 +40,3 @@ class IComponent
 
         inline string* GetName() const { return name; }
 };
-
-#endif

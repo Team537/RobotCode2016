@@ -173,18 +173,18 @@ class DriveTrain: public IComponent
             visionPID->Disable();
         }
 
-        void Update(bool teleop);
+        void Update(const bool& teleop);
         bool DefenceCross();
         void Dashboard();
 
         void SetState(DriveState driveState);
-        void Shift(bool highGear);
+        void Shift(const bool& highGear);
 
-        void AutoAngle(float angleDegrees);
-        void AutoDistance(int distanceIn);
+        void AutoAngle(const float& angleDegrees);
+        void AutoDistance(const int& distanceIn);
         void AutoTimed();
-        void Cross(bool reverse, float speed);
-        void SetCrossing(bool crossing);
+        void Cross(const bool& reverse, const float& speed);
+        void SetCrossing(const bool& crossing);
 
         bool IsWaiting();
         bool IsTeleopControl();

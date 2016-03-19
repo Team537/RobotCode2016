@@ -1,5 +1,4 @@
-#ifndef IAUTONOMOUS_HPP
-#define IAUTONOMOUS_HPP
+#pragma once
 
 #include <Schematic.hpp>
 
@@ -73,5 +72,3 @@ class IAutonomous
 
         inline string GetName() const { return name; }
 };
-
-#endif

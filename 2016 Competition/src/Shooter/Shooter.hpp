@@ -67,7 +67,7 @@ class Shooter: public IComponent
         {
         }
 
-        void Update(bool teleop);
+        void Update(const bool& teleop);
         void Dashboard();
 
         void SetState(ShooterState shooterState);
