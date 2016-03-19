@@ -7,6 +7,15 @@ void DriveTrain::Update(bool teleop)
     float crossSign;
     float gyroError;
 
+    if (joystickPrimary->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y) > JOYSTICK_DEADBAND || joystickPrimary->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y) > JOYSTICK_DEADBAND)
+    {
+        primaryDriving = true;
+    }
+    else
+    {
+        primaryDriving = false;
+    }
+
     // Secondary update checks!
     if (!isClimbing)
     {
@@ -15,21 +24,21 @@ void DriveTrain::Update(bool teleop)
             crossingForward = joystickSecondary->GetPOV() == 0 ? true : joystickSecondary->GetPOV() == 180 ? false : crossingForward;
         }
 
-        if (joystickSecondary->GetRawButton(JOYSTICK_X))
+        if (joystickSecondary->GetRawButton(JOYSTICK_Y))
+        {
+            crossSpeedMultiplier = DRIVE_DEFENSE_LOW_BAR;
+        }
+        else if (joystickSecondary->GetRawButton(JOYSTICK_X))
+        {
+            crossSpeedMultiplier = DRIVE_DEFENSE_RAMP_PARTS;
+        }
+        else if (joystickSecondary->GetRawButton(JOYSTICK_B))
         {
             crossSpeedMultiplier = DRIVE_DEFENSE_MOAT;
         }
         else if (joystickSecondary->GetRawButton(JOYSTICK_A))
         {
             crossSpeedMultiplier = DRIVE_DEFENSE_ROCK_WALL;
-        }
-        else if (joystickSecondary->GetRawButton(JOYSTICK_B))
-        {
-            crossSpeedMultiplier = DRIVE_DEFENSE_ROUGH_TERRAIN;
-        }
-        else if (joystickSecondary->GetRawButton(JOYSTICK_Y))
-        {
-            crossSpeedMultiplier = DRIVE_DEFENSE_RAMP_PARTS;
         }
     }
 
@@ -106,25 +115,6 @@ void DriveTrain::Update(bool teleop)
             }
             break;
         case (DriveState::TELEOP_CONTROL):
-            // Grabs the current speed from the two drive axes.
-            leftSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y);
-            rightSpeedCurrent = (isClimbing ? joystickSecondary : joystickPrimary)->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
-
-            // Deadband
-            if (fabs(leftSpeedCurrent) < CONTROLLER_DEADBAND)
-            {
-                leftSpeedCurrent = 0;
-            }
-
-            if (fabs(rightSpeedCurrent) < CONTROLLER_DEADBAND)
-            {
-                rightSpeedCurrent = 0;
-            }
-
-            // Multiplies the speed to slow down the bot.
-            leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
-            rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
-
             // Shifts the gears.
             if (shiftLow->WasDown())
             {
@@ -135,13 +125,36 @@ void DriveTrain::Update(bool teleop)
                 Shift(true);
             }
 
+            if (reverseToggle->WasDown())
+            {
+                reverse = !reverse;
+            }
+
+            // Grabs the current speed from the two drive axes.
+            leftSpeedCurrent = (isClimbing && !primaryDriving ? joystickSecondary : joystickPrimary)->GetRawAxis(!reverse ? JOYSTICK_AXIS_LEFT_Y : JOYSTICK_AXIS_RIGHT_Y);
+            rightSpeedCurrent = (isClimbing && !primaryDriving ? joystickSecondary : joystickPrimary)->GetRawAxis(!reverse ? JOYSTICK_AXIS_RIGHT_Y : JOYSTICK_AXIS_LEFT_Y);
+
+            // Deadband
+            if (fabs(leftSpeedCurrent) < JOYSTICK_DEADBAND)
+            {
+                leftSpeedCurrent = 0;
+            }
+
+            if (fabs(rightSpeedCurrent) < JOYSTICK_DEADBAND)
+            {
+                rightSpeedCurrent = 0;
+            }
+
+            // Multiplies the speed to slow down the bot.
+            leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
+            rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
+
             // Gets the auto angle from POV (if down).
             if (joystickPrimary->GetPOV() != -1.0f)
             {
                 AutoAngle(joystickPrimary->GetPOV());
             }
             // Auto crosses if toggle is down!
-
             else if (autoCrossToggle->GetState())
             {
                 Cross(crossingForward, crossSpeedMultiplier);
@@ -149,9 +162,8 @@ void DriveTrain::Update(bool teleop)
             // Drives the master talons.
             else
             {
-                // motors inverted during normal driving
-                rightDriveMaster->Set(rightSpeedCurrent);
-                leftDriveMaster->Set(-leftSpeedCurrent);
+                rightDriveMaster->Set(reverse /*&& primaryDriving*/ ? rightSpeedCurrent : -rightSpeedCurrent);
+                leftDriveMaster->Set(reverse /*&& primaryDriving*/ ? -leftSpeedCurrent : leftSpeedCurrent);
             }
             break;
         case (DriveState::TELEOP_SHOOT):
@@ -266,6 +278,8 @@ void DriveTrain::Dashboard()
     SmartDashboard::PutNumber("Drive Cross State", crossState);
 
     SmartDashboard::PutString("Drive State", stateNames[state]);
+
+    SmartDashboard::PutBoolean("Drive Reversed", reverse);
 
     LiveWindow::GetInstance()->AddSensor("Drive", "VisionPID", visionPID);
 }

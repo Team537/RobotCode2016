@@ -43,13 +43,13 @@ class Robot: public IterativeRobot
 
         State gameState;
 
-        float pressure = 0;
+        // float pressure = 0;
 
         void RobotInit()
         {
             // Sets up the joysticks.
-            joystickPrimary = new Joystick(CONTROLLER_PRIMARY);
-            joystickSecondary = new Joystick(CONTROLLER_SECONDARY);
+            joystickPrimary = new Joystick(JOYSTICK_PRIMARY);
+            joystickSecondary = new Joystick(JOYSTICK_SECONDARY);
 
             // Sets up robot components.
             compressor = new Compressor();
@@ -77,15 +77,15 @@ class Robot: public IterativeRobot
             // Creates the auto modes.
             selectedAuto = NULL;
             autoChooser = new SendableChooser();
-            new AutonomousLowBar(autoChooser, false, driveTrain, shooter);
-            new AutonomousRockWall(autoChooser, false, driveTrain, shooter);
-            new AutonomousRoughTerrain(autoChooser, false, driveTrain, shooter);
-            new AutonomousRampParts(autoChooser, false, driveTrain, shooter);
-            new AutonomousMoat(autoChooser, false, driveTrain, shooter);
+            new AutonomousLowBar(autoChooser, false, driveTrain);
+            new AutonomousRockWall(autoChooser, false, driveTrain);
+            new AutonomousRoughTerrain(autoChooser, false, driveTrain);
+            new AutonomousRampParts(autoChooser, false, driveTrain);
+            new AutonomousMoat(autoChooser, false, driveTrain);
             new AutonomousDemo(autoChooser, true, driveTrain);
             new AutonomousReach(autoChooser, true, driveTrain);
             new AutonomousTimed(autoChooser, true, driveTrain);
-            new AutonomousNone(autoChooser, true, driveTrain, shooter);
+            new AutonomousNone(autoChooser, true);
             SmartDashboard::PutData("Auto Modes", autoChooser);
 
             // Sets up the game states.
@@ -106,7 +106,7 @@ class Robot: public IterativeRobot
                 shooter->ComponentUpdate(teleop);
             }
 
-            pressure = (250 * (pressureSensor->GetVoltage() / 5)) - 25;
+            // pressure = (250 * (pressureSensor->GetVoltage() / 5)) - 25;
 
             SmartDashboard::PutNumber("NavX Angle", ahrs->GetAngle());
             SmartDashboard::PutNumber("NavX Angle Pitch", ahrs->GetPitch());
@@ -115,7 +115,7 @@ class Robot: public IterativeRobot
             SmartDashboard::PutNumber("NavX Velocity X", ahrs->GetVelocityX());
             SmartDashboard::PutNumber("NavX Velocity Y", ahrs->GetVelocityY());
             SmartDashboard::PutNumber("NavX Velocity Z", ahrs->GetVelocityZ());
-            SmartDashboard::PutNumber("Pressure", pressure);
+            // SmartDashboard::PutNumber("Pressure", pressure);
         }
 
         void AutonomousInit()

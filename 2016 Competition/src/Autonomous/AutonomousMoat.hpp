@@ -1,29 +1,27 @@
-#ifndef AUTONOMOUSMOAT_HPP
-#define AUTONOMOUSMOAT_HPP
+#pragma once
 
 #include <DriveTrain/DriveTrain.hpp>
-#include <Shooter/Shooter.hpp>
 #include <Schematic.hpp>
 
 class AutonomousMoat: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        Shooter *shooter;
-        int CrossState;
+        int crossState;
 
     public:
-        AutonomousMoat(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Shooter *shooter) :
-                IAutonomous(chooser, defaultChooser, "Moat")
+        AutonomousMoat(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+                IAutonomous(chooser, defaultChooser, "Moat"),
+                driveTrain(driveTrain),
+                crossState(0)
         {
-            this->driveTrain = driveTrain;
-            this->shooter = shooter;
-            CrossState = 0;
+        }
+
+        virtual ~AutonomousMoat()
+        {
         }
 
         void Start();
-        bool Run(double time);
+        bool Run(const double& time);
         void Stop();
 };
-
-#endif

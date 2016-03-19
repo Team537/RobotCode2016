@@ -1,5 +1,4 @@
-#ifndef ERRORTIMECUBED_HPP
-#define ERRORTIMECUBED_HPP
+#pragma once
 
 #include <Schematic.hpp>
 
@@ -18,30 +17,25 @@ class ErrorTimeCubed
 
         void Update();
     public:
-        ErrorTimeCubed(float rampMin, float rampMax, float rangeMin, float rangeMax)
+        ErrorTimeCubed(const float& rampMin, const float& rampMax, const float& rangeMin, const float& rangeMax) :
+            target(0.0f),
+            input(0.0f),
+            output(0.0f),
+            rampMin(rampMin),
+            rampMax(rampMax),
+            rangeMin(rangeMin),
+            rangeMax(rangeMax),
+            timer(new Timer())
         {
-            target = 0.0f;
-            input = 0.0f;
-            output = 0.0f;
-            this->rampMin = rampMin;
-            this->rampMax = rampMax;
-            this->rangeMin = rangeMin;
-            this->rangeMax = rangeMax;
-            timer = new Timer();
         }
 
         void Enable();
         void Disable();
 
         float GetTarget();
-        void SetTarget(float target);
-
+        void SetTarget(const float& target);
         float GetInput();
-        void SetInput(float input);
-
+        void SetInput(const float& input);
         float GetOutput();
-
         float GetError();
 };
-
-#endif

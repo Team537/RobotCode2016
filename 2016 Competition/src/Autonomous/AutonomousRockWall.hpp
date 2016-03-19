@@ -1,29 +1,27 @@
-#ifndef AUTONOMOUSROCKWALL_HPP
-#define AUTONOMOUSROCKWALL_HPP
+#pragma once
 
 #include <DriveTrain/DriveTrain.hpp>
-#include <Shooter/Shooter.hpp>
 #include <Schematic.hpp>
 
 class AutonomousRockWall: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        Shooter *shooter;
-        int CrossState;
+        int crossState;
 
     public:
-        AutonomousRockWall(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Shooter *shooter) :
-                IAutonomous(chooser, defaultChooser, "RockWall")
+        AutonomousRockWall(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+                IAutonomous(chooser, defaultChooser, "RockWall"),
+                driveTrain(driveTrain),
+                crossState(0)
         {
-            this->driveTrain = driveTrain;
-            this->shooter = shooter;
-            CrossState = 0;
+        }
+
+        virtual ~AutonomousRockWall()
+        {
         }
 
         void Start();
-        bool Run(double time);
+        bool Run(const double& time);
         void Stop();
 };
-
-#endif

@@ -1,0 +1,37 @@
+#ifndef ICOMPONENT_HPP
+#define ICOMPONENT_HPP
+
+#include <Schematic.hpp>
+
+using namespace std;
+
+class IComponent
+{
+    private:
+        string* name;
+
+    public:
+        Joystick* joystickPrimary;
+        Joystick* joystickSecondary;
+
+        IComponent(Joystick* joystickPrimary, Joystick* joystickSecondary, string* name)
+        {
+            this->joystickPrimary = joystickPrimary;
+            this->joystickSecondary = joystickSecondary;
+            this->name = name;
+        }
+
+        void ComponentUpdate(const double& teleop)
+        {
+            Update(teleop);
+            Dashboard();
+        }
+
+        virtual void Update(const double& teleop) = 0;
+
+        virtual void Dashboard() = 0;
+
+        inline string* GetName() const { return name; }
+};
+
+#endif

@@ -1,5 +1,4 @@
-#ifndef COLLECTOR_HPP
-#define COLLECTOR_HPP
+#pragma once
 
 #include <ToolBox/RobotButton.hpp>
 #include <Schematic.hpp>
@@ -17,23 +16,24 @@ class Collector: public IComponent
 
     public:
         Collector(Joystick* joystickPrimary, Joystick* joystickSecondary) :
-                IComponent(joystickPrimary, joystickSecondary, new string("Collector"))
+                IComponent(joystickPrimary, joystickSecondary, new string("Collector")),
+                collectMotor(new CANTalon(9)),
+                collectInToggle(new RobotButton(joystickPrimary, JOYSTICK_A, false)),
+                collectStop(new RobotButton(joystickPrimary, JOYSTICK_B, false)),
+                collectOutButton(new RobotButton(joystickPrimary, JOYSTICK_Y, false)),
+                reverseCollecting(false)
         {
-            collectMotor = new CANTalon(9);
             collectMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-
-            collectInToggle = new RobotButton(joystickPrimary, JOYSTICK_A, false);
-            collectStop = new RobotButton(joystickPrimary, JOYSTICK_B, false);
-            collectOutButton = new RobotButton(joystickPrimary, JOYSTICK_Y, false);
-
-            reverseCollecting = false;
+            collectMotor->Enable();
         }
 
-        void Update(bool teleop);
+        virtual ~Collector()
+        {
+        }
+
+        void Update(const bool& teleop);
         void Dashboard();
 
-        void Collect(bool reverse);
+        void Collect(const bool& reverse);
         void TurnOff();
 };
-
-#endif

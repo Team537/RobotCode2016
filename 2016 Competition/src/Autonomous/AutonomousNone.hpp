@@ -1,8 +1,5 @@
-#ifndef AUTONOMOUSNONE_HPP
-#define AUTONOMOUSNONE_HPP
+#pragma once
 
-#include <DriveTrain/DriveTrain.hpp>
-#include <Shooter/Shooter.hpp>
 #include <Schematic.hpp>
 
 class AutonomousNone: public IAutonomous
@@ -10,15 +7,16 @@ class AutonomousNone: public IAutonomous
     private:
 
     public:
-        AutonomousNone(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Shooter *shooter) :
+        AutonomousNone(SendableChooser *chooser, bool defaultChooser) :
                 IAutonomous(chooser, defaultChooser, "None")
         {
+        }
 
+        virtual ~AutonomousNone()
+        {
         }
 
         void Start();
-        bool Run();
+        bool Run(const double& time);
         void Stop();
 };
-
-#endif

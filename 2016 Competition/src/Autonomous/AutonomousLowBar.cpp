@@ -4,34 +4,38 @@ void AutonomousLowBar::Start()
 {
 }
 
-bool AutonomousLowBar::Run(double time)
+bool AutonomousLowBar::Run(const double& time)
 {
-    switch (CrossState)
+    switch (crossState)
     {
         case (0):
-            driveTrain->Cross(false, DRIVE_DEFENSE_LOW_BAR);
-            CrossState++;
+            autoTime->Reset();
+            autoTime->Start();
             break;
         case (1):
-            CrossState += driveTrain->IsWaiting() ? 1 : 0;
+            if (autoTime->Get() > 2.0)
+            {
+                autoTime->Stop();
+                crossState++;
+            }
             break;
         case (2):
+            driveTrain->Cross(false, DRIVE_DEFENSE_LOW_BAR);
+            crossState++;
+            break;
+        case (3):
+            crossState += driveTrain->IsWaiting() ? 1 : 0;
+            break;
+       /* case (4):
             driveTrain->AutoDistance(84.0f);
             CrossState++;
             break;
-        case (3):
-            CrossState += driveTrain->IsWaiting() ? 1 : 0;
-            break;
-        case (4):
-            shooter->AutoShoot();
-            CrossState++;
-            break;
         case (5):
-            CrossState += !shooter->IsActivated() ? 1 : 0;
-            break;
+            crossState += driveTrain->IsWaiting() ? 1 : 0;
+            break;*/
     }
 
-    return CrossState <= 5;
+    return crossState <= 3;
 }
 
 void AutonomousLowBar::Stop()

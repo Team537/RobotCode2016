@@ -1,29 +1,27 @@
-#ifndef AUTONOMOUSRAMPPARTS_HPP
-#define AUTONOMOUSRAMPPARTS_HPP
+#pragma once
 
 #include <DriveTrain/DriveTrain.hpp>
-#include <Shooter/Shooter.hpp>
 #include <Schematic.hpp>
 
 class AutonomousRampParts: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        Shooter *shooter;
-        int CrossState;
+        int crossState;
 
     public:
-        AutonomousRampParts(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Shooter *shooter) :
-                IAutonomous(chooser, defaultChooser, "RampParts")
+        AutonomousRampParts(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+                IAutonomous(chooser, defaultChooser, "RampParts"),
+                driveTrain(driveTrain),
+                crossState(0)
         {
-            this->driveTrain = driveTrain;
-            this->shooter = shooter;
-            CrossState = 0;
+        }
+
+        virtual ~AutonomousRampParts()
+        {
         }
 
         void Start();
-        bool Run(double time);
+        bool Run(const double& time);
         void Stop();
 };
-
-#endif

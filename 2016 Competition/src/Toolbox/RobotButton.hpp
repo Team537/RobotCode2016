@@ -1,5 +1,4 @@
-#ifndef ROBOTBUTTON_HPP
-#define ROBOTBUTTON_HPP
+#pragma once
 
 #include <Schematic.hpp>
 
@@ -7,19 +6,23 @@ class RobotButton
 {
     private:
         Joystick *joystick;
-        unsigned int key;bool lastState;bool axis;
+        unsigned int key;
+        bool axis;
+        bool lastState;
 
     public:
-        RobotButton(Joystick *joystick, unsigned int key, bool axis)
+        RobotButton(Joystick *joystick, unsigned int key, bool axis) :
+            joystick(joystick),
+            key(key),
+            axis(axis),
+            lastState(false)
         {
-            this->joystick = joystick;
-            this->key = key;
-            this->axis = axis;
-            this->lastState = false;
+        }
+
+        virtual ~RobotButton()
+        {
         }
 
         bool GetState();
         bool WasDown();
 };
-
-#endif

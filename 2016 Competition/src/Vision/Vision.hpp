@@ -1,5 +1,4 @@
-#ifndef VISION_HPP
-#define VISION_HPP
+#pragma once
 
 #include <Schematic.hpp>
 
@@ -18,43 +17,30 @@ class Vision: public IComponent
 
     public:
         Vision() :
-                IComponent(NULL, NULL, new string("Vision"))
+                IComponent(NULL, NULL, new string("Vision")),
+                goalImageTable(NetworkTable::GetTable("GRIP/myContoursReport")),
+                goalArea(0),
+                goalCenterX(0),
+                goalWidth(0),
+                goalHeight(0),
+                goalDistance(0)
         {
-            goalImageTable = NetworkTable::GetTable("GRIP/myContoursReport");
-            goalArea = 0;
-            goalCenterX = 0;
-            goalWidth = 0;
-            goalHeight = 0;
-            goalDistance = 0;
         }
 
-        void Update(bool teleop);
+        virtual ~Vision()
+        {
+        }
+
+        void Update(const bool& teleop);
         void Dashboard();
 
-        inline double GetGoalArea()
-        {
-            return goalArea;
-        }
+        inline double GetGoalArea() const { return goalArea; }
 
-        inline double GetGoalCenterX()
-        {
-            return goalCenterX;
-        }
+        inline double GetGoalCenterX() const { return goalCenterX; }
 
-        inline double GetGoalDistance()
-        {
-            return goalDistance;
-        }
+        inline double GetGoalDistance() const { return goalDistance; }
 
-        inline double GetGoalHeight()
-        {
-            return goalHeight;
-        }
+        inline double GetGoalHeight() const { return goalHeight; }
 
-        inline double GetGoalWidth()
-        {
-            return goalWidth;
-        }
+        inline double GetGoalWidth() const { return goalWidth; }
 };
-
-#endif

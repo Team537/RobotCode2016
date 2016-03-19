@@ -1,29 +1,27 @@
-#ifndef AUTONOMOUSROUGHTERRAIN_HPP
-#define AUTONOMOUSROUGHTERRAIN_HPP
+#pragma once
 
 #include <DriveTrain/DriveTrain.hpp>
-#include <Shooter/Shooter.hpp>
 #include <Schematic.hpp>
 
 class AutonomousRoughTerrain: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        Shooter *shooter;
-        int CrossState;
+        int crossState;
 
     public:
-        AutonomousRoughTerrain(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Shooter *shooter) :
-                IAutonomous(chooser, defaultChooser, "RockWall")
+        AutonomousRoughTerrain(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+                IAutonomous(chooser, defaultChooser, "RoughTerrain"),
+                driveTrain(driveTrain),
+                crossState(0)
         {
-            this->driveTrain = driveTrain;
-            this->shooter = shooter;
-            CrossState = 0;
+        }
+
+        virtual ~AutonomousRoughTerrain()
+        {
         }
 
         void Start();
-        bool Run(double time);
+        bool Run(const double& time);
         void Stop();
 };
-
-#endif

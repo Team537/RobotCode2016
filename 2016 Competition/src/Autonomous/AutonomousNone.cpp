@@ -4,12 +4,11 @@ void AutonomousNone::Start()
 {
 }
 
-bool AutonomousNone::Run()
+bool AutonomousNone::Run(const double& time)
 {
-
+    return false;
 }
 
 void AutonomousNone::Stop()
 {
-
 }

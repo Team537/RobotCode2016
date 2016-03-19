@@ -2,19 +2,19 @@
 
 void AutonomousTimed::Start()
 {
-    AutoTime->Reset();
-    AutoTime->Start();
+    autoTime->Reset();
+    autoTime->Start();
     SmartDashboard::PutString("Test", "Auto started");
 }
 
-bool AutonomousTimed::Run(double time)
+bool AutonomousTimed::Run(const double& time)
 {
-    if(AutoTime->Get() < 2)
+    if(autoTime->Get() < 2)
     {
         driveTrain->SetState(DriveTrain::DriveState::NONE);
         SmartDashboard::PutString("Test1", "State1");
     }
-    else if(AutoTime->Get() < 10)
+    else if(autoTime->Get() < 7)
     {
         driveTrain->AutoTimed();
         SmartDashboard::PutString("Test2", "State2");
@@ -24,7 +24,9 @@ bool AutonomousTimed::Run(double time)
         driveTrain->SetState(DriveTrain::DriveState::NONE);
         SmartDashboard::PutString("Test3", "State3");
     }
-    SmartDashboard::PutNumber("Auto time 537", AutoTime->Get());
+
+    SmartDashboard::PutNumber("Auto time 537", autoTime->Get());
+    return autoTime->Get() <= 7;
 }
 
 void AutonomousTimed::Stop()

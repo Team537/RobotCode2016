@@ -21,13 +21,17 @@ class IComponent
             this->name = name;
         }
 
-        void ComponentUpdate(bool teleop)
+        virtual ~IComponent()
+        {
+        }
+
+        void ComponentUpdate(const double& teleop)
         {
             Update(teleop);
             Dashboard();
         }
 
-        virtual void Update(bool teleop)
+        virtual void Update(const double& teleop)
         {
         }
 
@@ -35,10 +39,7 @@ class IComponent
         {
         }
 
-        inline string* GetName()
-        {
-            return name;
-        }
+        inline string* GetName() const { return name; }
 };
 
 #endif

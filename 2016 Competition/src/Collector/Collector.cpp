@@ -1,6 +1,6 @@
 #include <Collector/Collector.hpp>
 
-void Collector::Update(bool teleop)
+void Collector::Update(const bool& teleop)
 {
     if (teleop)
     {
@@ -35,7 +35,7 @@ void Collector::Dashboard()
     SmartDashboard::PutNumber("Collector Motor Speed", collectMotor->Get());
 }
 
-void Collector::Collect(bool reverse)
+void Collector::Collect(const bool& reverse)
 {
     collectMotor->Set(COLLECTOR_SPEED * (reverse ? 1.0 : -1.0));
 }

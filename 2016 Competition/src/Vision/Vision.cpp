@@ -1,6 +1,6 @@
 #include <Vision/Vision.hpp>
 
-void Vision::Update(bool teleop)
+void Vision::Update(const bool& teleop)
 {
 	/* Gets the data from the network table. */
     ArrayRef<double> areaData = goalImageTable->GetNumberArray("area", ArrayRef<double>());

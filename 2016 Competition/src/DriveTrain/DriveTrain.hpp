@@ -1,5 +1,4 @@
-#ifndef DRIVETRAIN_HPP
-#define DRIVETRAIN_HPP
+#pragma once
 
 #include <Schematic.hpp>
 #include <Toolbox/ErrorTimeCubed.hpp>
@@ -14,6 +13,10 @@ class DrivePIDSource: public PIDSource
         DrivePIDSource()
         {
             target = -1;
+        }
+
+        virtual ~DrivePIDSource()
+        {
         }
 
         void SetPIDSourceType(PIDSourceType pidSource)
@@ -40,6 +43,10 @@ class DrivePIDOutput: public PIDOutput
         DrivePIDOutput()
         {
             output = 0;
+        }
+
+        virtual ~DrivePIDOutput()
+        {
         }
 
         void PIDWrite(float output)
@@ -77,7 +84,7 @@ class DriveTrain: public IComponent
         Timer *driveTime;
         int timedDriveState;
 
-        RobotButton *shiftHigh, *shiftLow, *stateUntoggle, *autoCrossToggle;
+        RobotButton *shiftHigh, *shiftLow, *stateUntoggle, *autoCrossToggle, *reverseToggle;
 
         float crossSpeedMultiplier;
         bool crossingForward;
@@ -89,6 +96,9 @@ class DriveTrain: public IComponent
         bool crossReverse;
         string stateNames[7] = {"None", "Auto Angle", "Auto Distance", "Crossing", "Teleop Control", "Teleop Shoot", "Auto_Timed"};
 
+        bool reverse;
+        bool primaryDriving;
+
     public:
         enum DriveState
         {
@@ -98,93 +108,69 @@ class DriveTrain: public IComponent
         DriveState state;
 
         DriveTrain(Joystick* joystickPrimary, Joystick* joystickSecondary, AHRS *ahrs, Vision* visionTracking) :
-                IComponent(joystickPrimary, joystickSecondary, new string("DriveTrain"))
+                IComponent(joystickPrimary, joystickSecondary, new string("DriveTrain")),
+                leftDriveMaster(new CANTalon(1)),
+                leftDriveSlave1(new CANTalon(3)),
+                leftDriveSlave2(new CANTalon(5)),
+                rightDriveMaster(new CANTalon(2)),
+                rightDriveSlave1(new CANTalon(4)),
+                rightDriveSlave2(new CANTalon(6)),
+                shift(new Solenoid(4)),
+                gyro(ahrs),
+                vision(visionTracking),
+                visionPIDSource(new DrivePIDSource()),
+                visionPIDOutput(new DrivePIDOutput()),
+                visionPID(new PIDController(0.70f, 0, 0, visionPIDSource, visionPIDOutput)),
+                angleETC(new ErrorTimeCubed(DRIVE_ANGLE_TOLERANCE, 45.0f, -180.0f, 180.0f)),
+                crossTime(new Timer()),
+                hasCrossed(false),
+                crossState(0),
+                isClimbing(true),
+                driveTime(new Timer()),
+                timedDriveState(0),
+                shiftHigh(new RobotButton(joystickPrimary, JOYSTICK_BUMPER_RIGHT, false)),
+                shiftLow(new RobotButton(joystickPrimary, JOYSTICK_BUMPER_LEFT, false)),
+                stateUntoggle(new RobotButton(joystickPrimary, JOYSTICK_BACK, false)),
+                autoCrossToggle(new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_RIGHT, NEW_JOYSTICK)),
+                reverseToggle(new RobotButton(joystickPrimary, JOYSTICK_X, false)),
+                crossSpeedMultiplier(1.0f),
+                crossingForward(true),
+                leftSpeedCurrent(0),
+                rightSpeedCurrent(0),
+                targetDistance(0),
+                crossReverse(false),
+                reverse(true),
+                primaryDriving(false),
+                state(DriveState::NONE)
         {
-            // Left Master.
-            leftDriveMaster = new CANTalon(1);
             leftDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
             leftDriveMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
 
-            // Left Slave.
-            leftDriveSlave1 = new CANTalon(3);
             leftDriveSlave1->SetControlMode(CANTalon::ControlMode::kFollower);
             leftDriveSlave1->Enable();
             leftDriveSlave1->Set(1);
 
-            // Left Slave.
-            leftDriveSlave2 = new CANTalon(5);
             leftDriveSlave2->SetControlMode(CANTalon::ControlMode::kFollower);
             leftDriveSlave2->Enable();
             leftDriveSlave2->Set(1);
 
-            // Right Master.
-            rightDriveMaster = new CANTalon(2);
             rightDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
             rightDriveMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
             rightDriveMaster->Enable();
 
-            // Right Slave.
-            rightDriveSlave1 = new CANTalon(4);
             rightDriveSlave1->SetControlMode(CANTalon::ControlMode::kFollower);
             rightDriveSlave1->Enable();
             rightDriveSlave1->Set(2);
 
-            // Right Slave.
-            rightDriveSlave2 = new CANTalon(6);
             rightDriveSlave2->SetControlMode(CANTalon::ControlMode::kFollower);
             rightDriveSlave2->Enable();
             rightDriveSlave2->Set(2);
 
-            // Other robot objects.
-            shift = new Solenoid(4);
-            gyro = ahrs;
-            vision = visionTracking;
-
-            // Vision angle pids.
-            visionPIDSource = new DrivePIDSource();
-            visionPIDOutput = new DrivePIDOutput();
-            visionPID = new PIDController(0.70f, 0, 0, visionPIDSource, visionPIDOutput);
             visionPID->SetInputRange(-1, 1);
             visionPID->SetOutputRange(-1, 1);
             visionPID->SetContinuous(true);
             visionPID->SetAbsoluteTolerance(0.05);
             visionPID->Disable();
-
-            // Angle ETC.
-            angleETC = new ErrorTimeCubed(DRIVE_ANGLE_TOLERANCE, 45.0f, -180.0f, 180.0f);
-
-            // Crossing timers.
-            crossTime = new Timer();
-            hasCrossed = false;
-            crossState = 0;
-            isClimbing = true;
-
-            //AutoTimed timer
-            driveTime = new Timer();
-            timedDriveState = 0;
-
-            // Teleop controls.
-            shiftLow = new RobotButton(joystickPrimary, JOYSTICK_BUMPER_LEFT, false);
-            shiftHigh = new RobotButton(joystickPrimary, JOYSTICK_BUMPER_RIGHT, false);
-            stateUntoggle = new RobotButton(joystickPrimary, JOYSTICK_BACK, false);
-
-#if NEW_JOYSTICK
-            autoCrossToggle = new RobotButton(joystickPrimary, JOYSTICK_AXIS_TRIGGER_RIGHT, true);
-#else
-            autoCrossToggle = new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_RIGHT, false);
-#endif
-
-            // Sets up the state;
-            SetState(DriveState::NONE);
-
-            // Initial drive speeds.
-            crossSpeedMultiplier = 1.0f;
-            crossingForward = true;
-
-            leftSpeedCurrent = 0;
-            rightSpeedCurrent = 0;
-            targetDistance = 0;
-            crossReverse = false;
         }
 
         void Update(bool teleop);
@@ -204,5 +190,3 @@ class DriveTrain: public IComponent
         bool IsTeleopControl();
         float GetCurrentDraw();
 };
-
-#endif

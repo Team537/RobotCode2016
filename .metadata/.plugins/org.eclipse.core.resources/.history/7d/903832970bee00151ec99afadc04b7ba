@@ -1,0 +1,27 @@
+#ifndef ROBOTBUTTON_HPP
+#define ROBOTBUTTON_HPP
+
+#include <Schematic.hpp>
+
+class RobotButton
+{
+    private:
+        Joystick *joystick;
+        unsigned int key;
+        bool lastState;
+        bool axis;
+
+    public:
+        RobotButton(Joystick *joystick, unsigned int key, bool axis) :
+            joystick(joystick),
+            key(key),
+            axis(axis),
+            lastState(false)
+        {
+        }
+
+        bool GetState();
+        bool WasDown();
+};
+
+#endif

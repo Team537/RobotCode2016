@@ -87,8 +87,8 @@ void Shooter::Update(bool teleop)
             }
             break;
         case ShooterState::MANUAL:
-           talon1->Set(manualSpeed);
-           talon2->Set(-manualSpeed);
+           talon1->Set(-manualSpeed); //flip directions for comp
+           talon2->Set(manualSpeed);
            if (manualFireButton->WasDown())
             {
                 extendSolenoid->Set(true);

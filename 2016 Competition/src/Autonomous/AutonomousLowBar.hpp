@@ -1,29 +1,29 @@
-#ifndef AUTONOMOUSLOWBAR_HPP
-#define AUTONOMOUSLOWBAR_HPP
+#pragma once
 
 #include <DriveTrain/DriveTrain.hpp>
-#include <Shooter/Shooter.hpp>
 #include <Schematic.hpp>
 
 class AutonomousLowBar: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        Shooter *shooter;
-        int CrossState;
+        Timer *autoTime;
+        int crossState;
 
     public:
-        AutonomousLowBar(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Shooter *shooter) :
-                IAutonomous(chooser, defaultChooser, "LowBar")
+        AutonomousLowBar(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+                IAutonomous(chooser, defaultChooser, "LowBar"),
+                driveTrain(driveTrain),
+                autoTime(new Timer()),
+                crossState(0)
         {
-            this->driveTrain = driveTrain;
-            this->shooter = shooter;
-            CrossState = 0;
+        }
+
+        virtual ~AutonomousLowBar()
+        {
         }
 
         void Start();
-        bool Run(double time);
+        bool Run(const double& time);
         void Stop();
 };
-
-#endif

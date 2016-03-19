@@ -27,7 +27,11 @@ class IAutonomous
             }
         }
 
-        bool AutonomousUpdate(double time)
+        virtual ~IAutonomous()
+        {
+        }
+
+        bool AutonomousUpdate(const double& time)
         {
             //if (!started)
             //{
@@ -58,7 +62,7 @@ class IAutonomous
         {
         }
 
-        virtual bool Run(double time)
+        virtual bool Run(const double& time)
         {
             return false;
         }
@@ -67,10 +71,7 @@ class IAutonomous
         {
         }
 
-        inline string GetName()
-        {
-            return name;
-        }
+        inline string GetName() const { return name; }
 };
 
 #endif

@@ -1,5 +1,4 @@
-#ifndef AUTONOMOUSREACH_HPP
-#define AUTONOMOUSREACH_HPP
+#pragma once
 
 #include <DriveTrain/DriveTrain.hpp>
 #include <Schematic.hpp>
@@ -12,15 +11,17 @@ class AutonomousReach: public IAutonomous
 
     public:
         AutonomousReach(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
-                IAutonomous(chooser, defaultChooser, "Reach")
+                IAutonomous(chooser, defaultChooser, "Reach"),
+                driveTrain(driveTrain),
+                reachState(0)
         {
-            this->driveTrain = driveTrain;
-            reachState = 0;
+        }
+
+        virtual ~AutonomousReach()
+        {
         }
 
         void Start();
-        bool Run(double time);
+        bool Run(const double& time);
         void Stop();
 };
-
-#endif

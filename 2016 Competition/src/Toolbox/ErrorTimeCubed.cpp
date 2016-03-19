@@ -38,7 +38,7 @@ float ErrorTimeCubed::GetTarget()
     return target;
 }
 
-void ErrorTimeCubed::SetTarget(float target)
+void ErrorTimeCubed::SetTarget(const float& target)
 {
     this->target = target;
 }
@@ -48,7 +48,7 @@ float ErrorTimeCubed::GetInput()
     return input;
 }
 
-void ErrorTimeCubed::SetInput(float input)
+void ErrorTimeCubed::SetInput(const float& input)
 {
     this->input = input;
 }

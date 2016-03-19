@@ -1,29 +1,29 @@
-#ifndef AUTONOMOUSTIMED_HPP
-#define AUTONOMOUSTIMED_HPP
+#pragma once
 
 #include <DriveTrain/DriveTrain.hpp>
-#include <Shooter/Shooter.hpp>
 #include <Schematic.hpp>
 
 class AutonomousTimed: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        Timer *AutoTime;
-        int CrossState;
+        Timer *autoTime;
+        int crossState;
 
     public:
         AutonomousTimed(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
-                IAutonomous(chooser, defaultChooser, "Timed")
+                IAutonomous(chooser, defaultChooser, "Timed"),
+                driveTrain(driveTrain),
+                autoTime(new Timer()),
+                crossState(0)
         {
-            this->driveTrain = driveTrain;
-            AutoTime = new Timer;
-            CrossState = 0;
+        }
+
+        virtual ~AutonomousTimed()
+        {
         }
 
         void Start();
-        bool Run(double time);
+        bool Run(const double& time);
         void Stop();
 };
-
-#endif

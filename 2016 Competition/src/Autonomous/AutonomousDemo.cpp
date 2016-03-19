@@ -4,7 +4,7 @@ void AutonomousDemo::Start()
 {
 }
 
-bool AutonomousDemo::Run(double time)
+bool AutonomousDemo::Run(const double& time)
 {
     switch (reachState)
     {

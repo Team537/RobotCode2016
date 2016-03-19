@@ -1,5 +1,4 @@
-#ifndef SCHEMATIC_H
-#define SCHEMATIC_H
+#pragma once
 
 #include <WPILib.h>
 #include "AHRS.h"
@@ -9,14 +8,31 @@
 #include <IAutonomous.hpp>
 #include <IComponent.hpp>
 
+class Schematic
+{
+    public:
+    private:
+};
+
 #define PI 3.14159265358
 #define G -9.80665
 
-#define CONTROLLER_PRIMARY 0
-#define CONTROLLER_SECONDARY 1
-#define CONTROLLER_DEADBAND 0.10
+#define COLLECTOR_SPEED 1.0f
 
-#define GYRO_PORT 0
+#define DRIVE_IN_TO_ENCODER 504.0163 // 1000 Edges Per Revolution: ((ticks / 1rev) * (3rev / 1rev) * (64revs / 20rev) * (1rev / 19.047in))
+#define DRIVE_ANGLE_TOLERANCE 1.25
+#define DRIVE_DISTANCE_TOLERANCE 250
+#define DRIVE_SPEED_MULTIPLIER 1.00
+#define DRIVE_CLIMBING_MULTIPLIER .5//0.25
+#define DRIVE_TIMED_SPEED 0.75
+#define DRIVE_DEFENSE_LOW_BAR 1.6
+#define DRIVE_DEFENSE_RAMP_PARTS 1.4
+#define DRIVE_DEFENSE_MOAT 1.8
+#define DRIVE_DEFENSE_ROCK_WALL 2.7
+#define DRIVE_DEFENSE_ROUGH_TERRAIN 1.0
+
+#define SHOOTER_SPEED_TOLERANCE 50
+#define SHOOTER_ANGLE 45 // TODO
 
 #define WEBCAM_BOT_ANGLE 0 // TODO
 #define WEBCAM_BOT_HEIGHT 18 // TODO
@@ -28,23 +44,9 @@
 #define GOAL_GROUND_HEIGHT 368.3
 #define GOAL_WIDTH 20.5
 
-#define DRIVE_IN_TO_ENCODER 504.0163 // 1000 Edges Per Revolution: ((ticks / 1rev) * (3rev / 1rev) * (64revs / 20rev) * (1rev / 19.047in))
-#define DRIVE_ANGLE_TOLERANCE 1.25
-#define DRIVE_DISTANCE_TOLERANCE 250
-#define DRIVE_SPEED_MULTIPLIER 1.00
-#define DRIVE_CLIMBING_MULTIPLIER .5//0.25
-#define DRIVE_DEFENSE_LOW_BAR 1
-#define DRIVE_DEFENSE_MOAT 1.35
-#define DRIVE_DEFENSE_ROCK_WALL 1.15
-#define DRIVE_DEFENSE_ROUGH_TERRAIN 1.0
-#define DRIVE_DEFENSE_RAMP_PARTS 1.25
-#define DRIVE_TIMED_SPEED 0.5
-
-#define SHOOTER_SPEED_TOLERANCE 50
-#define SHOOTER_ANGLE 45 // TODO
-
-#define COLLECTOR_SPEED 1.0f
-
+#define JOYSTICK_PRIMARY 0
+#define JOYSTICK_SECONDARY 1
+#define JOYSTICK_DEADBAND 0.10
 #define NEW_JOYSTICK true
 
 #if NEW_JOYSTICK
@@ -60,8 +62,8 @@
 #define JOYSTICK_BUTTON_RIGHT 10
 #define JOYSTICK_AXIS_LEFT_X 0
 #define JOYSTICK_AXIS_LEFT_Y 1
-#define JOYSTICK_AXIS_TRIGGER_LEFT 2
-#define JOYSTICK_AXIS_TRIGGER_RIGHT 3
+#define JOYSTICK_TRIGGER_LEFT 2
+#define JOYSTICK_TRIGGER_RIGHT 3
 #define JOYSTICK_AXIS_RIGHT_X 4
 #define JOYSTICK_AXIS_RIGHT_Y 5
 #else
@@ -81,6 +83,4 @@
 #define JOYSTICK_AXIS_LEFT_Y 1
 #define JOYSTICK_AXIS_RIGHT_X 2
 #define JOYSTICK_AXIS_RIGHT_Y 3
-#endif
-
 #endif

@@ -1,5 +1,4 @@
-#ifndef AUTONOMOUSDRIVE_HPP
-#define AUTONOMOUSDEMO_HPP
+#pragma once
 
 #include <DriveTrain/DriveTrain.hpp>
 #include <Schematic.hpp>
@@ -12,15 +11,17 @@ class AutonomousDemo: public IAutonomous
 
     public:
         AutonomousDemo(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
-                IAutonomous(chooser, defaultChooser, "Demo")
+                IAutonomous(chooser, defaultChooser, "Demo"),
+                driveTrain(driveTrain),
+                reachState(0)
         {
-            this->driveTrain = driveTrain;
-            reachState = 0;
+        }
+
+        virtual ~AutonomousDemo()
+        {
         }
 
         void Start();
-        bool Run(double time);
+        bool Run(const double& time);
         void Stop();
 };
-
-#endif
