@@ -23,8 +23,8 @@ class Climber: public IComponent
 
         ClimberState state;
 
-        Climber(Joystick* joystickPrimary, Joystick* joystickSecondary) :
-                IComponent(joystickPrimary, joystickSecondary, new string("Climber")),
+        Climber() :
+                IComponent(new string("Climber")),
                 deployStage1Right(new DigitalInput(0)),
                 deployStage2Right(new DigitalInput(1)),
                 deployStage1Left(new DigitalInput(2)),
@@ -32,13 +32,13 @@ class Climber: public IComponent
                 deployStage1(new Solenoid(2)),
                 deployStage2(new Solenoid(3)),
                 hooksStage3(new Solenoid(0)),
-                gotoNoneButton(new RobotButton(joystickSecondary, JOYSTICK_BACK, false)),
-                toggleClimbMode(new RobotButton(joystickSecondary, JOYSTICK_START, false)),
-                retractButton(new RobotButton(joystickSecondary, JOYSTICK_Y, false)),
-                deployHalfButton(new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT, NEW_JOYSTICK)),
-                deployFullButton(new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT, NEW_JOYSTICK)),
-                deployHooksButton(new RobotButton(joystickSecondary, JOYSTICK_BUMPER_RIGHT, false)),
-                pullUpButton(new RobotButton(joystickSecondary, JOYSTICK_BUMPER_LEFT, false)),
+                gotoNoneButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_BACK, false)),
+                toggleClimbMode(new RobotButton(Schematic::GetSecondary(), JOYSTICK_START, false)),
+                retractButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_Y, false)),
+                deployHalfButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_TRIGGER_RIGHT, NEW_JOYSTICK)),
+                deployFullButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_TRIGGER_LEFT, NEW_JOYSTICK)),
+                deployHooksButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_BUMPER_RIGHT, false)),
+                pullUpButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_BUMPER_LEFT, false)),
                 timer(new Timer()),
                 climbing(false),
                 deployedFull(false),

@@ -19,19 +19,9 @@ using namespace std;
 
 class Robot: public IterativeRobot
 {
-        enum State
-        {
-            STOPPED, AUTO, TELEOP, TEST
-        };
-
     private:
         SendableChooser* autoChooser;
         IAutonomous* selectedAuto;
-
-        Joystick* joystickPrimary;
-        Joystick* joystickSecondary;
-        Compressor *compressor;
-        AHRS *ahrs;
 
         Vision* vision;
         DriveTrain* driveTrain;
@@ -39,20 +29,9 @@ class Robot: public IterativeRobot
         Climber* climber;
         Collector* collector;
 
-        AnalogOutput* pressureSensor;
-
-        State gameState;
-
-        // float pressure = 0;
-
         void RobotInit()
         {
-            // Sets up the joysticks.
-            joystickPrimary = new Joystick(JOYSTICK_PRIMARY);
-            joystickSecondary = new Joystick(JOYSTICK_SECONDARY);
-
-            // Sets up robot components.
-            compressor = new Compressor();
+            AHRS* ahrs = nullptr;
 
             try
             {
@@ -66,13 +45,14 @@ class Robot: public IterativeRobot
                 DriverStation::ReportError(err_string.c_str());
             }
 
+            Schematic::Init(new Joystick(JOYSTICK_PRIMARY), new Joystick(JOYSTICK_SECONDARY), ahrs);
+
             // Creates the robot components.
             vision = new Vision();
-            driveTrain = new DriveTrain(joystickPrimary, joystickSecondary, ahrs, vision);
-            shooter = new Shooter(joystickPrimary, joystickSecondary, vision, driveTrain);
-            climber = new Climber(joystickPrimary, joystickSecondary);
-            collector = new Collector(joystickPrimary, joystickSecondary);
-            pressureSensor = new AnalogOutput(1);
+            driveTrain = new DriveTrain(vision);
+            shooter = new Shooter(vision, driveTrain);
+            climber = new Climber();
+            collector = new Collector();
 
             // Creates the auto modes.
             selectedAuto = NULL;
@@ -87,9 +67,6 @@ class Robot: public IterativeRobot
             new AutonomousTimed(autoChooser, true, driveTrain);
             new AutonomousNone(autoChooser, true);
             SmartDashboard::PutData("Auto Modes", autoChooser);
-
-            // Sets up the game states.
-            gameState = State::STOPPED;
         }
 
         void ComponentsUpdate(bool teleop)
@@ -106,23 +83,19 @@ class Robot: public IterativeRobot
                 shooter->ComponentUpdate(teleop);
             }
 
-            // pressure = (250 * (pressureSensor->GetVoltage() / 5)) - 25;
-
-            SmartDashboard::PutNumber("NavX Angle", ahrs->GetAngle());
-            SmartDashboard::PutNumber("NavX Angle Pitch", ahrs->GetPitch());
-            SmartDashboard::PutNumber("NavX Angle Yaw", ahrs->GetYaw());
-            SmartDashboard::PutNumber("NavX Angle Roll", ahrs->GetRoll());
-            SmartDashboard::PutNumber("NavX Velocity X", ahrs->GetVelocityX());
-            SmartDashboard::PutNumber("NavX Velocity Y", ahrs->GetVelocityY());
-            SmartDashboard::PutNumber("NavX Velocity Z", ahrs->GetVelocityZ());
-            // SmartDashboard::PutNumber("Pressure", pressure);
+            SmartDashboard::PutNumber("NavX Angle", Schematic::GetGyro()->GetAngle());
+            SmartDashboard::PutNumber("NavX Angle Pitch", Schematic::GetGyro()->GetPitch());
+            SmartDashboard::PutNumber("NavX Angle Yaw", Schematic::GetGyro()->GetYaw());
+            SmartDashboard::PutNumber("NavX Angle Roll", Schematic::GetGyro()->GetRoll());
+            SmartDashboard::PutNumber("NavX Velocity X", Schematic::GetGyro()->GetVelocityX());
+            SmartDashboard::PutNumber("NavX Velocity Y", Schematic::GetGyro()->GetVelocityY());
+            SmartDashboard::PutNumber("NavX Velocity Z", Schematic::GetGyro()->GetVelocityZ());
         }
 
         void AutonomousInit()
         {
+            Schematic::GetGyro()->Reset();
             selectedAuto = (IAutonomous*) autoChooser->GetSelected();
-            ahrs->Reset();
-            gameState = State::AUTO;
             climber->Init();
             selectedAuto->Start();
         }
@@ -148,14 +121,14 @@ class Robot: public IterativeRobot
 
         void TeleopInit()
         {
+            Schematic::GetGyro()->Reset();
+
             if (selectedAuto != NULL)
             {
                 selectedAuto->AutonomousUpdate(1000);
                 selectedAuto = NULL;
             }
 
-            ahrs->Reset();
-            gameState = State::TELEOP;
             climber->Init();
         }
 
@@ -168,7 +141,6 @@ class Robot: public IterativeRobot
         {
             ComponentsUpdate(true);
             LiveWindow::GetInstance()->Run();
-            gameState = State::TEST;
         }
 };
 

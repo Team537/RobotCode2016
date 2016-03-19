@@ -10,13 +10,8 @@ class IComponent
         string* name;
 
     public:
-        Joystick* joystickPrimary;
-        Joystick* joystickSecondary;
-
-        IComponent(Joystick* joystickPrimary, Joystick* joystickSecondary, string* name)
+        IComponent(string* name)
         {
-            this->joystickPrimary = joystickPrimary;
-            this->joystickSecondary = joystickSecondary;
             this->name = name;
         }
 

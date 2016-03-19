@@ -29,8 +29,8 @@ class Shooter: public IComponent
 
         ShooterState state;
 
-        Shooter(Joystick* joystickPrimary, Joystick* joystickSecondary, Vision *vision, DriveTrain *drive) :
-                IComponent(joystickPrimary, joystickSecondary, new string("Shooter")),
+        Shooter(Vision *vision, DriveTrain *drive) :
+                IComponent(new string("Shooter")),
                 vision(vision),
                 drive(drive),
                 talon1(new CANTalon(7)),
@@ -40,15 +40,15 @@ class Shooter: public IComponent
                 spinSpeed(50.0f),
                 manualSpeed(1.0f),
                 autoAdvance(false),
-                gotoNoneButton0(new RobotButton(joystickPrimary, JOYSTICK_B, false)),
-                autoShootButton(new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_LEFT, NEW_JOYSTICK)),
-                manualAimButton(new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT, NEW_JOYSTICK)),
-                manualFireButton(new RobotButton(joystickSecondary, JOYSTICK_BUMPER_RIGHT, false)),
-                manualRetractButton(new RobotButton(joystickSecondary, JOYSTICK_BUMPER_LEFT, false)),
-                manualOnButton(new RobotButton(joystickSecondary, JOYSTICK_BACK, false)),
-                speedUpButton(new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_RIGHT, NEW_JOYSTICK)),
-                speedDownButton(new RobotButton(joystickSecondary, JOYSTICK_TRIGGER_LEFT, NEW_JOYSTICK)),
-                manualOffButton(new RobotButton(joystickSecondary, JOYSTICK_BUTTON_LEFT, false)),
+                gotoNoneButton0(new RobotButton(Schematic::GetPrimary(), JOYSTICK_B, false)),
+                autoShootButton(new RobotButton(Schematic::GetPrimary(), JOYSTICK_TRIGGER_LEFT, NEW_JOYSTICK)),
+                manualAimButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_TRIGGER_LEFT, NEW_JOYSTICK)),
+                manualFireButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_BUMPER_RIGHT, false)),
+                manualRetractButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_BUMPER_LEFT, false)),
+                manualOnButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_BACK, false)),
+                speedUpButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_TRIGGER_RIGHT, NEW_JOYSTICK)),
+                speedDownButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_TRIGGER_LEFT, NEW_JOYSTICK)),
+                manualOffButton(new RobotButton(Schematic::GetSecondary(), JOYSTICK_BUTTON_LEFT, false)),
                 state(ShooterState::NONE)
         {
             talon1->SetControlMode(CANTalon::ControlMode::kSpeed);

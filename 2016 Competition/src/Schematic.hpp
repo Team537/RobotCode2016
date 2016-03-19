@@ -11,10 +11,17 @@
 class Schematic
 {
     public:
+        static void Init(Joystick* primary, Joystick* secondary, AHRS* ahrs);
+        static Joystick* GetPrimary();
+        static Joystick* GetSecondary();
+        static AHRS* GetGyro();
     private:
+        static Joystick* joystickPrimary;
+        static Joystick* secondaryPrimary;
+        static AHRS* gryo;
 };
 
-#define PI 3.14159265358
+#define PI 3.14159
 #define G -9.80665
 
 #define COLLECTOR_SPEED 1.0f

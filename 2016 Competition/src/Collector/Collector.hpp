@@ -15,12 +15,12 @@ class Collector: public IComponent
         bool reverseCollecting;
 
     public:
-        Collector(Joystick* joystickPrimary, Joystick* joystickSecondary) :
-                IComponent(joystickPrimary, joystickSecondary, new string("Collector")),
+        Collector() :
+                IComponent(new string("Collector")),
                 collectMotor(new CANTalon(9)),
-                collectInToggle(new RobotButton(joystickPrimary, JOYSTICK_A, false)),
-                collectStop(new RobotButton(joystickPrimary, JOYSTICK_B, false)),
-                collectOutButton(new RobotButton(joystickPrimary, JOYSTICK_Y, false)),
+                collectInToggle(new RobotButton(Schematic::GetPrimary(), JOYSTICK_A, false)),
+                collectStop(new RobotButton(Schematic::GetPrimary(), JOYSTICK_B, false)),
+                collectOutButton(new RobotButton(Schematic::GetPrimary(), JOYSTICK_Y, false)),
                 reverseCollecting(false)
         {
             collectMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);

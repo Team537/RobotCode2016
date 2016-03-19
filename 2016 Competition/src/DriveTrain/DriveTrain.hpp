@@ -67,7 +67,6 @@ class DriveTrain: public IComponent
         CANTalon *rightDriveMaster, *rightDriveSlave1, *rightDriveSlave2;
 
         Solenoid *shift;
-        AHRS *gyro;
         Vision* vision;
 
         DrivePIDSource *visionPIDSource;
@@ -107,8 +106,8 @@ class DriveTrain: public IComponent
 
         DriveState state;
 
-        DriveTrain(Joystick* joystickPrimary, Joystick* joystickSecondary, AHRS *ahrs, Vision* visionTracking) :
-                IComponent(joystickPrimary, joystickSecondary, new string("DriveTrain")),
+        DriveTrain(Vision* visionTracking) :
+                IComponent(new string("DriveTrain")),
                 leftDriveMaster(new CANTalon(1)),
                 leftDriveSlave1(new CANTalon(3)),
                 leftDriveSlave2(new CANTalon(5)),
@@ -116,7 +115,6 @@ class DriveTrain: public IComponent
                 rightDriveSlave1(new CANTalon(4)),
                 rightDriveSlave2(new CANTalon(6)),
                 shift(new Solenoid(4)),
-                gyro(ahrs),
                 vision(visionTracking),
                 visionPIDSource(new DrivePIDSource()),
                 visionPIDOutput(new DrivePIDOutput()),
@@ -128,11 +126,11 @@ class DriveTrain: public IComponent
                 isClimbing(true),
                 driveTime(new Timer()),
                 timedDriveState(0),
-                shiftHigh(new RobotButton(joystickPrimary, JOYSTICK_BUMPER_RIGHT, false)),
-                shiftLow(new RobotButton(joystickPrimary, JOYSTICK_BUMPER_LEFT, false)),
-                stateUntoggle(new RobotButton(joystickPrimary, JOYSTICK_BACK, false)),
-                autoCrossToggle(new RobotButton(joystickPrimary, JOYSTICK_TRIGGER_RIGHT, NEW_JOYSTICK)),
-                reverseToggle(new RobotButton(joystickPrimary, JOYSTICK_X, false)),
+                shiftHigh(new RobotButton(Schematic::GetPrimary(), JOYSTICK_BUMPER_RIGHT, false)),
+                shiftLow(new RobotButton(Schematic::GetPrimary(), JOYSTICK_BUMPER_LEFT, false)),
+                stateUntoggle(new RobotButton(Schematic::GetPrimary(), JOYSTICK_BACK, false)),
+                autoCrossToggle(new RobotButton(Schematic::GetPrimary(), JOYSTICK_TRIGGER_RIGHT, NEW_JOYSTICK)),
+                reverseToggle(new RobotButton(Schematic::GetPrimary(), JOYSTICK_X, false)),
                 crossSpeedMultiplier(1.0f),
                 crossingForward(true),
                 leftSpeedCurrent(0),

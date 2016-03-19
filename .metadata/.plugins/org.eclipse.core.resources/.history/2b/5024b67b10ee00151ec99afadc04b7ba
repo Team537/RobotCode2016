@@ -1,0 +1,5 @@
+#include <Schematic.hpp>
+
+Joystick* Schematic::joystickPrimary = nullptr;
+Joystick* Schematic::secondaryPrimary = nullptr;
+AHRS* Schematic::gryo = nullptr;

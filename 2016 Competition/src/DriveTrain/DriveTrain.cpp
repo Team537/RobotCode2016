@@ -7,7 +7,7 @@ void DriveTrain::Update(const bool& teleop)
     float crossSign;
     float gyroError;
 
-    if (joystickPrimary->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y) > JOYSTICK_DEADBAND || joystickPrimary->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y) > JOYSTICK_DEADBAND)
+    if (Schematic::GetPrimary()->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y) > JOYSTICK_DEADBAND || Schematic::GetPrimary()->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y) > JOYSTICK_DEADBAND)
     {
         primaryDriving = true;
     }
@@ -19,24 +19,24 @@ void DriveTrain::Update(const bool& teleop)
     // Secondary update checks!
     if (!isClimbing)
     {
-        if (joystickSecondary->GetPOV() != -1.0f)
+        if (Schematic::GetSecondary()->GetPOV() != -1.0f)
         {
-            crossingForward = joystickSecondary->GetPOV() == 0 ? true : joystickSecondary->GetPOV() == 180 ? false : crossingForward;
+            crossingForward = Schematic::GetSecondary()->GetPOV() == 0 ? true : Schematic::GetPrimary()->GetPOV() == 180 ? false : crossingForward;
         }
 
-        if (joystickSecondary->GetRawButton(JOYSTICK_Y))
+        if (Schematic::GetSecondary()->GetRawButton(JOYSTICK_Y))
         {
             crossSpeedMultiplier = DRIVE_DEFENSE_LOW_BAR;
         }
-        else if (joystickSecondary->GetRawButton(JOYSTICK_X))
+        else if (Schematic::GetSecondary()->GetRawButton(JOYSTICK_X))
         {
             crossSpeedMultiplier = DRIVE_DEFENSE_RAMP_PARTS;
         }
-        else if (joystickSecondary->GetRawButton(JOYSTICK_B))
+        else if (Schematic::GetSecondary()->GetRawButton(JOYSTICK_B))
         {
             crossSpeedMultiplier = DRIVE_DEFENSE_MOAT;
         }
-        else if (joystickSecondary->GetRawButton(JOYSTICK_A))
+        else if (Schematic::GetSecondary()->GetRawButton(JOYSTICK_A))
         {
             crossSpeedMultiplier = DRIVE_DEFENSE_ROCK_WALL;
         }
@@ -46,7 +46,7 @@ void DriveTrain::Update(const bool& teleop)
     {
         case (DriveState::AUTO_ANGLE):
             // Updates the ETC input and grabs the output.
-            angleETC->SetInput(gyro->GetYaw());
+            angleETC->SetInput(Schematic::GetGyro()->GetYaw());
             output = angleETC->GetOutput();
 
             // Calculated what direction the output want to go.
@@ -77,7 +77,7 @@ void DriveTrain::Update(const bool& teleop)
         case (DriveState::CROSSING):
             // Update the current readings and errors.
             crossSign = crossReverse ? 1.0f : -1.0f;
-            gyroError = gyro->GetYaw();
+            gyroError = Schematic::GetGyro()->GetYaw();
             rightSpeedCurrent = 1.0f;
             leftSpeedCurrent = 1.0f;
             DefenceCross();
@@ -131,8 +131,8 @@ void DriveTrain::Update(const bool& teleop)
             }
 
             // Grabs the current speed from the two drive axes.
-            leftSpeedCurrent = (isClimbing && !primaryDriving ? joystickSecondary : joystickPrimary)->GetRawAxis(!reverse ? JOYSTICK_AXIS_LEFT_Y : JOYSTICK_AXIS_RIGHT_Y);
-            rightSpeedCurrent = (isClimbing && !primaryDriving ? joystickSecondary : joystickPrimary)->GetRawAxis(!reverse ? JOYSTICK_AXIS_RIGHT_Y : JOYSTICK_AXIS_LEFT_Y);
+            leftSpeedCurrent = (isClimbing && !primaryDriving ? Schematic::GetSecondary() : Schematic::GetPrimary())->GetRawAxis(!reverse ? JOYSTICK_AXIS_LEFT_Y : JOYSTICK_AXIS_RIGHT_Y);
+            rightSpeedCurrent = (isClimbing && !primaryDriving ? Schematic::GetSecondary() : Schematic::GetPrimary())->GetRawAxis(!reverse ? JOYSTICK_AXIS_RIGHT_Y : JOYSTICK_AXIS_LEFT_Y);
 
             // Deadband
             if (fabs(leftSpeedCurrent) < JOYSTICK_DEADBAND)
@@ -150,9 +150,9 @@ void DriveTrain::Update(const bool& teleop)
             rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
 
             // Gets the auto angle from POV (if down).
-            if (joystickPrimary->GetPOV() != -1.0f)
+            if (Schematic::GetPrimary()->GetPOV() != -1.0f)
             {
-                AutoAngle(joystickPrimary->GetPOV());
+                AutoAngle(Schematic::GetPrimary()->GetPOV());
             }
             // Auto crosses if toggle is down!
             else if (autoCrossToggle->GetState())
@@ -210,13 +210,13 @@ bool DriveTrain::DefenceCross()
         case 0:
             hasCrossed = false;
 
-            if (gyro->GetRoll() >= -7.0f)
+            if (Schematic::GetGyro()->GetRoll() >= -7.0f)
             {
                 crossState = 1;
             }
             break;
         case 1:
-            if (gyro->GetRoll() >= 7.0f)
+            if (Schematic::GetGyro()->GetRoll() >= 7.0f)
             {
                 crossTime->Reset();
                 crossTime->Start();
@@ -224,7 +224,7 @@ bool DriveTrain::DefenceCross()
             }
             break;
         case 2:
-            if (fabs(gyro->GetRoll()) >= 4)
+            if (fabs(Schematic::GetGyro()->GetRoll()) >= 4)
             {
                 crossTime->Stop();
                 crossState = 3;
@@ -237,7 +237,7 @@ bool DriveTrain::DefenceCross()
             }
             break;
         case 3:
-            if (fabs(gyro->GetRoll()) <= 4)
+            if (fabs(Schematic::GetGyro()->GetRoll()) <= 4)
             {
                 crossTime->Start();
                 crossState = 2;
@@ -379,7 +379,7 @@ void DriveTrain::AutoAngle(const float& angleDegrees)
     // Changes the state.
     SetState(DriveState::AUTO_ANGLE);
     // Resets the gyro.
-    gyro->Reset();
+    Schematic::GetGyro()->Reset();
 
     // Change angles from 0 to 360 => -180 to 180.
     float targetAngle = angleDegrees;
@@ -430,7 +430,7 @@ void DriveTrain::Cross(const bool& reverse, const float& speed)
     // Changes the state.
     SetState(DriveState::CROSSING);
     // Resets the gyro.
-    gyro->Reset();
+    Schematic::GetGyro()->Reset();
     // Sets if its crossing in reverse.
     crossReverse = reverse;
     crossSpeedMultiplier = speed;

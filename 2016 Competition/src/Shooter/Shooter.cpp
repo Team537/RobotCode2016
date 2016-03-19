@@ -22,21 +22,20 @@ void Shooter::Update(const bool& teleop)
             state = ShooterState::AIMING;
         }
 
-
         if (manualOnButton->WasDown() && state != ShooterState::MANUAL)
         {
             state = ShooterState::MANUAL;
             talon1->SetControlMode(CANTalon::ControlMode::kPercentVbus);
             talon2->SetControlMode(CANTalon::ControlMode::kPercentVbus);
         }
-        if (manualOffButton->WasDown()   && state == ShooterState::MANUAL)
+
+        if (manualOffButton->WasDown() && state == ShooterState::MANUAL)
         {
             state = ShooterState::NONE;
             talon1->SetControlMode(CANTalon::ControlMode::kSpeed);
             talon2->SetControlMode(CANTalon::ControlMode::kFollower);
         }
-
-}
+    }
 
     switch (state)
     {
@@ -52,10 +51,10 @@ void Shooter::Update(const bool& teleop)
             break;
         case ShooterState::SPINNING:
             // Start spinning up the fly wheels.
-        {
-            double velocity = ((vision->GetGoalDistance() * 0.0254) / cos(WEBCAM_BOT_ANGLE)) * sqrt(G / (2 * (((GOAL_GROUND_HEIGHT - WEBCAM_BOT_HEIGHT) * 0.0254) - (((vision->GetGoalDistance() * 0.0254) * cos(WEBCAM_BOT_ANGLE)) * tan(SHOOTER_ANGLE)))));
-            spinSpeed = (velocity * (2 * PI * (0.1 / 2.0)) * 1000.0); // 0.1m diameter, 256 ticks/revolution * 4
-        }
+            {
+                double velocity = ((vision->GetGoalDistance() * 0.0254) / cos(WEBCAM_BOT_ANGLE)) * sqrt(G / (2 * (((GOAL_GROUND_HEIGHT - WEBCAM_BOT_HEIGHT) * 0.0254) - (((vision->GetGoalDistance() * 0.0254) * cos(WEBCAM_BOT_ANGLE)) * tan(SHOOTER_ANGLE)))));
+                spinSpeed = (velocity * (2 * PI * (0.1 / 2.0)) * 1000.0); // 0.1m diameter, 256 ticks/revolution * 4
+            }
 
             drive->SetState(DriveTrain::DriveState::NONE);
 
@@ -87,9 +86,10 @@ void Shooter::Update(const bool& teleop)
             }
             break;
         case ShooterState::MANUAL:
-           talon1->Set(-manualSpeed); //flip directions for comp
-           talon2->Set(manualSpeed);
-           if (manualFireButton->WasDown())
+            talon1->Set(-manualSpeed); //flip directions for comp
+            talon2->Set(manualSpeed);
+
+            if (manualFireButton->WasDown())
             {
                 extendSolenoid->Set(true);
             }
@@ -100,10 +100,11 @@ void Shooter::Update(const bool& teleop)
 
             if (speedUpButton->WasDown())
             {
-                manualSpeed +=.05;
+                manualSpeed += .05;
             }
-            if(speedDownButton->WasDown()){
-                manualSpeed -=.05;
+            if (speedDownButton->WasDown())
+            {
+                manualSpeed -= .05;
             }
 
             if (manualSpeed > 1)
