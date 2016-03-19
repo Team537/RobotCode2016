@@ -1,0 +1,21 @@
+#include <Toolbox/RobotButton.hpp>
+
+float RobotButton::GetAxis()
+{
+    if (controlsType != AXIS){
+        DriverStation::ReportError("Getting values for axis " + key + " failed because it is not an axis!");
+    }
+    return (joystickType == PRIMARY ? Schematic::GetPrimary() : Schematic::GetSecondary())->GetRawAxis(key);
+}
+
+bool RobotButton::GetKey()
+{
+    return (joystickType == PRIMARY ? Schematic::GetPrimary() : Schematic::GetSecondary())->GetRawButton(key);
+}
+
+bool RobotButton::WasDown()
+{
+    bool stillDown = lastState && GetKey();
+    lastState = GetKey();
+    return lastState == !stillDown;
+}

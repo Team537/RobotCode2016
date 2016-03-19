@@ -10,13 +10,15 @@ void Shooter::Update(const bool& teleop)
             state = ShooterState::NONE;
         }
 
-        if (autoShootButton->WasDown())
+
+        if (NEW_JOYSTICK ? autoShootButton->GetAxis() > JOYSTICK_DEADBAND : autoShootButton->GetKey())
         {
             autoAdvance = true;
             state = ShooterState::AIMING;
         }
 
-        if (manualAimButton->WasDown() && state != ShooterState::MANUAL)
+
+        if ((NEW_JOYSTICK ? manualAimButton->GetAxis() > JOYSTICK_DEADBAND : manualAimButton->GetKey()) && state != ShooterState::MANUAL)
         {
             autoAdvance = false;
             state = ShooterState::AIMING;
@@ -98,11 +100,13 @@ void Shooter::Update(const bool& teleop)
                 extendSolenoid->Set(false);
             }
 
-            if (speedUpButton->WasDown())
+
+            if (NEW_JOYSTICK ? speedUpButton->GetAxis() > JOYSTICK_DEADBAND : speedUpButton->GetKey())
             {
                 manualSpeed += .05;
             }
-            if (speedDownButton->WasDown())
+
+            if (NEW_JOYSTICK ? speedDownButton->GetAxis() > JOYSTICK_DEADBAND : speedDownButton->GetKey())
             {
                 manualSpeed -= .05;
             }

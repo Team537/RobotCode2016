@@ -1,20 +1,32 @@
 #include <Toolbox/RobotButton.hpp>
 
-bool RobotButton::GetState()
+float RobotButton::GetAxis()
 {
-    if (axis)
+    if (controlsType != AXIS)
     {
-        return joystick->GetRawAxis(key) > JOYSTICK_DEADBAND;
+    //    char* error = "Getting values for axis " + key + " failed because it is not an axis type!";
+    //    DriverStation::ReportError(error);
+    //    delete[] error;
     }
-    else
+
+    return (joystickType == PRIMARY ? Schematic::GetPrimary() : Schematic::GetSecondary())->GetRawAxis(key);
+}
+
+bool RobotButton::GetKey()
+{
+    if (controlsType != KEY)
     {
-        return joystick->GetRawButton(key);
+    //    char* error = "Getting values for key " + key + " failed because it is not a key type!";
+    //    DriverStation::ReportError(error);
+    //    delete[] error;
     }
+
+    return (joystickType == PRIMARY ? Schematic::GetPrimary() : Schematic::GetSecondary())->GetRawButton(key);
 }
 
 bool RobotButton::WasDown()
 {
-    bool stillDown = lastState && GetState();
-    lastState = GetState();
+    bool stillDown = lastState && GetKey();
+    lastState = GetKey();
     return lastState == !stillDown;
 }

@@ -18,9 +18,9 @@ class Collector: public IComponent
         Collector() :
                 IComponent(new string("Collector")),
                 collectMotor(new CANTalon(9)),
-                collectInToggle(new RobotButton(Schematic::GetPrimary(), JOYSTICK_A, false)),
-                collectStop(new RobotButton(Schematic::GetPrimary(), JOYSTICK_B, false)),
-                collectOutButton(new RobotButton(Schematic::GetPrimary(), JOYSTICK_Y, false)),
+                collectInToggle(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_A)),
+                collectStop(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_B)),
+                collectOutButton(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_Y)),
                 reverseCollecting(false)
         {
             collectMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);

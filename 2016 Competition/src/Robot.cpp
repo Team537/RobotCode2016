@@ -1,19 +1,10 @@
-#include <Autonomous/AutonomousDemo.hpp>
-#include <Autonomous/AutonomousLowBar.hpp>
-#include <Autonomous/AutonomousRockWall.hpp>
-#include <Autonomous/AutonomousRoughTerrain.hpp>
-#include <Autonomous/AutonomousRampParts.hpp>
-#include <Autonomous/AutonomousMoat.hpp>
-#include <Autonomous/AutonomousReach.hpp>
-#include <Autonomous/AutonomousTimed.hpp>
-#include <Autonomous/AutonomousNone.hpp>
+#include <Autonomous/Autonomous.hpp>
 #include <Climber/Climber.hpp>
 #include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
 #include <Shooter/Shooter.hpp>
 #include <Vision/Vision.hpp>
 #include <Schematic.hpp>
-#include <Toolbox/RobotButton.hpp>
 
 using namespace std;
 

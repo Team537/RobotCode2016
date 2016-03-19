@@ -16,13 +16,13 @@ void Collector::Update(const bool& teleop)
         }
 
         // Spits out while held down.
-        if (collectOutButton->GetState())
+        if (collectOutButton->GetKey())
         {
             Collect(true);
             reverseCollecting = true;
         }
         // Stop collecting if not held down.
-        else if (reverseCollecting && !collectOutButton->GetState())
+        else if (reverseCollecting && !collectOutButton->GetKey())
         {
             TurnOff();
             reverseCollecting = false;

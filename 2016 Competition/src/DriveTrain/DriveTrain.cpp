@@ -155,7 +155,7 @@ void DriveTrain::Update(const bool& teleop)
                 AutoAngle(Schematic::GetPrimary()->GetPOV());
             }
             // Auto crosses if toggle is down!
-            else if (autoCrossToggle->GetState())
+            else if (NEW_JOYSTICK ? autoCrossToggle->GetAxis() > JOYSTICK_DEADBAND : autoCrossToggle->GetKey())
             {
                 Cross(crossingForward, crossSpeedMultiplier);
             }

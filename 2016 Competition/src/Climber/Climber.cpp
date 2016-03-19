@@ -30,12 +30,12 @@ void Climber::Update(const bool& teleop)
                 state = ClimberState::RETRACT;
             }
 
-            if (deployHalfButton->WasDown())
+            if (NEW_JOYSTICK ? deployHalfButton->GetAxis() > JOYSTICK_DEADBAND : deployHalfButton->GetKey())
             {
                 state = ClimberState::EXTEND_HALF;
             }
 
-            if (deployFullButton->WasDown())
+            if (NEW_JOYSTICK ? deployFullButton->GetAxis() > JOYSTICK_DEADBAND : deployFullButton->GetKey())
             {
                 state = ClimberState::EXTEND_FULL;
             }

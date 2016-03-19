@@ -4,17 +4,14 @@
 
 class RobotButton
 {
-    private:
-        Joystick *joystick;
-        unsigned int key;
-        bool axis;
-        bool lastState;
-
     public:
-        RobotButton(Joystick *joystick, unsigned int key, bool axis) :
-            joystick(joystick),
+        enum JoystickType { PRIMARY, SECONDARY };
+        enum ControlTypes { KEY, AXIS };
+
+        RobotButton(JoystickType joystickType, ControlTypes controlsType, unsigned int key) :
+            joystickType(joystickType),
+            controlsType(controlsType),
             key(key),
-            axis(axis),
             lastState(false)
         {
         }
@@ -23,6 +20,12 @@ class RobotButton
         {
         }
 
-        bool GetState();
+        float GetAxis();
+        bool GetKey();
         bool WasDown();
+    private:
+        JoystickType joystickType;
+        ControlTypes controlsType;
+        unsigned int key;
+        bool lastState;
 };
