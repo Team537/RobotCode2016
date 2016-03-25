@@ -1,0 +1,138 @@
+#include <Autonomous/Autonomous.hpp>
+#include <Climber/Climber.hpp>
+#include <Collector/Collector.hpp>
+#include <DriveTrain/DriveTrain.hpp>
+#include <Shooter/Shooter.hpp>
+#include <Vision/Vision.hpp>
+#include <Schematic.hpp>
+
+using namespace std;
+
+class Robot: public IterativeRobot
+{
+    private:
+        SendableChooser* autoChooser;
+        IAutonomous* selectedAuto;
+
+        Vision* vision;
+        DriveTrain* driveTrain;
+        Shooter* shooter;
+        Climber* climber;
+        Collector* collector;
+
+        void RobotInit()
+        {
+            AHRS* ahrs = nullptr;
+
+            try
+            {
+                ahrs = new AHRS(SPI::Port::kMXP);
+                ahrs->Reset();
+            }
+            catch (exception ex)
+            {
+                std::string err_string = "Error instantiating navX-MXP:  ";
+                err_string += ex.what();
+                DriverStation::ReportError(err_string.c_str());
+            }
+
+            Schematic::Init(new Joystick(JOYSTICK_PRIMARY), new Joystick(JOYSTICK_SECONDARY), ahrs);
+
+            // Creates the robot components.
+            vision = new Vision();
+            driveTrain = new DriveTrain(vision);
+            shooter = new Shooter(vision, driveTrain);
+            climber = new Climber();
+            collector = new Collector();
+
+            // Creates the auto modes.
+            selectedAuto = NULL;
+            autoChooser = new SendableChooser();
+            new AutonomousLowBar(autoChooser, false, driveTrain);
+            new AutonomousRockWall(autoChooser, false, driveTrain);
+            new AutonomousRoughTerrain(autoChooser, false, driveTrain);
+            new AutonomousRampParts(autoChooser, false, driveTrain);
+            new AutonomousMoat(autoChooser, false, driveTrain);
+            new AutonomousDemo(autoChooser, true, driveTrain);
+            new AutonomousReach(autoChooser, true, driveTrain);
+            new AutonomousTimed(autoChooser, true, driveTrain);
+            new AutonomousNone(autoChooser, true);
+            SmartDashboard::PutData("Auto Modes", autoChooser);
+        }
+
+        void ComponentsUpdate(bool teleop)
+        {
+            vision->ComponentUpdate(teleop);
+            climber->ComponentUpdate(teleop);
+
+            driveTrain->SetCrossing(climber->IsClimbing());
+            driveTrain->ComponentUpdate(teleop);
+
+            if (!climber->IsClimbing())
+            {
+                collector->ComponentUpdate(teleop);
+                shooter->ComponentUpdate(teleop);
+            }
+
+            SmartDashboard::PutNumber("NavX Angle", Schematic::GetGyro()->GetAngle());
+            SmartDashboard::PutNumber("NavX Angle Pitch", Schematic::GetGyro()->GetPitch());
+            SmartDashboard::PutNumber("NavX Angle Yaw", Schematic::GetGyro()->GetYaw());
+            SmartDashboard::PutNumber("NavX Angle Roll", Schematic::GetGyro()->GetRoll());
+            SmartDashboard::PutNumber("NavX Velocity X", Schematic::GetGyro()->GetVelocityX());
+            SmartDashboard::PutNumber("NavX Velocity Y", Schematic::GetGyro()->GetVelocityY());
+            SmartDashboard::PutNumber("NavX Velocity Z", Schematic::GetGyro()->GetVelocityZ());
+        }
+
+        void AutonomousInit()
+        {
+            Schematic::GetGyro()->Reset();
+            selectedAuto = AutonomousTimed;
+            climber->Init();
+            selectedAuto->Start();
+        }
+
+        void AutonomousPeriodic()
+        {
+            SmartDashboard::PutString("Auto Selected", ((IAutonomous*) autoChooser->GetSelected())->GetName());
+
+            if (selectedAuto != NULL)
+            {
+                double time = DriverStation::GetInstance().GetMatchTime();
+                // bool autoRunning = selectedAuto->AutonomousUpdate(time);
+                selectedAuto->AutonomousDashboard();
+                selectedAuto->Run(time);
+                ComponentsUpdate(false);
+
+//                if (!autoRunning)
+//                {
+//                    selectedAuto = NULL;
+//                }
+            }
+        }
+
+        void TeleopInit()
+        {
+            Schematic::GetGyro()->Reset();
+
+            if (selectedAuto != NULL)
+            {
+                selectedAuto->AutonomousUpdate(1000);
+                selectedAuto = NULL;
+            }
+
+            climber->Init();
+        }
+
+        void TeleopPeriodic()
+        {
+            ComponentsUpdate(true);
+        }
+
+        void TestPeriodic()
+        {
+            ComponentsUpdate(true);
+            LiveWindow::GetInstance()->Run();
+        }
+};
+
+START_ROBOT_CLASS(Robot)

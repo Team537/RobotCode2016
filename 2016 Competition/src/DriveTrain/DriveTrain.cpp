@@ -146,8 +146,8 @@ void DriveTrain::Update(const bool& teleop)
             }
 
             // Multiplies the speed to slow down the bot.
-            leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
-            rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_CLIMBING_MULTIPLIER : 1.0f);
+            leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_SECONDARY_CLIMBING_MULTIPLIER : 1.0f);
+            rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_SECONDARY_CLIMBING_MULTIPLIER : 1.0f);
 
             // Gets the auto angle from POV (if down).
             if (Schematic::GetPrimary()->GetPOV() != -1.0f)

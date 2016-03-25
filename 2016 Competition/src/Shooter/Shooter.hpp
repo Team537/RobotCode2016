@@ -18,7 +18,7 @@ class Shooter: public IComponent
         float spinSpeed, manualSpeed;
         bool autoAdvance;
 
-        RobotButton *gotoNoneButton0, *autoShootButton, *manualAimButton, *manualFireButton,
+        RobotButton *gotoNoneButton0, *gotoNoneButton1, *autoShootButton, *manualAimButton, *manualFireButton,
         *manualRetractButton, *manualOnButton, *speedUpButton, *speedDownButton, *manualOffButton;
 
     public:
@@ -41,6 +41,7 @@ class Shooter: public IComponent
                 manualSpeed(1.0f),
                 autoAdvance(false),
                 gotoNoneButton0(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_B)),
+                gotoNoneButton1(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_B)),
                 autoShootButton(new RobotButton(RobotButton::JoystickType::PRIMARY, NEW_JOYSTICK ? RobotButton::ControlTypes::AXIS : RobotButton::ControlTypes::KEY, JOYSTICK_TRIGGER_LEFT)),
                 manualAimButton(new RobotButton(RobotButton::JoystickType::SECONDARY, NEW_JOYSTICK ? RobotButton::ControlTypes::AXIS : RobotButton::ControlTypes::KEY, JOYSTICK_TRIGGER_LEFT)),
                 manualFireButton(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUMPER_RIGHT)),

@@ -4,18 +4,18 @@ void Shooter::Update(const bool& teleop)
 {
     if (teleop)
     {
-        if (gotoNoneButton0->WasDown())
+        if (gotoNoneButton0->WasDown() || gotoNoneButton1->WasDown())
         {
             drive->SetState(DriveTrain::DriveState::NONE);
             state = ShooterState::NONE;
         }
 
 
-        if (NEW_JOYSTICK ? autoShootButton->GetAxis() > JOYSTICK_DEADBAND : autoShootButton->GetKey())
+     /*   if (NEW_JOYSTICK ? autoShootButton->GetAxis() > JOYSTICK_DEADBAND : autoShootButton->GetKey())
         {
             autoAdvance = true;
             state = ShooterState::AIMING;
-        }
+        }*/
 
 
         if ((NEW_JOYSTICK ? manualAimButton->GetAxis() > JOYSTICK_DEADBAND : manualAimButton->GetKey()) && state != ShooterState::MANUAL)
@@ -48,14 +48,16 @@ void Shooter::Update(const bool& teleop)
             // Once targeted advance / pause.
             if (drive->IsWaiting() || drive->IsTeleopControl())
             {
-                state = autoAdvance ? ShooterState::AIMING : ShooterState::NONE;
+                state = /*autoAdvance ? ShooterState::AIMING :*/ ShooterState::NONE;
             }
             break;
         case ShooterState::SPINNING:
             // Start spinning up the fly wheels.
             {
                 double velocity = ((vision->GetGoalDistance() * 0.0254) / cos(WEBCAM_BOT_ANGLE)) * sqrt(G / (2 * (((GOAL_GROUND_HEIGHT - WEBCAM_BOT_HEIGHT) * 0.0254) - (((vision->GetGoalDistance() * 0.0254) * cos(WEBCAM_BOT_ANGLE)) * tan(SHOOTER_ANGLE)))));
+                SmartDashboard::PutNumber("Shooter Calculated Velocity", velocity);
                 spinSpeed = (velocity * (2 * PI * (0.1 / 2.0)) * 1000.0); // 0.1m diameter, 256 ticks/revolution * 4
+                SmartDashboard::PutNumber("Shooter Calculated Rate", spinSpeed);
             }
 
             drive->SetState(DriveTrain::DriveState::NONE);
@@ -88,9 +90,6 @@ void Shooter::Update(const bool& teleop)
             }
             break;
         case ShooterState::MANUAL:
-            talon1->Set(-manualSpeed); //flip directions for comp
-            talon2->Set(manualSpeed);
-
             if (manualFireButton->WasDown())
             {
                 extendSolenoid->Set(true);
@@ -99,7 +98,6 @@ void Shooter::Update(const bool& teleop)
             {
                 extendSolenoid->Set(false);
             }
-
 
             if (NEW_JOYSTICK ? speedUpButton->GetAxis() > JOYSTICK_DEADBAND : speedUpButton->GetKey())
             {
@@ -120,6 +118,8 @@ void Shooter::Update(const bool& teleop)
                 manualSpeed = 0;
             }
 
+            talon1->Set(manualSpeed); // flip directions for comp
+            talon2->Set(-manualSpeed);
             break;
         case ShooterState::NONE:
             // Returns to states before.

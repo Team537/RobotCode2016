@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="Timed" key="selection"/>
+		<item value="RobotButton::JoystickType::PRIMARY" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="Schematic::GetPrimary()"/>
+			<item value="Schematic::GetSecondary()"/>
+			<item value="joystickPrimary"/>
+			<item value="joystickSecondary"/>
+			<item value="reverse"/>
 			<item value="RoughTerrain"/>
 			<item value="AUTO_TIMED"/>
 			<item value="new solenoid"/>
-			<item value="new solenokid"/>
-			<item value="climbing"/>
-			<item value="set"/>
-			<item value="master"/>
-			<item value="autodistance"/>
 		</list>
 		<list key="replacehistory">
+			<item value="RobotButton::JoystickType::PRIMARY"/>
+			<item value="RobotButton::JoystickType::SECONDARY"/>
+			<item value="Schematic::GetPrimary()"/>
+			<item value="Schematic::GetSecondary()"/>
 			<item value="Timed"/>
 			<item value="None"/>
 			<item value="Moat"/>
 			<item value="RampParts"/>
-			<item value="RoughTerrain"/>
-			<item value="DEFENSE"/>
-			<item value="LowBar"/>
-			<item value="LOWBAR"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

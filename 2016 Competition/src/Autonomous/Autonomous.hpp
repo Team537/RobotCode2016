@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Autonomous/AutonomousDemo.hpp>
 #include <Autonomous/AutonomousLowBar.hpp>
 #include <Autonomous/AutonomousMoat.hpp>
 #include <Autonomous/AutonomousNone.hpp>
