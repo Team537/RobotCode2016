@@ -20,6 +20,10 @@ void Climber::Update(const bool& teleop)
         // If climbing update controls.
         if (climbing)
         {
+            if (toggleFullSpeed->WasDown())
+            {
+                fullSpeed = !fullSpeed;
+            }
             if (gotoNoneButton->WasDown())
             {
                 state = ClimberState::NONE;

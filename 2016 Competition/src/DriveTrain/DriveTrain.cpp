@@ -7,7 +7,7 @@ void DriveTrain::Update(const bool& teleop)
     float crossSign;
     float gyroError;
 
-    if (Schematic::GetPrimary()->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y) > JOYSTICK_DEADBAND || Schematic::GetPrimary()->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y) > JOYSTICK_DEADBAND)
+    if (Schematic::GetPrimary()->GetRawAxis(JOYSTICK_AXIS_LEFT_Y) > JOYSTICK_DEADBAND || Schematic::GetPrimary()->GetRawAxis(JOYSTICK_AXIS_RIGHT_Y) > JOYSTICK_DEADBAND)
     {
         primaryDriving = true;
     }
@@ -146,8 +146,8 @@ void DriveTrain::Update(const bool& teleop)
             }
 
             // Multiplies the speed to slow down the bot.
-            leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_SECONDARY_CLIMBING_MULTIPLIER : 1.0f);
-            rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * (isClimbing ? DRIVE_SECONDARY_CLIMBING_MULTIPLIER : 1.0f);
+            leftSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * ((isClimbing && !climbingFullSpeed) ? DRIVE_SECONDARY_CLIMBING_MULTIPLIER : 1.0f);
+            rightSpeedCurrent *= DRIVE_SPEED_MULTIPLIER * ((isClimbing && ~climbingFullSpeed) ? DRIVE_SECONDARY_CLIMBING_MULTIPLIER : 1.0f);
 
             // Gets the auto angle from POV (if down).
             if (Schematic::GetPrimary()->GetPOV() != -1.0f)
@@ -162,8 +162,8 @@ void DriveTrain::Update(const bool& teleop)
             // Drives the master talons.
             else
             {
-                rightDriveMaster->Set(reverse /*&& primaryDriving*/ ? rightSpeedCurrent : -rightSpeedCurrent);
-                leftDriveMaster->Set(reverse /*&& primaryDriving*/ ? -leftSpeedCurrent : leftSpeedCurrent);
+                rightDriveMaster->Set(reverse ? rightSpeedCurrent : -rightSpeedCurrent);
+                leftDriveMaster->Set(reverse ? -leftSpeedCurrent : leftSpeedCurrent);
             }
             break;
         case (DriveState::TELEOP_SHOOT):
@@ -410,9 +410,14 @@ void DriveTrain::AutoTimed()
     SetState(DriveState::AUTO_TIMED);
 }
 
-void DriveTrain::SetCrossing(const bool& crossing)
+void DriveTrain::SetClimbing(const bool& climbing)
 {
-    isClimbing = crossing;
+    isClimbing = climbing;
+}
+
+void DriveTrain::SetClimbingFullSpeed(const bool& fullSpeed)
+{
+    climbingFullSpeed = fullSpeed;
 }
 
 bool DriveTrain::IsWaiting()

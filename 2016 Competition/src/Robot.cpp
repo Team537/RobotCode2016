@@ -23,6 +23,9 @@ class Robot: public IterativeRobot
 
         void RobotInit()
         {
+            camera = CameraServer::GetInstance();
+            camera->SetQuality(50);
+            camera->StartAutomaticCapture("cam0");
             AHRS* ahrs = nullptr;
 
             try
@@ -45,9 +48,6 @@ class Robot: public IterativeRobot
             shooter = new Shooter(vision, driveTrain);
             climber = new Climber();
             collector = new Collector();
-            camera = CameraServer::GetInstance();
-            camera->SetQuality(50);
-            camera->StartAutomaticCapture("cam0");
 
             // Creates the auto modes.
             selectedAuto = NULL;
@@ -57,9 +57,9 @@ class Robot: public IterativeRobot
             new AutonomousRoughTerrain(autoChooser, false, driveTrain);
             new AutonomousRampParts(autoChooser, false, driveTrain);
             new AutonomousMoat(autoChooser, false, driveTrain);
-            new AutonomousReach(autoChooser, true, driveTrain);
+            new AutonomousReach(autoChooser, false, driveTrain);
             new AutonomousTimed(autoChooser, true, driveTrain);
-            new AutonomousNone(autoChooser, true);
+            new AutonomousNone(autoChooser, false);
             SmartDashboard::PutData("Auto Modes", autoChooser);
         }
 
@@ -68,12 +68,14 @@ class Robot: public IterativeRobot
             vision->ComponentUpdate(teleop);
             climber->ComponentUpdate(teleop);
 
-            driveTrain->SetCrossing(climber->IsClimbing());
+            driveTrain->SetClimbing(climber->IsClimbing());
+            driveTrain->SetClimbingFullSpeed(climber->IsFullSpeed());
             driveTrain->ComponentUpdate(teleop);
+
+            collector->ComponentUpdate(teleop);
 
             if (!climber->IsClimbing())
             {
-                collector->ComponentUpdate(teleop);
                 shooter->ComponentUpdate(teleop);
             }
 

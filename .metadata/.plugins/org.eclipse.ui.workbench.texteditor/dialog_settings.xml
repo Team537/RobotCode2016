@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="RobotButton::JoystickType::PRIMARY" key="selection"/>
+		<item value="JOYSTICK_X" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="JOYSTICK_X"/>
+			<item value="_X"/>
+			<item value="isClimbing"/>
+			<item value="TRIGGER"/>
+			<item value="primaryDriving"/>
 			<item value="Schematic::GetPrimary()"/>
 			<item value="Schematic::GetSecondary()"/>
 			<item value="joystickPrimary"/>
-			<item value="joystickSecondary"/>
-			<item value="reverse"/>
-			<item value="RoughTerrain"/>
-			<item value="AUTO_TIMED"/>
-			<item value="new solenoid"/>
 		</list>
 		<list key="replacehistory">
 			<item value="RobotButton::JoystickType::PRIMARY"/>

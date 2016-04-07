@@ -79,6 +79,7 @@ class DriveTrain: public IComponent
         bool hasCrossed;
         int crossState;
         bool isClimbing;
+        bool climbingFullSpeed;
 
         Timer *driveTime;
         int timedDriveState;
@@ -182,7 +183,8 @@ class DriveTrain: public IComponent
         void AutoDistance(const int& distanceIn);
         void AutoTimed();
         void Cross(const bool& reverse, const float& speed);
-        void SetCrossing(const bool& crossing);
+        void SetClimbing(const bool& climbing);
+        void SetClimbingFullSpeed(const bool& fullSpeed);
 
         bool IsWaiting();
         bool IsTeleopControl();

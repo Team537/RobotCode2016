@@ -9,10 +9,10 @@ class Climber: public IComponent
         DigitalInput *deployStage1Right, *deployStage2Right, *deployStage1Left, *deployStage2Left;
         Solenoid *deployStage1, *deployStage2, *hooksStage3;
 
-        RobotButton *gotoNoneButton, *toggleClimbMode, *retractButton, *deployHalfButton, *deployFullButton, *deployHooksButton, *pullUpButton;
+        RobotButton *gotoNoneButton, *toggleClimbMode, *toggleFullSpeed, *retractButton, *deployHalfButton, *deployFullButton, *deployHooksButton, *pullUpButton;
 
         Timer *timer;
-        bool climbing, deployedFull;
+        bool climbing, deployedFull, fullSpeed;
         string stateNames[6] = {"None", "Retract", "Extend Half", "Extend Full", "Extend Hooks", "Pull Up"};
 
     public:
@@ -21,7 +21,7 @@ class Climber: public IComponent
             NONE, RETRACT, EXTEND_HALF, EXTEND_FULL, EXTEND_HOOKS, PULL_UP
         };
 
-        ClimberState state;
+        ClimberState state, statelast;
 
         Climber() :
                 IComponent(new string("Climber")),
@@ -39,10 +39,13 @@ class Climber: public IComponent
                 deployFullButton(new RobotButton(RobotButton::JoystickType::SECONDARY, NEW_JOYSTICK ? RobotButton::ControlTypes::AXIS : RobotButton::ControlTypes::KEY, JOYSTICK_TRIGGER_LEFT)),
                 deployHooksButton(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUMPER_RIGHT)),
                 pullUpButton(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUMPER_LEFT)),
+                toggleFullSpeed(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_X)),
                 timer(new Timer()),
                 climbing(false),
                 deployedFull(false),
-                state(ClimberState::RETRACT)
+                fullSpeed(true),
+                state(ClimberState::RETRACT),
+                statelast(ClimberState::NONE)
         {
         }
 
@@ -58,4 +61,5 @@ class Climber: public IComponent
         void ToggleStage2(const bool& extend);
         void ToggleExtend(const bool& extend);
         inline bool IsClimbing() const { return climbing; }
+        inline bool IsFullSpeed() const { return fullSpeed; }
 };

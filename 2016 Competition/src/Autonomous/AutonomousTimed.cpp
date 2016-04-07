@@ -14,7 +14,7 @@ bool AutonomousTimed::Run(const double& time)
         driveTrain->SetState(DriveTrain::DriveState::NONE);
         SmartDashboard::PutString("Test1", "State1");
     }
-    else if(autoTime->Get() < 4)
+    else if(autoTime->Get() < 5)
     {
         driveTrain->AutoTimed();
         SmartDashboard::PutString("Test2", "State2");
