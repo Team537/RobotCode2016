@@ -2,7 +2,7 @@
 #include <Climber/Climber.hpp>
 #include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
-#include <Shooter/Shooter.hpp>
+//#include <Shooter/Shooter.hpp>
 #include <Vision/Vision.hpp>
 #include <Schematic.hpp>
 
@@ -16,16 +16,16 @@ class Robot: public IterativeRobot
 
         Vision* vision;
         DriveTrain* driveTrain;
-        Shooter* shooter;
+        //Shooter* shooter;
         Climber* climber;
         Collector* collector;
-        CameraServer* camera;
+      //  CameraServer* camera;
 
         void RobotInit()
         {
-            camera = CameraServer::GetInstance();
-            camera->SetQuality(50);
-            camera->StartAutomaticCapture("cam0");
+           // camera = CameraServer::GetInstance();
+            //camera->SetQuality(50);
+            //camera->StartAutomaticCapture("cam0");
             AHRS* ahrs = nullptr;
 
             try
@@ -40,12 +40,12 @@ class Robot: public IterativeRobot
                 DriverStation::ReportError(err_string.c_str());
             }
 
-            Schematic::Init(new Joystick(JOYSTICK_PRIMARY), new Joystick(JOYSTICK_SECONDARY), ahrs);
+            Schematic::Init(new Joystick(JOYSTICK_PRIMARY), new Joystick(JOYSTICK_SECONDARY), new Joystick(JOYSTICK_TERTIARY), ahrs);
 
             // Creates the robot components.
             vision = new Vision();
             driveTrain = new DriveTrain(vision);
-            shooter = new Shooter(vision, driveTrain);
+           // shooter = new Shooter(vision, driveTrain);
             climber = new Climber();
             collector = new Collector();
 
@@ -53,12 +53,13 @@ class Robot: public IterativeRobot
             selectedAuto = NULL;
             autoChooser = new SendableChooser();
             new AutonomousLowBar(autoChooser, false, driveTrain);
+            new AutonomousLowGoal(autoChooser, true, driveTrain, collector);
             new AutonomousRockWall(autoChooser, false, driveTrain);
             new AutonomousRoughTerrain(autoChooser, false, driveTrain);
             new AutonomousRampParts(autoChooser, false, driveTrain);
             new AutonomousMoat(autoChooser, false, driveTrain);
             new AutonomousReach(autoChooser, false, driveTrain);
-            new AutonomousTimed(autoChooser, true, driveTrain);
+            new AutonomousTimed(autoChooser, false, driveTrain);
             new AutonomousNone(autoChooser, false);
             SmartDashboard::PutData("Auto Modes", autoChooser);
         }
@@ -74,10 +75,10 @@ class Robot: public IterativeRobot
 
             collector->ComponentUpdate(teleop);
 
-            if (!climber->IsClimbing())
-            {
-                shooter->ComponentUpdate(teleop);
-            }
+          //  if (!climber->IsClimbing())
+          //  {
+          //      shooter->ComponentUpdate(teleop);
+          //  }
 
             SmartDashboard::PutNumber("NavX Angle", Schematic::GetGyro()->GetAngle());
             SmartDashboard::PutNumber("NavX Angle Pitch", Schematic::GetGyro()->GetPitch());
@@ -103,15 +104,9 @@ class Robot: public IterativeRobot
             if (selectedAuto != NULL)
             {
                 double time = DriverStation::GetInstance().GetMatchTime();
-                // bool autoRunning = selectedAuto->AutonomousUpdate(time);
-                selectedAuto->AutonomousDashboard();
                 selectedAuto->Run(time);
+                SmartDashboard::PutString("Autonomous Using", selectedAuto->GetName());
                 ComponentsUpdate(false);
-
-//                if (!autoRunning)
-//                {
-//                    selectedAuto = NULL;
-//                }
             }
         }
 
@@ -121,7 +116,6 @@ class Robot: public IterativeRobot
 
             if (selectedAuto != NULL)
             {
-                selectedAuto->AutonomousUpdate(1000);
                 selectedAuto = NULL;
             }
 

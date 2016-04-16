@@ -9,7 +9,7 @@ class Climber: public IComponent
         DigitalInput *deployStage1Right, *deployStage2Right, *deployStage1Left, *deployStage2Left;
         Solenoid *deployStage1, *deployStage2, *hooksStage3;
 
-        RobotButton *gotoNoneButton, *toggleClimbMode, *toggleFullSpeed, *retractButton, *deployHalfButton, *deployFullButton, *deployHooksButton, *pullUpButton;
+        RobotButton *gotoNoneButton, *toggleClimbMode, *toggleFullSpeed, *retractButton, *deployHalfButton, *deployFullButton, *deployHooksButton, *pullUpButton, *noModeHalf;
 
         Timer *timer;
         bool climbing, deployedFull, fullSpeed;
@@ -21,7 +21,7 @@ class Climber: public IComponent
             NONE, RETRACT, EXTEND_HALF, EXTEND_FULL, EXTEND_HOOKS, PULL_UP
         };
 
-        ClimberState state, statelast;
+        ClimberState state;
 
         Climber() :
                 IComponent(new string("Climber")),
@@ -40,12 +40,12 @@ class Climber: public IComponent
                 deployHooksButton(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUMPER_RIGHT)),
                 pullUpButton(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUMPER_LEFT)),
                 toggleFullSpeed(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_X)),
+                noModeHalf(new RobotButton(RobotButton::JoystickType::PRIMARY, NEW_JOYSTICK ? RobotButton::ControlTypes::AXIS : RobotButton::ControlTypes::KEY, JOYSTICK_TRIGGER_LEFT)),
                 timer(new Timer()),
                 climbing(false),
                 deployedFull(false),
                 fullSpeed(true),
-                state(ClimberState::RETRACT),
-                statelast(ClimberState::NONE)
+                state(ClimberState::EXTEND_HALF)
         {
         }
 

@@ -11,13 +11,15 @@
 class Schematic
 {
     public:
-        static void Init(Joystick* primary, Joystick* secondary, AHRS* ahrs);
+        static void Init(Joystick* primary, Joystick* secondary, Joystick* tertiary, AHRS* ahrs);
         static Joystick* GetPrimary();
         static Joystick* GetSecondary();
+        static Joystick* GetTertiary();
         static AHRS* GetGyro();
     private:
         static Joystick* joystickPrimary;
         static Joystick* secondaryPrimary;
+        static Joystick* secondaryTertiary;
         static AHRS* gryo;
 };
 
@@ -26,6 +28,7 @@ class Schematic
 
 #define COLLECTOR_SPEED 1.0f
 
+#define DRIVE_ARCADE_MODE false
 #define DRIVE_IN_TO_ENCODER 504.0163 // 1000 Edges Per Revolution: ((ticks / 1rev) * (3rev / 1rev) * (64revs / 20rev) * (1rev / 19.047in))
 #define DRIVE_ANGLE_TOLERANCE 1.25
 #define DRIVE_DISTANCE_TOLERANCE 250
@@ -54,6 +57,7 @@ class Schematic
 
 #define JOYSTICK_PRIMARY 0
 #define JOYSTICK_SECONDARY 1
+#define JOYSTICK_TERTIARY 3
 #define JOYSTICK_DEADBAND 0.10
 #define NEW_JOYSTICK true
 

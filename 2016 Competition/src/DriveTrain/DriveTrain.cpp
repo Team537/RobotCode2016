@@ -17,8 +17,6 @@ void DriveTrain::Update(const bool& teleop)
     }
 
     // Secondary update checks!
-    if (!isClimbing)
-    {
         if (Schematic::GetSecondary()->GetPOV() != -1.0f)
         {
             crossingForward = Schematic::GetSecondary()->GetPOV() == 0 ? true : Schematic::GetPrimary()->GetPOV() == 180 ? false : crossingForward;
@@ -40,7 +38,6 @@ void DriveTrain::Update(const bool& teleop)
         {
             crossSpeedMultiplier = DRIVE_DEFENSE_ROCK_WALL;
         }
-    }
 
     switch (state)
     {
@@ -64,11 +61,9 @@ void DriveTrain::Update(const bool& teleop)
             }
             break;
         case (DriveState::AUTO_DISTANCE):
-            // If at target or untoggled, go to state NONE.
-            if (fabs(rightDriveMaster->GetEncPosition() - rightDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERANCE || fabs(leftDriveMaster->GetEncPosition() - leftDriveMaster->GetSetpoint()) < DRIVE_DISTANCE_TOLERANCE || stateUntoggle->WasDown())
-            {
-                SetState(DriveState::NONE);
-            }
+            // Sets the distance to drive.
+            rightDriveMaster->Set(targetDistance);
+            leftDriveMaster->Set(-1 * targetDistance);
             return;
         case (DriveState::AUTO_TIMED):
             rightDriveMaster->Set(-1 * DRIVE_TIMED_SPEED);
@@ -130,9 +125,26 @@ void DriveTrain::Update(const bool& teleop)
                 reverse = !reverse;
             }
 
+            Joystick* joystickActive;
+            joystickActive = (isClimbing && !primaryDriving ? Schematic::GetSecondary() : Schematic::GetPrimary());
+
             // Grabs the current speed from the two drive axes.
-            leftSpeedCurrent = (isClimbing && !primaryDriving ? Schematic::GetSecondary() : Schematic::GetPrimary())->GetRawAxis(!reverse ? JOYSTICK_AXIS_LEFT_Y : JOYSTICK_AXIS_RIGHT_Y);
-            rightSpeedCurrent = (isClimbing && !primaryDriving ? Schematic::GetSecondary() : Schematic::GetPrimary())->GetRawAxis(!reverse ? JOYSTICK_AXIS_RIGHT_Y : JOYSTICK_AXIS_LEFT_Y);
+#if DRIVE_ARCADE_MODE
+            float axisY;
+            axisY = joystickActive->GetRawAxis(JOYSTICK_AXIS_LEFT_Y);
+            float axisX ;
+            axisX = joystickActive->GetRawAxis(JOYSTICK_AXIS_LEFT_X);
+            float leftSpeed;
+            leftSpeed = -(axisY + axisX) * (reverse ? -1 : 1);
+            float rightSpeed;
+            rightSpeed = -(axisY - axisX) * (reverse ? -1 : 1);
+
+            leftSpeedCurrent = leftSpeed;
+            rightSpeedCurrent = rightSpeed;
+#else
+            leftSpeedCurrent = joystickActive->GetRawAxis(!reverse ? JOYSTICK_AXIS_LEFT_Y : JOYSTICK_AXIS_RIGHT_Y);
+            rightSpeedCurrent = joystickActive->GetRawAxis(!reverse ? JOYSTICK_AXIS_RIGHT_Y : JOYSTICK_AXIS_LEFT_Y);
+#endif
 
             // Deadband
             if (fabs(leftSpeedCurrent) < JOYSTICK_DEADBAND)
@@ -162,8 +174,8 @@ void DriveTrain::Update(const bool& teleop)
             // Drives the master talons.
             else
             {
-                rightDriveMaster->Set(reverse ? rightSpeedCurrent : -rightSpeedCurrent);
-                leftDriveMaster->Set(reverse ? -leftSpeedCurrent : leftSpeedCurrent);
+                rightDriveMaster->Set(reverse ? (fabs(rightSpeedCurrent)*rightSpeedCurrent) : (-fabs(rightSpeedCurrent)*rightSpeedCurrent));
+                leftDriveMaster->Set(reverse ? (-fabs(leftSpeedCurrent)*leftSpeedCurrent) : (fabs(leftSpeedCurrent)*leftSpeedCurrent));
             }
             break;
         case (DriveState::TELEOP_SHOOT):
@@ -180,7 +192,7 @@ void DriveTrain::Update(const bool& teleop)
             rightSpeedCurrent = (output > 0) ? -fabs(output) : fabs(output);
 
             // Drives the master talons.
-            rightDriveMaster->Set(-rightSpeedCurrent);
+            rightDriveMaster->Set(-1 * rightSpeedCurrent);
             leftDriveMaster->Set(leftSpeedCurrent);
 
             // If on vision target or untoggled, go to state NONE.
@@ -263,13 +275,16 @@ void DriveTrain::Dashboard()
     SmartDashboard::PutNumber("Drive Angle Target", visionPIDSource->PIDGet());
     SmartDashboard::PutNumber("Drive Angle PID Out", visionPIDOutput->GetOutput());
 
+    SmartDashboard::PutNumber("Drive Error Right", rightDriveMaster->GetClosedLoopError());
+    SmartDashboard::PutNumber("Drive Error Left", leftDriveMaster->GetClosedLoopError());
+
     SmartDashboard::PutNumber("Drive Setpoint Right", rightDriveMaster->GetSetpoint());
     SmartDashboard::PutNumber("Drive Setpoint Left", leftDriveMaster->GetSetpoint());
 
     SmartDashboard::PutNumber("Drive Encoder Speed Left", leftDriveMaster->GetSpeed());
     SmartDashboard::PutNumber("Drive Encoder Speed Right", rightDriveMaster->GetSpeed());
 
-    SmartDashboard::PutNumber("Drive Encoder Right", -rightDriveMaster->GetEncPosition());
+    SmartDashboard::PutNumber("Drive Encoder Right", rightDriveMaster->GetEncPosition());
     SmartDashboard::PutNumber("Drive Encoder Left", leftDriveMaster->GetEncPosition());
 
     SmartDashboard::PutNumber("Drive Draw Average", GetCurrentDraw());
@@ -295,7 +310,14 @@ void DriveTrain::SetState(DriveState driveState)
         leftDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
 
         rightDriveMaster->SetPID(0.085f, 0.0f, 0.0f);
+        rightDriveMaster->SetF(0.0f);
+        rightDriveMaster->SetClosedLoopOutputDirection(true);
+        rightDriveMaster->SetCloseLoopRampRate(0.1f);
+
         leftDriveMaster->SetPID(0.085f, 0.0f, 0.0f);
+        leftDriveMaster->SetF(0.0f);
+        leftDriveMaster->SetClosedLoopOutputDirection(true);
+        leftDriveMaster->SetCloseLoopRampRate(0.1f);
     }
     else if (state == DriveState::CROSSING)
     {
@@ -399,9 +421,6 @@ void DriveTrain::AutoDistance(const int& distanceIn)
     SetState(DriveState::AUTO_DISTANCE);
     // Converts the distance from IN to encoder ticks.
     targetDistance = round(distanceIn * DRIVE_IN_TO_ENCODER);
-    // Sets the distance to drive.
-    rightDriveMaster->Set(targetDistance);
-    leftDriveMaster->Set(-targetDistance);
 }
 
 // TODO: Finish timed auto drive.

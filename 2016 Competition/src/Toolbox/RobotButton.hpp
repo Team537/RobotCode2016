@@ -5,7 +5,7 @@
 class RobotButton
 {
     public:
-        enum JoystickType { PRIMARY, SECONDARY };
+        enum JoystickType { PRIMARY, SECONDARY, TERTIARY };
         enum ControlTypes { KEY, AXIS };
 
         RobotButton(JoystickType joystickType, ControlTypes controlsType, unsigned int key) :

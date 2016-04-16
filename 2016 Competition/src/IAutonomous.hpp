@@ -8,13 +8,11 @@ class IAutonomous
 {
     private:
         string name;
-        bool started;
 
     public:
         IAutonomous(SendableChooser *chooser, bool defaultChooser, string autoName)
         {
             name = autoName;
-            started = false;
 
             if (defaultChooser)
             {
@@ -28,33 +26,6 @@ class IAutonomous
 
         virtual ~IAutonomous()
         {
-        }
-
-        bool AutonomousUpdate(const double& time)
-        {
-            //if (!started)
-            //{
-//               Start();
-//                started = true;
-//            }
-//            else
-//            {
-//                bool running = Run(time);
-//
-//                if ((time > 15 || started) ? !Run(1000) : false || !running)
-//                {
-//                    Stop();
-//                    return (started = false);
-//                }
-//            }
-
-            return true;
-        }
-
-        void AutonomousDashboard()
-        {
-            SmartDashboard::PutString("Autonomous Using", name);
-            SmartDashboard::PutBoolean("Autonomous Enabled", started);
         }
 
         virtual void Start()

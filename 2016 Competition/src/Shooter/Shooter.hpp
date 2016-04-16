@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include <Schematic.hpp>
 #include <DriveTrain/DriveTrain.hpp>
@@ -75,4 +75,4 @@ class Shooter: public IComponent
         void AutoShoot();
 
         bool IsActivated();
-};
+};*/

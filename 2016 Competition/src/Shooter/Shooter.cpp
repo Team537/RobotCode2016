@@ -1,4 +1,4 @@
-#include <Shooter/Shooter.hpp>
+/*#include <Shooter/Shooter.hpp>
 
 void Shooter::Update(const bool& teleop)
 {
@@ -11,11 +11,11 @@ void Shooter::Update(const bool& teleop)
         }
 
 
-     /*   if (NEW_JOYSTICK ? autoShootButton->GetAxis() > JOYSTICK_DEADBAND : autoShootButton->GetKey())
-        {
-            autoAdvance = true;
-            state = ShooterState::AIMING;
-        }*/
+     //   if (NEW_JOYSTICK ? autoShootButton->GetAxis() > JOYSTICK_DEADBAND : autoShootButton->GetKey())
+     //   {
+     //       autoAdvance = true;
+     //       state = ShooterState::AIMING;
+     //   }
 
 
         if ((NEW_JOYSTICK ? manualAimButton->GetAxis() > JOYSTICK_DEADBAND : manualAimButton->GetKey()) && state != ShooterState::MANUAL)
@@ -48,7 +48,7 @@ void Shooter::Update(const bool& teleop)
             // Once targeted advance / pause.
             if (drive->IsWaiting() || drive->IsTeleopControl())
             {
-                state = /*autoAdvance ? ShooterState::AIMING :*/ ShooterState::NONE;
+                state = ShooterState::NONE; // autoAdvance ? ShooterState::AIMING :
             }
             break;
         case ShooterState::SPINNING:
@@ -155,5 +155,4 @@ void Shooter::AutoShoot()
 bool Shooter::IsActivated()
 {
     return state != ShooterState::NONE;
-}
-
+}*/

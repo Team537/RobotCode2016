@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Autonomous/AutonomousLowBar.hpp>
+#include <Autonomous/AutonomousLowGoal.hpp>
 #include <Autonomous/AutonomousMoat.hpp>
 #include <Autonomous/AutonomousNone.hpp>
 #include <Autonomous/AutonomousRampParts.hpp>
