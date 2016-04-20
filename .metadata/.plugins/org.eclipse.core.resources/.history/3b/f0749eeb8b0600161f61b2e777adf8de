@@ -144,7 +144,6 @@ class DriveTrain: public IComponent
         {
             leftDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
             leftDriveMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-            leftDriveMaster->ConfigEncoderCodesPerRev(1024);
             leftDriveMaster->Enable();
 
             leftDriveSlave1->SetControlMode(CANTalon::ControlMode::kFollower);
@@ -157,7 +156,6 @@ class DriveTrain: public IComponent
 
             rightDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
             rightDriveMaster->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-            leftDriveMaster->ConfigEncoderCodesPerRev(1024);
             rightDriveMaster->Enable();
 
             rightDriveSlave1->SetControlMode(CANTalon::ControlMode::kFollower);

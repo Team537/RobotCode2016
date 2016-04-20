@@ -287,9 +287,6 @@ void DriveTrain::Dashboard()
     SmartDashboard::PutNumber("Drive Encoder Right", rightDriveMaster->GetEncPosition());
     SmartDashboard::PutNumber("Drive Encoder Left", leftDriveMaster->GetEncPosition());
 
-    SmartDashboard::PutNumber("Drive Right Output", rightDriveMaster->GetOutputVoltage());
-    SmartDashboard::PutNumber("Drive Left Output", leftDriveMaster->GetOutputVoltage());
-
     SmartDashboard::PutNumber("Drive Draw Average", GetCurrentDraw());
 
     SmartDashboard::PutBoolean("Drive Cross Successful", hasCrossed);
@@ -312,16 +309,16 @@ void DriveTrain::SetState(DriveState driveState)
         rightDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
         leftDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
 
-        //rightDriveMaster->SetPID(1, 0.0f, 0.0f);
+        rightDriveMaster->SetPID(.085f, 0.0f, 0.0f);
         rightDriveMaster->SetF(0.0f);
         rightDriveMaster->SetClosedLoopOutputDirection(false);
-        rightDriveMaster->SetSensorDirection(false);
+        rightDriveMaster->SetSensorDirection(true);
         rightDriveMaster->SetCloseLoopRampRate(0.1f);
 
-        //leftDriveMaster->SetPID(1, 0.0f, 0.0f);
+        leftDriveMaster->SetPID(.085f, 0.0f, 0.0f);
         leftDriveMaster->SetF(0.0f);
         leftDriveMaster->SetClosedLoopOutputDirection(true);
-        leftDriveMaster->SetSensorDirection(false);
+        leftDriveMaster->SetSensorDirection(true);
         leftDriveMaster->SetCloseLoopRampRate(0.1f);
     }
     else if (state == DriveState::CROSSING)

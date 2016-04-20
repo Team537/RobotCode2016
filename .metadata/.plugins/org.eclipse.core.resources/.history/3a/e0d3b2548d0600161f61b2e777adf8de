@@ -19,7 +19,6 @@ class Robot: public IterativeRobot
         //Shooter* shooter;
         Climber* climber;
         Collector* collector;
-        //Talon *TestTalon;
       //  CameraServer* camera;
 
         void RobotInit()
