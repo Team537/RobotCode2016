@@ -7,22 +7,40 @@ class Collector: public IComponent
 {
     private:
         CANTalon *collectMotor;
+        CANTalon *positionMotor;
 
         RobotButton *collectInToggle;
         RobotButton *collectStop;
         RobotButton *collectOutButton;
+        RobotButton *toggleDeploy;
+        RobotButton *retractToFrame;
 
         bool reverseCollecting;
+        bool deployed;
+        int ReturnState;
 
     public:
         Collector() :
                 IComponent(new string("Collector")),
-                collectMotor(new CANTalon(9)),
+                collectMotor(new CANTalon(8)),
+                positionMotor(new CANTalon(7)),
                 collectInToggle(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_A)),
                 collectStop(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_B)),
                 collectOutButton(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_Y)),
-                reverseCollecting(false)
+                toggleDeploy(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::AXIS, JOYSTICK_TRIGGER_LEFT)),
+                retractToFrame(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_X)),
+                reverseCollecting(false),
+                ReturnState(0),
+                deployed(true)
         {
+            positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
+            positionMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
+            positionMotor->ConfigFwdLimitSwitchNormallyOpen(true);
+            positionMotor->ConfigLimitMode(CANTalon::LimitMode::kLimitMode_SoftPositionLimits);
+            positionMotor->ConfigForwardLimit(100);
+            positionMotor->ConfigReverseLimit(-2000);
+            positionMotor->Enable();
+
             collectMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
             collectMotor->Enable();
         }
@@ -35,5 +53,9 @@ class Collector: public IComponent
         void Dashboard();
 
         void Collect(const bool& reverse);
+        void DeployCollector();
+        void HalfRetractCollector();
+        void RetractCollector();
         void TurnOff();
+        void SetState(const int &state);
 };

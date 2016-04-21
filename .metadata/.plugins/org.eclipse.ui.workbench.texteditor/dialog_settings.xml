@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="targetDistance" key="selection"/>
+		<item value="Climb" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="climb"/>
 			<item value="targetDistance"/>
 			<item value="JOYSTICK_X"/>
 			<item value="_X"/>
@@ -15,7 +16,6 @@
 			<item value="TRIGGER"/>
 			<item value="primaryDriving"/>
 			<item value="Schematic::GetPrimary()"/>
-			<item value="Schematic::GetSecondary()"/>
 		</list>
 		<list key="replacehistory">
 			<item value="RobotButton::JoystickType::PRIMARY"/>

@@ -27,6 +27,23 @@ void Collector::Update(const bool& teleop)
             TurnOff();
             reverseCollecting = false;
         }
+        if(toggleDeploy->WasDown())
+        {
+            deployed = !deployed;
+        }
+        if (deployed == true)
+        {
+            DeployCollector();
+        }
+        else if(ReturnState > 1 && retractToFrame->WasDown())
+        {
+            RetractCollector();
+        }
+        else
+        {
+            HalfRetractCollector();
+        }
+
     }
 }
 
@@ -43,4 +60,28 @@ void Collector::Collect(const bool& reverse)
 void Collector::TurnOff()
 {
     collectMotor->Set(0);
+}
+
+void Collector::DeployCollector()
+{
+    positionMotor->Set(0);
+    if(positionMotor->IsFwdLimitSwitchClosed())
+    {
+        positionMotor->SetEncPosition(0);
+    }
+}
+
+void Collector::HalfRetractCollector()
+{
+    positionMotor->Set(1000);
+}
+
+void Collector::RetractCollector()
+{
+    positionMotor->Set(2000);
+}
+
+void Collector::SetState(const int &state)
+{
+    ReturnState = state;
 }

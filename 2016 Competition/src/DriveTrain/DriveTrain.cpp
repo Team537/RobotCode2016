@@ -63,8 +63,8 @@ void DriveTrain::Update(const bool& teleop)
         case (DriveState::AUTO_DISTANCE):
             // Sets the distance to drive.
             rightDriveMaster->Set(targetDistance);
-            leftDriveMaster->Set(-1 * targetDistance);
-            return;
+            leftDriveMaster->Set(100);
+            break;
         case (DriveState::AUTO_TIMED):
             rightDriveMaster->Set(-1 * DRIVE_TIMED_SPEED);
             leftDriveMaster->Set(1 * DRIVE_TIMED_SPEED);
@@ -312,17 +312,17 @@ void DriveTrain::SetState(DriveState driveState)
         rightDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
         leftDriveMaster->SetControlMode(CANTalon::ControlMode::kPosition);
 
-        //rightDriveMaster->SetPID(1, 0.0f, 0.0f);
+        rightDriveMaster->SetPID(0.085f, 0.0f, 0.0f);
         rightDriveMaster->SetF(0.0f);
         rightDriveMaster->SetClosedLoopOutputDirection(false);
         rightDriveMaster->SetSensorDirection(false);
-        rightDriveMaster->SetCloseLoopRampRate(0.1f);
+        rightDriveMaster->SetCloseLoopRampRate(100);
 
-        //leftDriveMaster->SetPID(1, 0.0f, 0.0f);
+        leftDriveMaster->SetPID(0.085f, 0.0f, 0.0f);
         leftDriveMaster->SetF(0.0f);
         leftDriveMaster->SetClosedLoopOutputDirection(true);
-        leftDriveMaster->SetSensorDirection(false);
-        leftDriveMaster->SetCloseLoopRampRate(0.1f);
+        leftDriveMaster->SetSensorDirection(true);
+        leftDriveMaster->SetCloseLoopRampRate(100);
     }
     else if (state == DriveState::CROSSING)
     {
@@ -381,13 +381,13 @@ void DriveTrain::SetState(DriveState driveState)
         angleETC->Disable();
     }
 
-    // Enables the talons.
-    rightDriveMaster->Enable();
-    leftDriveMaster->Enable();
-
     // Sets the sensor readings to zero.
     rightDriveMaster->SetPosition(0);
     leftDriveMaster->SetPosition(0);
+
+    // Enables the talons.
+    rightDriveMaster->Enable();
+    leftDriveMaster->Enable();
 
     // Go's to low gear if not in teleop control.
     if (state != DriveState::TELEOP_CONTROL)

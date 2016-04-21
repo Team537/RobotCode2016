@@ -124,3 +124,7 @@ void Climber::ToggleExtend(const bool& extend)
 {
     hooksStage3->Set(extend);
 }
+int Climber::ReturnState()
+{
+    return state;
+}

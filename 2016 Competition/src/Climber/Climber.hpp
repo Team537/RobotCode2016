@@ -57,9 +57,11 @@ class Climber: public IComponent
         void Update(const bool& teleop);
         void Dashboard();
 
+
         void ToggleStage1(const bool& extend);
         void ToggleStage2(const bool& extend);
         void ToggleExtend(const bool& extend);
         inline bool IsClimbing() const { return climbing; }
         inline bool IsFullSpeed() const { return fullSpeed; }
+        inline int ReturnState() const {return state;}
 };

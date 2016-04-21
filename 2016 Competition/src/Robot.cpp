@@ -115,11 +115,11 @@ class Robot: public IterativeRobot
         {
             Schematic::GetGyro()->Reset();
 
-            if (selectedAuto != NULL)
-            {
-                selectedAuto = NULL;
-            }
-
+//            if (selectedAuto != NULL)
+//            {
+//                selectedAuto = NULL;
+//            }
+            driveTrain->SetState(DriveTrain::DriveState::TELEOP_CONTROL);
             climber->Init();
         }
 
