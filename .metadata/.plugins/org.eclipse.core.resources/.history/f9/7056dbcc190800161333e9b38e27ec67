@@ -66,11 +66,6 @@ void Climber::Update(const bool& teleop)
    //     }
     }
 
-    if (!collector->IsCollecting())
-    {
-        state = EXTEND_HALF;
-    }
-
     switch (state)
     {
         case NONE:
@@ -129,4 +124,8 @@ void Climber::ToggleStage2(const bool& extend)
 void Climber::ToggleExtend(const bool& extend)
 {
     hooksStage3->Set(extend);
+}
+int Climber::ReturnState()
+{
+    return state;
 }

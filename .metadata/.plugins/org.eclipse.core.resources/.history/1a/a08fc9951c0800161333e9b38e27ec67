@@ -101,5 +101,6 @@ void Collector::SetState(const int &state)
 
 bool Collector::IsCollecting()
 {
-    return collectState != RETRACT;
+    return collectState == RETRACT;
+}
 }

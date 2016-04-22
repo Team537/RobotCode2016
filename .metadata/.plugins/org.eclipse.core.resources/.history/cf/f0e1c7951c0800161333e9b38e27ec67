@@ -66,11 +66,6 @@ void Climber::Update(const bool& teleop)
    //     }
     }
 
-    if (!collector->IsCollecting())
-    {
-        state = EXTEND_HALF;
-    }
-
     switch (state)
     {
         case NONE:

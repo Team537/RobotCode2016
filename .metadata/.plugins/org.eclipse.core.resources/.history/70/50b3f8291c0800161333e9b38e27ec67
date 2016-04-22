@@ -2,6 +2,7 @@
 
 #include <ToolBox/RobotButton.hpp>
 #include <Schematic.hpp>
+#include <Climber/Climber.hpp>
 
 
 class Collector: public IComponent
@@ -19,6 +20,7 @@ class Collector: public IComponent
         bool reverseCollecting;
         bool deployed;
         int ReturnState;
+        Climber *climber;
 
     public:
         enum CollectorState
@@ -39,6 +41,7 @@ class Collector: public IComponent
                 retractToFrame(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_X)),
                 reverseCollecting(false),
                 ReturnState(0),
+                climber(new Climber),
                 deployed(true)
         {
             positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
@@ -66,5 +69,4 @@ class Collector: public IComponent
         void RetractCollector();
         void TurnOff();
         void SetState(const int &state);
-        bool IsCollecting();
 };

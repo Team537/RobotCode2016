@@ -98,8 +98,3 @@ void Collector::SetState(const int &state)
 {
     ReturnState = state;
 }
-
-bool Collector::IsCollecting()
-{
-    return collectState != RETRACT;
-}

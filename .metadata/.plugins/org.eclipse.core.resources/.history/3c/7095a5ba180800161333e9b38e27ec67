@@ -79,27 +79,7 @@ void Collector::TurnOff()
     collectMotor->Set(0);
 }
 
-void Collector::HalfRetractCollector()
-{
-    collectState = DEPLOY_HALF;
-}
-
-void Collector::RetractCollector()
-{
-    collectState = RETRACT;
-}
-
-void Collector::DeployCollector()
-{
-    collectState = DEPLOY_FULL;
-}
-
 void Collector::SetState(const int &state)
 {
     ReturnState = state;
-}
-
-bool Collector::IsCollecting()
-{
-    return collectState != RETRACT;
 }

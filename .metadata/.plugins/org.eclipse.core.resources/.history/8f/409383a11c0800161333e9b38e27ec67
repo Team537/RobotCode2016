@@ -103,3 +103,4 @@ bool Collector::IsCollecting()
 {
     return collectState != RETRACT;
 }
+}

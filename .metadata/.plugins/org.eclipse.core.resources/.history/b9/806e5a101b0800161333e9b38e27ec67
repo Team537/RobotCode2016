@@ -44,6 +44,11 @@ void Collector::Update(const bool& teleop)
             HalfRetractCollector();
         }
 
+        if (!IsClimbing())
+        {
+
+        }
+
         switch (collectState)
         {
             case RETRACT:
@@ -97,9 +102,4 @@ void Collector::DeployCollector()
 void Collector::SetState(const int &state)
 {
     ReturnState = state;
-}
-
-bool Collector::IsCollecting()
-{
-    return collectState != RETRACT;
 }

@@ -69,7 +69,7 @@ void Collector::Dashboard()
     SmartDashboard::PutNumber("Collector Motor Speed", collectMotor->Get());
 }
 
-void Collector::Collect(const bool& reverse)
+void Collector::Collect(bool& reverse)
 {
     collectMotor->Set(COLLECTOR_SPEED * (reverse ? 1.0 : -1.0));
 }
@@ -86,20 +86,10 @@ void Collector::HalfRetractCollector()
 
 void Collector::RetractCollector()
 {
-    collectState = RETRACT;
+    collectState =
 }
 
-void Collector::DeployCollector()
-{
-    collectState = DEPLOY_FULL;
-}
-
-void Collector::SetState(const int &state)
+void Collector::SetState(int &state)
 {
     ReturnState = state;
-}
-
-bool Collector::IsCollecting()
-{
-    return collectState != RETRACT;
 }

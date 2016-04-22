@@ -3,7 +3,6 @@
 #include <ToolBox/RobotButton.hpp>
 #include <Schematic.hpp>
 
-
 class Collector: public IComponent
 {
     private:
@@ -26,7 +25,7 @@ class Collector: public IComponent
             RETRACT, DEPLOY_HALF, DEPLOY_FULL
         };
 
-        CollectorState collectState;
+        CollectorState state;
 
         Collector() :
                 IComponent(new string("Collector")),
@@ -66,5 +65,4 @@ class Collector: public IComponent
         void RetractCollector();
         void TurnOff();
         void SetState(const int &state);
-        bool IsCollecting();
 };
