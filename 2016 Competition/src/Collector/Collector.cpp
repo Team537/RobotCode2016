@@ -27,17 +27,20 @@ void Collector::Update(const bool& teleop)
             TurnOff();
             reverseCollecting = false;
         }
+
         if(toggleDeploy->WasDown())
         {
             deployed = !deployed;
         }
-        if (deployed == true)
-        {
-            DeployCollector();
-        }
-        else if(ReturnState > 1 && retractToFrame->WasDown())
+
+        if(retractToFrame->WasDown())
         {
             RetractCollector();
+        }
+
+        if (deployed)
+        {
+            DeployCollector();
         }
         else
         {
@@ -47,10 +50,10 @@ void Collector::Update(const bool& teleop)
         switch (collectState)
         {
             case RETRACT:
-                positionMotor->Set(2000);
+                positionMotor->Set(4000);
                 break;
             case DEPLOY_HALF:
-                positionMotor->Set(1000);
+                positionMotor->Set(2000);
                 break;
             case DEPLOY_FULL:
                 positionMotor->Set(0);
@@ -60,13 +63,18 @@ void Collector::Update(const bool& teleop)
                 }
                 break;
         }
-
     }
 }
 
 void Collector::Dashboard()
 {
     SmartDashboard::PutNumber("Collector Motor Speed", collectMotor->Get());
+    SmartDashboard::PutNumber("Collector State", collectState);
+    SmartDashboard::PutNumber("Collector Error", positionMotor->GetClosedLoopError());
+    SmartDashboard::PutNumber("Collector Output", positionMotor->Get());
+    SmartDashboard::PutNumber("Collector Setpoint", positionMotor->GetSetpoint());
+    SmartDashboard::PutNumber("Collector Encoder Pos", positionMotor->GetEncPosition());
+    SmartDashboard::PutNumber("Collector Limit Switch", positionMotor->IsFwdLimitSwitchClosed());
 }
 
 void Collector::Collect(const bool& reverse)
@@ -96,7 +104,7 @@ void Collector::DeployCollector()
 
 void Collector::SetState(const int &state)
 {
-    ReturnState = state;
+    returnState = state;
 }
 
 bool Collector::IsCollecting()

@@ -18,7 +18,7 @@ class Collector: public IComponent
 
         bool reverseCollecting;
         bool deployed;
-        int ReturnState;
+        int returnState;
 
     public:
         enum CollectorState
@@ -35,18 +35,21 @@ class Collector: public IComponent
                 collectInToggle(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_A)),
                 collectStop(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_B)),
                 collectOutButton(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_Y)),
-                toggleDeploy(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::AXIS, JOYSTICK_TRIGGER_LEFT)),
-                retractToFrame(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_X)),
+                toggleDeploy(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_Y)),
+                retractToFrame(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_X)),
                 reverseCollecting(false),
-                ReturnState(0),
-                deployed(true)
+                returnState(0),
+                deployed(false)
         {
             positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
             positionMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
             positionMotor->ConfigFwdLimitSwitchNormallyOpen(true);
-            positionMotor->ConfigLimitMode(CANTalon::LimitMode::kLimitMode_SoftPositionLimits);
-            positionMotor->ConfigForwardLimit(100);
-            positionMotor->ConfigReverseLimit(-2000);
+            positionMotor->SetPID(20, 0, 0, 0);
+            positionMotor->ConfigEncoderCodesPerRev(1);
+            //positionMotor->ConfigLimitMode(CANTalon::LimitMode::kLimitMode_SoftPositionLimits);
+            //positionMotor->ConfigForwardLimit(100);
+            //positionMotor->ConfigReverseLimit(-2000);
+            positionMotor->SetPosition(0);
             positionMotor->Enable();
 
             collectMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
