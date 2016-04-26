@@ -1,5 +1,5 @@
 #pragma once
-
+#include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
 #include <Schematic.hpp>
 
@@ -8,7 +8,7 @@ class AutonomousMoat: public IAutonomous
     private:
         DriveTrain *driveTrain;
         int crossState;
-
+        Collector *collector;
     public:
         AutonomousMoat(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
                 IAutonomous(chooser, defaultChooser, "Moat"),

@@ -23,7 +23,7 @@ class Collector: public IComponent
     public:
         enum CollectorState
         {
-            RETRACT, DEPLOY_HALF, DEPLOY_FULL
+            INIT, RETRACT, DEPLOY_HALF, DEPLOY_FULL
         };
 
         CollectorState collectState;
@@ -39,7 +39,8 @@ class Collector: public IComponent
                 retractToFrame(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_X)),
                 reverseCollecting(false),
                 returnState(0),
-                deployed(false)
+                deployed(false),
+                collectState(INIT)
         {
             positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
             positionMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
@@ -70,4 +71,6 @@ class Collector: public IComponent
         void TurnOff();
         void SetState(const int &state);
         bool IsCollecting();
+        void collectorInit();
+        bool IsCollectorDeployed();
 };

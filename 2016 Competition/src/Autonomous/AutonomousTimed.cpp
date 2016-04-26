@@ -2,13 +2,17 @@
 
 void AutonomousTimed::Start()
 {
-    autoTime->Reset();
-    autoTime->Start();
-    SmartDashboard::PutString("Test", "Auto started");
+    if (collector->IsCollectorDeployed())
+    {
+        autoTime->Reset();
+        autoTime->Start();
+        SmartDashboard::PutString("Test", "Auto started");
+    }
 }
 
 bool AutonomousTimed::Run(const double& time)
 {
+    collector->HalfRetractCollector();
     if(autoTime->Get() < 2)
     {
         driveTrain->SetState(DriveTrain::DriveState::NONE);

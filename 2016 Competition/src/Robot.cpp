@@ -61,18 +61,19 @@ class Robot: public IterativeRobot
             new AutonomousMoat(autoChooser, false, driveTrain);
             new AutonomousReach(autoChooser, false, driveTrain);
             new AutonomousTimed(autoChooser, false, driveTrain);
+            new AutonomousTimedLowBar(autoChooser, false, driveTrain);
             new AutonomousNone(autoChooser, false);
             SmartDashboard::PutData("Auto Modes", autoChooser);
         }
 
         void ComponentsUpdate(bool teleop)
         {
-            vision->ComponentUpdate(teleop);
-            climber->ComponentUpdate(teleop);
+         //   vision->ComponentUpdate(teleop);
+         //   climber->ComponentUpdate(teleop);
 
-            driveTrain->SetClimbing(climber->IsClimbing());
-            driveTrain->SetClimbingFullSpeed(climber->IsFullSpeed());
-            driveTrain->ComponentUpdate(teleop);
+        //    driveTrain->SetClimbing(climber->IsClimbing());
+        //    driveTrain->SetClimbingFullSpeed(climber->IsFullSpeed());
+        //    driveTrain->ComponentUpdate(teleop);
 
             collector->ComponentUpdate(teleop);
 
@@ -94,7 +95,6 @@ class Robot: public IterativeRobot
         {
             Schematic::GetGyro()->Reset();
             selectedAuto = (IAutonomous*) autoChooser->GetSelected();
-            climber->Init();
             selectedAuto->Start();
         }
 
@@ -104,6 +104,10 @@ class Robot: public IterativeRobot
 
             if (selectedAuto != NULL)
             {
+                if (collector->IsCollectorDeployed())
+                {
+                    climber->Init();
+                }
                 double time = DriverStation::GetInstance().GetMatchTime();
                 selectedAuto->Run(time);
                 SmartDashboard::PutString("Autonomous Using", selectedAuto->GetName());

@@ -49,6 +49,19 @@ void Collector::Update(const bool& teleop)
 
         switch (collectState)
         {
+            case INIT:
+                positionMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+                positionMotor->Set(0.4);
+                if (positionMotor->IsFwdLimitSwitchClosed())
+                {
+                    positionMotor->Set(0);
+                    positionMotor->Disable();
+                    positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
+                    positionMotor->SetEncPosition(0);
+                    positionMotor->Enable();
+                    collectState = DEPLOY_FULL;
+                }
+                break;
             case RETRACT:
                 positionMotor->Set(4000);
                 break;
@@ -110,4 +123,9 @@ void Collector::SetState(const int &state)
 bool Collector::IsCollecting()
 {
     return collectState != RETRACT;
+}
+
+bool Collector::IsCollectorDeployed()
+{
+    return collectState = DEPLOY_FULL;
 }

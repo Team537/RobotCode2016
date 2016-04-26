@@ -9,9 +9,12 @@ bool AutonomousMoat::Run(const double& time)
     switch (crossState)
     {
         case (0):
-            driveTrain->Cross(false, DRIVE_DEFENSE_MOAT);
-            crossState++;
-            break;
+            if (collector->IsCollectorDeployed())
+            {
+                driveTrain->Cross(false, DRIVE_DEFENSE_MOAT);
+                crossState++;
+                break;
+            }
         case (1):
             crossState += driveTrain->IsWaiting() ? 1 : 0;
             break;

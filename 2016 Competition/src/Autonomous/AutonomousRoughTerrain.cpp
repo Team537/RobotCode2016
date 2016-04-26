@@ -9,8 +9,11 @@ bool AutonomousRoughTerrain::Run(const double& time)
     switch (crossState)
     {
         case (0):
-            driveTrain->Cross(false, DRIVE_DEFENSE_ROUGH_TERRAIN);
-            crossState++;
+            if (collector->IsCollectorDeployed())
+            {
+                driveTrain->Cross(false, DRIVE_DEFENSE_ROUGH_TERRAIN);
+                crossState++;
+            }
             break;
         case (1):
             crossState += driveTrain->IsWaiting() ? 1 : 0;

@@ -1,11 +1,12 @@
 #pragma once
-
+#include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
 #include <Schematic.hpp>
 
 class AutonomousLowBar: public IAutonomous
 {
     private:
+        Collector *collector;
         DriveTrain *driveTrain;
         Timer *autoTime;
         int crossState;

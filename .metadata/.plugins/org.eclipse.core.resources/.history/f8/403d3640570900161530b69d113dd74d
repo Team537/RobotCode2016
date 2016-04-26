@@ -1,0 +1,106 @@
+#include <Collector/Collector.hpp>
+
+void Collector::Update(const bool& teleop)
+{
+    if (teleop)
+    {
+        // Intakes if the toggle was pressed.
+        if (collectInToggle->WasDown())
+        {
+            Collect(false);
+        }
+        // Stop collecting if stop toggle was pressed.
+        else if (collectStop->WasDown())
+        {
+            TurnOff();
+        }
+
+        // Spits out while held down.
+        if (collectOutButton->GetKey())
+        {
+            Collect(true);
+            reverseCollecting = true;
+        }
+        // Stop collecting if not held down.
+        else if (reverseCollecting && !collectOutButton->GetKey())
+        {
+            TurnOff();
+            reverseCollecting = false;
+        }
+        if(toggleDeploy->WasDown())
+        {
+            deployed = !deployed;
+        }
+        if (deployed == true)
+        {
+            DeployCollector();
+        }
+        else if(retractToFrame->WasDown())
+        {
+            RetractCollector();
+        }
+        else
+        {
+            HalfRetractCollector();
+        }
+
+        switch (collectState)
+        {
+            case RETRACT:
+                positionMotor->Set(2000);
+                break;
+            case DEPLOY_HALF:
+                positionMotor->Set(1000);
+                break;
+            case DEPLOY_FULL:
+                positionMotor->Set(0);
+                if(positionMotor->IsFwdLimitSwitchClosed())
+                {
+                    positionMotor->SetEncPosition(0);
+                }
+                break;
+        }
+
+    }
+}
+
+void Collector::Dashboard()
+{
+    SmartDashboard::PutNumber("Collector Motor Speed", collectMotor->Get());
+    SmartDashboard::PutNumber("CollectorState", collectState);
+}
+
+void Collector::Collect(const bool& reverse)
+{
+    collectMotor->Set(COLLECTOR_SPEED * (reverse ? 1.0 : -1.0));
+}
+
+void Collector::TurnOff()
+{
+    collectMotor->Set(0);
+}
+
+void Collector::HalfRetractCollector()
+{
+    collectState = DEPLOY_HALF;
+}
+
+void Collector::RetractCollector()
+{
+    collectState = RETRACT;
+}
+
+void Collector::DeployCollector()
+{
+    collectState = DEPLOY_FULL;
+}
+
+void Collector::SetState(const int &state)
+{
+    ReturnState = state;
+}
+
+bool Collector::IsCollecting()
+{
+    return collectState != RETRACT;
+}

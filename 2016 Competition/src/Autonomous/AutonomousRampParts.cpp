@@ -9,8 +9,11 @@ bool AutonomousRampParts::Run(const double& time)
     switch (crossState)
     {
         case (0):
-            driveTrain->Cross(false, DRIVE_DEFENSE_RAMP_PARTS);
-            crossState++;
+            if (collector->IsCollectorDeployed())
+            {
+                driveTrain->Cross(false, DRIVE_DEFENSE_RAMP_PARTS);
+                crossState++;
+            }
             break;
         case (1):
             crossState += driveTrain->IsWaiting() ? 1 : 0;

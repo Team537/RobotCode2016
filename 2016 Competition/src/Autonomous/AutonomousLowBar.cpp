@@ -9,9 +9,12 @@ bool AutonomousLowBar::Run(const double& time)
     switch (crossState)
     {
         case (0):
-            autoTime->Reset();
-            autoTime->Start();
-            crossState++;
+            if (collector->IsCollectorDeployed())
+            {
+                autoTime->Reset();
+                autoTime->Start();
+                crossState++;
+            }
             break;
         case (1):
             if (autoTime->Get() > 2.0)

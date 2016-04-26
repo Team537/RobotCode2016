@@ -1,5 +1,5 @@
 #pragma once
-
+#include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
 #include <Schematic.hpp>
 
@@ -8,7 +8,7 @@ class AutonomousReach: public IAutonomous
     private:
         DriveTrain *driveTrain;
         int reachState;
-
+        Collector *collector;
     public:
         AutonomousReach(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
                 IAutonomous(chooser, defaultChooser, "Reach"),

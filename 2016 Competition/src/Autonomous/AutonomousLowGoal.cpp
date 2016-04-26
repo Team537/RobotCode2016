@@ -10,10 +10,13 @@ bool AutonomousLowGoal::Run(const double& time)
     switch (crossState)
     {
         case (0):
-            driveTrain->SetState(DriveTrain::DriveState::NONE);
-            autoTime->Reset();
-            autoTime->Start();
-            crossState++;
+            if (collector->IsCollectorDeployed())
+            {
+                driveTrain->SetState(DriveTrain::DriveState::NONE);
+                autoTime->Reset();
+                autoTime->Start();
+                crossState++;
+            }
             break;
         case (1):
             if (autoTime->Get() > 2.0)

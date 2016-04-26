@@ -9,3 +9,4 @@
 #include <Autonomous/AutonomousRockWall.hpp>
 #include <Autonomous/AutonomousRoughTerrain.hpp>
 #include <Autonomous/AutonomousTimed.hpp>
+#include <Autonomous/AutonomousTimedLowBar.hpp>

@@ -1,5 +1,5 @@
 #pragma once
-
+#include <Collector/Collector.hpp>
 #include <DriveTrain/DriveTrain.hpp>
 #include <Schematic.hpp>
 
@@ -9,7 +9,8 @@ class AutonomousTimed: public IAutonomous
         DriveTrain *driveTrain;
         Timer *autoTime;
         int crossState;
-
+        Climber *climber;
+        Collector *collector;
     public:
         AutonomousTimed(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
                 IAutonomous(chooser, defaultChooser, "Timed"),
