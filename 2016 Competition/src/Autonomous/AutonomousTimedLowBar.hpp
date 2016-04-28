@@ -7,13 +7,14 @@ class AutonomousTimedLowBar: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
+        Collector *collector;
         Timer *autoTime;
         int crossState;
-        Collector *collector;
     public:
-        AutonomousTimedLowBar(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+        AutonomousTimedLowBar(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Collector *collector) :
                 IAutonomous(chooser, defaultChooser, "Timed"),
                 driveTrain(driveTrain),
+                collector(collector),
                 autoTime(new Timer()),
                 crossState(0)
         {

@@ -7,12 +7,13 @@ class AutonomousRampParts: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        int crossState;
         Collector *collector;
+        int crossState;
     public:
-        AutonomousRampParts(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+        AutonomousRampParts(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Collector *collector) :
                 IAutonomous(chooser, defaultChooser, "RampParts"),
                 driveTrain(driveTrain),
+                collector(collector),
                 crossState(0)
         {
         }

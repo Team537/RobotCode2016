@@ -59,7 +59,7 @@ void Collector::Update(const bool& teleop)
                     positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
                     positionMotor->SetEncPosition(0);
                     positionMotor->Enable();
-                    collectState = DEPLOY_FULL;
+                    collectState = TEST;
                 }
                 break;
             case RETRACT:
@@ -75,6 +75,15 @@ void Collector::Update(const bool& teleop)
                     positionMotor->SetEncPosition(0);
                 }
                 break;
+            case TEST:
+                if (toggleDeploy->GetKey())
+                {
+                    positionMotor->Set(positionMotor->GetEncPosition() + 1);
+                }
+                if (retractToFrame->GetKey())
+                {
+                    positionMotor->Set(positionMotor->GetEncPosition() - 1);
+                }
         }
     }
 }

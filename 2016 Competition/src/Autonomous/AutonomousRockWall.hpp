@@ -7,12 +7,13 @@ class AutonomousRockWall: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        int crossState;
         Collector *collector;
+        int crossState;
     public:
-        AutonomousRockWall(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+        AutonomousRockWall(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Collector *collector) :
                 IAutonomous(chooser, defaultChooser, "RockWall"),
                 driveTrain(driveTrain),
+                collector(collector),
                 crossState(0)
         {
         }

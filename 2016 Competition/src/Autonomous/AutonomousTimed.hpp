@@ -7,14 +7,14 @@ class AutonomousTimed: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
+        Collector *collector;
         Timer *autoTime;
         int crossState;
-        Climber *climber;
-        Collector *collector;
     public:
-        AutonomousTimed(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+        AutonomousTimed(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Collector *collector) :
                 IAutonomous(chooser, defaultChooser, "Timed"),
                 driveTrain(driveTrain),
+                collector(collector),
                 autoTime(new Timer()),
                 crossState(0)
         {

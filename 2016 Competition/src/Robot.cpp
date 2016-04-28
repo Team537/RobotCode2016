@@ -53,15 +53,15 @@ class Robot: public IterativeRobot
             // Creates the auto modes.
             selectedAuto = NULL;
             autoChooser = new SendableChooser();
-            new AutonomousLowBar(autoChooser, false, driveTrain);
-            new AutonomousLowGoal(autoChooser, true, driveTrain, collector);
-            new AutonomousRockWall(autoChooser, false, driveTrain);
-            new AutonomousRoughTerrain(autoChooser, false, driveTrain);
-            new AutonomousRampParts(autoChooser, false, driveTrain);
-            new AutonomousMoat(autoChooser, false, driveTrain);
-            new AutonomousReach(autoChooser, false, driveTrain);
-            new AutonomousTimed(autoChooser, false, driveTrain);
-            new AutonomousTimedLowBar(autoChooser, false, driveTrain);
+            new AutonomousLowBar(autoChooser, false, driveTrain, collector);
+            new AutonomousLowGoal(autoChooser, false, driveTrain, collector);
+            new AutonomousRockWall(autoChooser, false, driveTrain, collector);
+            new AutonomousRoughTerrain(autoChooser, false, driveTrain, collector);
+            new AutonomousRampParts(autoChooser, false, driveTrain, collector);
+            new AutonomousMoat(autoChooser, false, driveTrain, collector);
+            new AutonomousReach(autoChooser, false, driveTrain, collector);
+            new AutonomousTimed(autoChooser, false, driveTrain, collector);
+            new AutonomousTimedLowBar(autoChooser, true, driveTrain, collector);
             new AutonomousNone(autoChooser, false);
             SmartDashboard::PutData("Auto Modes", autoChooser);
         }
@@ -69,18 +69,18 @@ class Robot: public IterativeRobot
         void ComponentsUpdate(bool teleop)
         {
          //   vision->ComponentUpdate(teleop);
-         //   climber->ComponentUpdate(teleop);
+            climber->ComponentUpdate(teleop);
 
-        //    driveTrain->SetClimbing(climber->IsClimbing());
-        //    driveTrain->SetClimbingFullSpeed(climber->IsFullSpeed());
-        //    driveTrain->ComponentUpdate(teleop);
+            driveTrain->SetClimbing(climber->IsClimbing());
+            driveTrain->SetClimbingFullSpeed(climber->IsFullSpeed());
+            driveTrain->ComponentUpdate(teleop);
 
             collector->ComponentUpdate(teleop);
 
-          //  if (!climber->IsClimbing())
-          //  {
-          //      shooter->ComponentUpdate(teleop);
-          //  }
+            if (!climber->IsClimbing())
+            {
+           //     shooter->ComponentUpdate(teleop);
+            }
 
             SmartDashboard::PutNumber("NavX Angle", Schematic::GetGyro()->GetAngle());
             SmartDashboard::PutNumber("NavX Angle Pitch", Schematic::GetGyro()->GetPitch());

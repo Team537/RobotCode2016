@@ -7,12 +7,13 @@ class AutonomousReach: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        int reachState;
         Collector *collector;
+        int reachState;
     public:
-        AutonomousReach(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+        AutonomousReach(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Collector *collector) :
                 IAutonomous(chooser, defaultChooser, "Reach"),
                 driveTrain(driveTrain),
+                collector(collector),
                 reachState(0)
         {
         }

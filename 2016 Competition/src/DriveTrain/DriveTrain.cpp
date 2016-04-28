@@ -126,7 +126,7 @@ void DriveTrain::Update(const bool& teleop)
             }
 
             Joystick* joystickActive;
-            joystickActive = (isClimbing && !primaryDriving ? Schematic::GetSecondary() : Schematic::GetPrimary());
+            joystickActive = (Schematic::GetPrimary());
 
             // Grabs the current speed from the two drive axes.
 #if DRIVE_ARCADE_MODE
@@ -314,13 +314,13 @@ void DriveTrain::SetState(DriveState driveState)
 
         rightDriveMaster->SetPID(0.085f, 0.0f, 0.0f);
         rightDriveMaster->SetF(0.0f);
-        rightDriveMaster->SetClosedLoopOutputDirection(false);
+        rightDriveMaster->SetClosedLoopOutputDirection(true);
         rightDriveMaster->SetSensorDirection(false);
         rightDriveMaster->SetCloseLoopRampRate(100);
 
         leftDriveMaster->SetPID(0.085f, 0.0f, 0.0f);
         leftDriveMaster->SetF(0.0f);
-        leftDriveMaster->SetClosedLoopOutputDirection(true);
+        leftDriveMaster->SetClosedLoopOutputDirection(false);
         leftDriveMaster->SetSensorDirection(true);
         leftDriveMaster->SetCloseLoopRampRate(100);
     }

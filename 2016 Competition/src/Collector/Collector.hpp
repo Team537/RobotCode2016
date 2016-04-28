@@ -23,7 +23,7 @@ class Collector: public IComponent
     public:
         enum CollectorState
         {
-            INIT, RETRACT, DEPLOY_HALF, DEPLOY_FULL
+            INIT, RETRACT, DEPLOY_HALF, DEPLOY_FULL, TEST
         };
 
         CollectorState collectState;
@@ -35,12 +35,12 @@ class Collector: public IComponent
                 collectInToggle(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_A)),
                 collectStop(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_B)),
                 collectOutButton(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_Y)),
-                toggleDeploy(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_Y)),
-                retractToFrame(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_X)),
+                toggleDeploy(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUTTON_LEFT)),
+                retractToFrame(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUTTON_RIGHT)),
                 reverseCollecting(false),
                 returnState(0),
                 deployed(false),
-                collectState(INIT)
+                collectState(TEST)
         {
             positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
             positionMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);

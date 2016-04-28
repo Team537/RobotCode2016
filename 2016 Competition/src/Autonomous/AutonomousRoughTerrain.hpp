@@ -7,12 +7,13 @@ class AutonomousRoughTerrain: public IAutonomous
 {
     private:
         DriveTrain *driveTrain;
-        int crossState;
         Collector *collector;
+        int crossState;
     public:
-        AutonomousRoughTerrain(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain) :
+        AutonomousRoughTerrain(SendableChooser *chooser, bool defaultChooser, DriveTrain *driveTrain, Collector *collector) :
                 IAutonomous(chooser, defaultChooser, "RoughTerrain"),
                 driveTrain(driveTrain),
+                collector(collector),
                 crossState(0)
         {
         }
