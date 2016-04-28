@@ -48,7 +48,7 @@ class Climber: public IComponent
                 climbing(false),
                 deployedFull(false),
                 fullSpeed(true),
-                state(ClimberState::EXTEND_HALF),
+                state(ClimberState::NONE),
                 collector(new Collector)
         {
         }

@@ -28,7 +28,7 @@ void Collector::Update(const bool& teleop)
             reverseCollecting = false;
         }
 
-        if(toggleDeploy->WasDown())
+        /*if(toggleDeploy->WasDown())
         {
             deployed = !deployed;
         }
@@ -45,44 +45,55 @@ void Collector::Update(const bool& teleop)
         else
         {
             HalfRetractCollector();
+        }*/
+        collectState = TEST;
+        if (positionMotor->IsFwdLimitSwitchClosed())
+        {
+            positionMotor->SetPosition(0.0f);
         }
 
         switch (collectState)
         {
             case INIT:
-                positionMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-                positionMotor->Set(0.4);
+                //positionMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+                positionMotor->ConfigLimitMode(CANTalon::LimitMode::kLimitMode_SrxDisableSwitchInputs);
+                positionMotor->Set(0.4f);
+
                 if (positionMotor->IsFwdLimitSwitchClosed())
                 {
                     positionMotor->Set(0);
-                    positionMotor->Disable();
-                    positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
-                    positionMotor->SetEncPosition(0);
+                //  positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
+                    positionMotor->ConfigLimitMode(CANTalon::LimitMode::kLimitMode_SoftPositionLimits);
+                    positionMotor->SetPosition(0);
                     positionMotor->Enable();
                     collectState = TEST;
                 }
                 break;
             case RETRACT:
-                positionMotor->Set(4000);
+             //   positionMotor->Set(0);
                 break;
             case DEPLOY_HALF:
-                positionMotor->Set(2000);
+             //   positionMotor->Set(2000);
                 break;
             case DEPLOY_FULL:
-                positionMotor->Set(0);
-                if(positionMotor->IsFwdLimitSwitchClosed())
-                {
-                    positionMotor->SetEncPosition(0);
-                }
+             //   positionMotor->Set(-6130);
+            //    if(positionMotor->IsFwdLimitSwitchClosed())
+            //    {
+            //        positionMotor->SetEncPosition(0);
+            //    }
                 break;
             case TEST:
-                if (toggleDeploy->GetKey())
-                {
-                    positionMotor->Set(positionMotor->GetEncPosition() + 1);
-                }
                 if (retractToFrame->GetKey())
                 {
-                    positionMotor->Set(positionMotor->GetEncPosition() - 1);
+                    positionMotor->Set(1.0f);
+                }
+                else if (toggleDeploy->GetKey())
+                {
+                    positionMotor->Set(-1.0f);
+                }
+                else
+                {
+                    positionMotor->Set(0.0f);
                 }
         }
     }
@@ -101,7 +112,7 @@ void Collector::Dashboard()
 
 void Collector::Collect(const bool& reverse)
 {
-    collectMotor->Set(COLLECTOR_SPEED * (reverse ? 1.0 : -1.0));
+    collectMotor->Set(COLLECTOR_SPEED * (reverse ? -1.0 : 1.0));
 }
 
 void Collector::TurnOff()

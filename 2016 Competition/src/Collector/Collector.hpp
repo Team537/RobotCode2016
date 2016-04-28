@@ -35,21 +35,21 @@ class Collector: public IComponent
                 collectInToggle(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_A)),
                 collectStop(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_B)),
                 collectOutButton(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_Y)),
-                toggleDeploy(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUTTON_LEFT)),
-                retractToFrame(new RobotButton(RobotButton::JoystickType::SECONDARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUTTON_RIGHT)),
+                toggleDeploy(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUTTON_LEFT)),
+                retractToFrame(new RobotButton(RobotButton::JoystickType::PRIMARY, RobotButton::ControlTypes::KEY, JOYSTICK_BUTTON_RIGHT)),
                 reverseCollecting(false),
-                returnState(0),
                 deployed(false),
+                returnState(0),
                 collectState(TEST)
         {
-            positionMotor->SetControlMode(CANTalon::ControlMode::kPosition);
+            positionMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
             positionMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::QuadEncoder);
-            positionMotor->ConfigFwdLimitSwitchNormallyOpen(true);
+            positionMotor->ConfigRevLimitSwitchNormallyOpen(true);
             positionMotor->SetPID(20, 0, 0, 0);
             positionMotor->ConfigEncoderCodesPerRev(1);
-            //positionMotor->ConfigLimitMode(CANTalon::LimitMode::kLimitMode_SoftPositionLimits);
-            //positionMotor->ConfigForwardLimit(100);
-            //positionMotor->ConfigReverseLimit(-2000);
+            positionMotor->ConfigLimitMode(CANTalon::LimitMode::kLimitMode_SoftPositionLimits);
+            positionMotor->ConfigForwardLimit(0);
+            positionMotor->ConfigReverseLimit(-6130);
             positionMotor->SetPosition(0);
             positionMotor->Enable();
 

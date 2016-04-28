@@ -3,7 +3,7 @@
 void Climber::Init()
 {
     climbing = false;
-    state = RETRACT;
+    state = NONE;
 }
 
 void Climber::Update(const bool& teleop)
