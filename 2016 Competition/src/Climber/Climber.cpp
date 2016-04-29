@@ -38,7 +38,13 @@ void Climber::Update(const bool& teleop)
 
             if (retractButton->WasDown())
             {
-                SetState(ClimberState::RETRACT);
+                if (state == EXTEND_HOOKS) {
+                    SetState(ClimberState::EXTEND_FULL);
+                } else if (state == EXTEND_FULL) {
+                    SetState(ClimberState::EXTEND_HALF);
+                } else if (state == EXTEND_HALF) {
+                    SetState(ClimberState::RETRACT);
+                }
             }
 
             if (NEW_JOYSTICK ? deployHalfButton->GetAxis() > JOYSTICK_DEADBAND : deployHalfButton->GetKey())
@@ -53,12 +59,12 @@ void Climber::Update(const bool& teleop)
 
             if (deployHooksButton->WasDown())
             {
-                SetState(ClimberState::EXTEND_HOOKS);
+                DeployHooks(HookState::EXTENDHOOKS);
             }
 
             if (pullUpButton->WasDown())
             {
-                SetState(ClimberState::PULL_UP);
+                DeployHooks(HookState::RETRACTHOOKS);
             }
         }
    //     else
@@ -81,7 +87,7 @@ void Climber::Update(const bool& teleop)
         case RETRACT:
             ToggleStage1(false);
             ToggleStage2(false);
-            ToggleExtend(false);
+          //  ToggleExtend(false);
             TogglePopup(false);
             timer->Stop();
             timer->Reset();
@@ -89,7 +95,7 @@ void Climber::Update(const bool& teleop)
         case EXTEND_HALF:
             ToggleStage1(true);
             ToggleStage2(false);
-            ToggleExtend(false);
+         //   ToggleExtend(false);
             //updatePoupup
             timer->Start();
             if (timer->Get() > 2) {
@@ -103,20 +109,31 @@ void Climber::Update(const bool& teleop)
         case EXTEND_FULL:
             ToggleStage1(true);
             ToggleStage2(true);
-            ToggleExtend(false);
+            //ToggleExtend(false);
             UpdatePopUp();
             break;
-        case EXTEND_HOOKS:
+      /*  case EXTEND_HOOKS:
             ToggleStage1(true);
             ToggleStage2(true);
-            ToggleExtend(true);
+           // ToggleExtend(true);
             UpdatePopUp();
             break;
         case PULL_UP:
             ToggleStage1(true);
             ToggleStage2(true);
-            ToggleExtend(false);
+           // ToggleExtend(false);
             UpdatePopUp();
+            break;*/
+    }
+    switch (hookState)
+    {
+        case NOHOOK:
+            break;
+        case EXTENDHOOKS:
+            ToggleExtend(true);
+            break;
+        case RETRACTHOOKS:
+            ToggleExtend(false);
             break;
     }
 }
@@ -134,6 +151,14 @@ void Climber::SetState(ClimberState state)
     }
 }
 
+void Climber::DeployHooks(HookState hookState)
+{
+    if (this->hookState != hookState)
+    {
+        this->hookState = hookState;
+    }
+}
+
 void Climber::UpdatePopUp()
 {
     if (timer->Get() > 1) {
@@ -148,6 +173,7 @@ void Climber::UpdatePopUp()
 void Climber::Dashboard()
 {
     SmartDashboard::PutString("Climber State", stateNames[state]);
+    SmartDashboard::PutString("HookState", stateNames[hookState]);
     SmartDashboard::PutBoolean("Is Climbing", climbing);
     SmartDashboard::PutBoolean("Climber Stage 1", !deployStage1->Get());
     SmartDashboard::PutBoolean("Climber Stage 2", deployStage2->Get());

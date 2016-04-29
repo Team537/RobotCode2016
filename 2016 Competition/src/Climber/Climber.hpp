@@ -22,9 +22,14 @@ class Climber: public IComponent
         {
             NONE, RETRACT, EXTEND_HALF, EXTEND_FULL, EXTEND_HOOKS, PULL_UP
         };
+        enum HookState
+        {
+            NOHOOK, EXTENDHOOKS, RETRACTHOOKS
+        };
 
         ClimberState state;
         ClimberState lastState;
+        HookState hookState;
 
         Climber() :
                 IComponent(new string("Climber")),
@@ -50,6 +55,7 @@ class Climber: public IComponent
                 deployedFull(false),
                 fullSpeed(true),
                 state(ClimberState::RETRACT),
+                hookState(HookState::RETRACTHOOKS),
                 collector(new Collector)
         {
         }
@@ -61,6 +67,7 @@ class Climber: public IComponent
         void Init();
         void Update(const bool& teleop);
         void SetState(ClimberState state);
+        void DeployHooks(HookState hookState);
         void UpdatePopUp();
         void Dashboard();
 
