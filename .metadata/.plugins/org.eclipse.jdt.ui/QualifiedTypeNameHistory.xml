@@ -1,2 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.team537.robot.commands.climber.ClimberStage1"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.smartdashboard.SmartDashboard"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.climber.ClimberStage2"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.Joystick"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.command.Subsystem"/>
+<fullyQualifiedTypeName name="org.team537.robot.subsystems.Drive"/>
+<fullyQualifiedTypeName name="org.team537.robot.RobotMap.Driver"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.DriveArcade"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.DriveTank"/>
+<fullyQualifiedTypeName name="org.team537.toolbox.Maths"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.command.Command"/>
+<fullyQualifiedTypeName name="org.team537.robot.Robot"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.DriveShift"/>
+<fullyQualifiedTypeName name="org.team537.robot.RobotMap.JoystickKeys"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.DriveTimed"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.DriveDistance"/>
+<fullyQualifiedTypeName name="org.team537.robot.subsystems.Climber"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.ClimberActivate"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.ClimberRetract"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.ClimberStage1"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.ClimberStage2"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.ClimberHooks"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.ClimberStateDecrement"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.ClimberStateIncrement"/>
+</qualifiedTypeNameHistroy>

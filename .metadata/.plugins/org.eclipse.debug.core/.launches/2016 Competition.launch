@@ -6,7 +6,7 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.cdt.debug.mi.core.STOP_ON_SOLIB_EVENTS" value="false"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_NAME" value="arm-frc-linux-gnueabi-gdb"/>
-<stringAttribute key="org.eclipse.cdt.dsf.gdb.HOST" value="ROBORIO-538-FRC.LOCAL"/>
+<stringAttribute key="org.eclipse.cdt.dsf.gdb.HOST" value="ROBORIO-537-FRC.LOCAL"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.PORT" value="2345"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.REMOTE_TCP" value="true"/>
 <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
@@ -32,7 +32,6 @@
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
 </listAttribute>
-<stringAttribute key="org.eclipse.debug.core.REMOTE_TCP" value="roboRIO-538-FRC.local"/>
-<stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.debug.core.REMOTE_TCP" value="roboRIO-537-FRC.local"/>
 <stringAttribute key="process_factory_id" value="org.eclipse.cdt.dsf.gdb.GdbProcessFactory"/>
 </launchConfiguration>

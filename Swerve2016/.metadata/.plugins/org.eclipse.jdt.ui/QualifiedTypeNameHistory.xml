@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.command.Subsystem"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.command.Command"/>
+<fullyQualifiedTypeName name="org.team537.robot.commands.DriveDefault"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.smartdashboard.SmartDashboard"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.CANTalon"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.CANTalon.TalonControlMode"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.CANTalon.FeedbackDevice"/>
+<fullyQualifiedTypeName name="org.team537.robot.RobotMap"/>
+<fullyQualifiedTypeName name="org.team537.toolbox.Maths"/>
+<fullyQualifiedTypeName name="com.kauailabs.navx.frc.AHRS"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.DriverStation"/>
+<fullyQualifiedTypeName name="org.team537.robot.RobotMap.Robot"/>
+<fullyQualifiedTypeName name="org.team537.robot.Robot"/>
+</qualifiedTypeNameHistroy>

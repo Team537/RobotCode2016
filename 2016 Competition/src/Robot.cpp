@@ -20,7 +20,7 @@ class Robot: public IterativeRobot
         Climber* climber;
         Collector* collector;
         //Talon *TestTalon;
-      //  CameraServer* camera;
+        //CameraServer* camera;
 
         void RobotInit()
         {

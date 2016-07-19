@@ -1,0 +1,156 @@
+package org.team537.robot.subsystems;
+
+import org.team537.robot.Robot;
+import org.team537.robot.RobotMap;
+import org.team537.robot.commands.DriveDefault;
+import org.team537.toolbox.Maths;
+
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class Drive extends Subsystem {
+	private final CANTalon backLeftAngle = new CANTalon(RobotMap.CAN.DRIVE_BACK_LEFT_ANGLE);
+	private final CANTalon backLeftDrive = new CANTalon(RobotMap.CAN.DRIVE_BACK_LEFT_DRIVE);
+
+	private final CANTalon backRightAngle = new CANTalon(RobotMap.CAN.DRIVE_BACK_RIGHT_ANGLE);
+	private final CANTalon backRightDrive = new CANTalon(RobotMap.CAN.DRIVE_BACK_RIGHT_DRIVE);
+
+	private final CANTalon frontLeftAngle = new CANTalon(RobotMap.CAN.DRIVE_FRONT_LEFT_ANGLE);
+	private final CANTalon frontLeftDrive = new CANTalon(RobotMap.CAN.DRIVE_FRONT_LEFT_DRIVE);
+
+	private final CANTalon frontRightAngle = new CANTalon(RobotMap.CAN.DRIVE_FRONT_RIGHT_ANGLE);
+	private final CANTalon frontRightDrive = new CANTalon(RobotMap.CAN.DRIVE_FRONT_RIGHT_DRIVE);
+	
+	public Drive() {
+		double p = 1.0;
+		double i = 0.00001;
+		double d = 0.0007;
+		backLeftAngle.setFeedbackDevice(FeedbackDevice.AnalogPot);
+		backLeftAngle.changeControlMode(TalonControlMode.Position);
+		backLeftAngle.setPID(p, i, d);
+		backLeftDrive.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		backLeftDrive.changeControlMode(TalonControlMode.PercentVbus);
+
+		backRightAngle.setFeedbackDevice(FeedbackDevice.AnalogPot);
+		backRightAngle.changeControlMode(TalonControlMode.Position);
+		backRightAngle.setPID(p, i, d);
+		backRightDrive.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		backRightDrive.changeControlMode(TalonControlMode.PercentVbus);
+
+		frontLeftAngle.setFeedbackDevice(FeedbackDevice.AnalogPot);
+		frontLeftAngle.changeControlMode(TalonControlMode.Position);
+		frontLeftAngle.setPID(p, i, d);
+		frontLeftDrive.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		frontLeftDrive.changeControlMode(TalonControlMode.PercentVbus);
+
+		frontRightAngle.setFeedbackDevice(FeedbackDevice.AnalogPot);
+		frontRightAngle.changeControlMode(TalonControlMode.Position);
+		frontRightAngle.setPID(p, i, d);
+		frontRightDrive.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		frontRightDrive.changeControlMode(TalonControlMode.PercentVbus);
+	}
+
+	@Override
+	protected void initDefaultCommand() {
+		setDefaultCommand(new DriveDefault());
+	}
+	
+	public void dashboard() {
+		SmartDashboard.putNumber("Drive Front Left Drive", frontLeftDrive.getSpeed());
+		SmartDashboard.putNumber("Drive Front Left Drive (Encoder)", frontLeftDrive.getEncPosition());
+		SmartDashboard.putNumber("Drive Front Left Angle", frontLeftAngle.getAnalogInRaw());
+
+		SmartDashboard.putNumber("Drive Front Right Drive", frontRightDrive.getSpeed());
+		SmartDashboard.putNumber("Drive Front Right Drive (Encoder)", frontRightDrive.getEncPosition());
+		SmartDashboard.putNumber("Drive Front Right Angle", frontRightAngle.getAnalogInRaw());
+
+		SmartDashboard.putNumber("Drive Back Left Drive", backLeftDrive.getSpeed());
+		SmartDashboard.putNumber("Drive Back Left Drive (Encoder)", backLeftDrive.getEncPosition());
+		SmartDashboard.putNumber("Drive Back Left Angle", backLeftAngle.getAnalogInRaw());
+
+		SmartDashboard.putNumber("Drive Back Right Drive", backRightDrive.getSpeed());
+		SmartDashboard.putNumber("Drive Back Right Drive (Encoder)", backRightDrive.getEncPosition());
+		SmartDashboard.putNumber("Drive Back Right Angle", backRightAngle.getAnalogInRaw());
+	}
+	
+	public void drive(double rotation, double strafe, double forward, double gyro) {
+		SmartDashboard.putNumber("Drive Input Rotation", rotation);
+		SmartDashboard.putNumber("Drive Input Strafe", strafe);
+		SmartDashboard.putNumber("Drive Input Forward", forward);
+		SmartDashboard.putNumber("Drive Input Gyro", gyro);
+
+		double fwd = (forward * Math.cos(gyro)) + strafe * Math.sin(gyro);
+		double str = (-forward * Math.sin(gyro)) + strafe * Math.cos(gyro);
+
+		double r = Math.sqrt((RobotMap.Robot.WHEEL_BASE * RobotMap.Robot.WHEEL_BASE) + (RobotMap.Robot.TRACK_WIDTH * RobotMap.Robot.TRACK_WIDTH));
+		double A = str - rotation * (RobotMap.Robot.WHEEL_BASE / r);
+		double B = str + rotation * (RobotMap.Robot.WHEEL_BASE / r);
+		double C = str - rotation * (RobotMap.Robot.TRACK_WIDTH / r);
+		double D = str + rotation * (RobotMap.Robot.TRACK_WIDTH / r);
+
+		double frs = Math.sqrt(B * B + C * C);
+		double fls = Math.sqrt(B * B + D * D);
+		double bls = Math.sqrt(A * A + D * D);
+		double brs = Math.sqrt(A * A + C * C);
+
+		double fra = Math.atan2(B, C) * 180.0 / Math.PI;
+		double fla = Math.atan2(B, D) * 180.0 / Math.PI;
+		double bra = Math.atan2(A, D) * 180.0 / Math.PI;
+		double bla = Math.atan2(A, C) * 180.0 / Math.PI;
+
+	//	frontRightAngle.set((fra + 180.0) * (1023.0 / 360.0));
+	//	frontLeftAngle.set((fla + 180.0) * (1023.0 / 360.0));
+	//	backLeftAngle.set((bla + 180.0) * (1023.0 / 360.0));
+	//	backRightAngle.set((bra + 180.0) * (1023.0 / 360.0));
+
+		double max = frs;
+
+		if (fls > max){
+			max = fls;
+		}
+
+		if (bls > max){
+			max = bls;
+		}
+
+		if (brs > max){
+			max = brs;
+		}
+
+		if (max > 1.0){
+			frs /= max;
+			fls /= max;
+			brs /= max;
+			bls /= max;
+		}
+
+	//	frontRightDrive.set(frs * 12.0);
+	//	frontLeftDrive.set(fls * 12.0);
+	//	backRightDrive.set(brs * 12.0);
+	//	backLeftDrive.set(bls * 12.0);
+	}
+	
+	public void reset() {
+		frontLeftAngle.enable();
+		frontLeftDrive.enable();
+		frontRightAngle.enable();
+		frontRightDrive.enable();
+		backLeftAngle.enable();
+		backLeftDrive.enable();
+		backRightAngle.enable();
+		backRightDrive.enable();
+		
+		frontLeftDrive.setPosition(0.0);
+		frontRightDrive.setPosition(0.0);
+		backLeftDrive.setPosition(0.0);
+		backRightDrive.setPosition(0.0);
+		
+		Robot.ahrs.reset();
+	}
+	
+	public void stop() {
+	}
+}

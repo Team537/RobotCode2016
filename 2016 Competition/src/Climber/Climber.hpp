@@ -24,7 +24,7 @@ class Climber: public IComponent
         };
         enum HookState
         {
-            NOHOOK, EXTENDHOOKS, RETRACTHOOKS
+            EXTENDED, RETRACTED
         };
 
         ClimberState state;
@@ -55,7 +55,7 @@ class Climber: public IComponent
                 deployedFull(false),
                 fullSpeed(true),
                 state(ClimberState::RETRACT),
-                hookState(HookState::RETRACTHOOKS),
+                hookState(HookState::RETRACTED),
                 collector(new Collector)
         {
         }
