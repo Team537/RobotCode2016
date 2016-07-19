@@ -1,0 +1,15 @@
+--------- JETSON INFO ---------
+
+Connect w/ serial port
+
+Login prompt: 
+	Username: Ubuntu
+	Passwd: Team537
+
+Baud rate: 115200
+
+Feb25 version	homedirectory
+ move old file out of way
+ 	> mv oldname newname
+
+
