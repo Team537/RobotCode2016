@@ -97,9 +97,11 @@ public class Drive extends Subsystem {
 			this.angle.setFeedbackDevice(FeedbackDevice.AnalogPot);
 			this.angle.changeControlMode(TalonControlMode.Position);
 			this.angle.setPID(p, i, d);
+			this.angle.enable();
 			
 			this.drive.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			this.drive.changeControlMode(TalonControlMode.PercentVbus);
+			this.drive.enable();
 		}
 		
 		public void set(double speed, double angle) {
@@ -113,7 +115,7 @@ public class Drive extends Subsystem {
 		public void dashboard() {
 			SmartDashboard.putNumber(name + " Drive Speed", drive.getSpeed());
 			SmartDashboard.putNumber(name + " Drive (Encoder)", drive.getEncPosition());
-			SmartDashboard.putNumber(name + " Angle", angle.getAnalogInRaw());
+			SmartDashboard.putNumber(name + " Angle", angle.getAnalogInRaw() / 360.0);
 		}
 		
 		public void reset() {
