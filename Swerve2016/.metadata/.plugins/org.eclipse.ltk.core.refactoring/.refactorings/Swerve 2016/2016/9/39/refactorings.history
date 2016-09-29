@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename field &apos;comp&apos; in &apos;org.team537.robot.Robot&apos; to &apos;compressor&apos;&#x0D;&#x0A;- Original project: &apos;Swerve 2016&apos;&#x0D;&#x0A;- Original element: &apos;org.team537.robot.Robot.comp&apos;&#x0D;&#x0A;- Renamed element: &apos;org.team537.robot.Robot.compressor&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" delegate="false" deprecate="false" description="Rename field &apos;comp&apos;" flags="589826" getter="false" id="org.eclipse.jdt.ui.rename.field" input="/src&lt;org.team537.robot{Robot.java[Robot^comp" name="compressor" references="true" setter="false" stamp="1474588929064" textual="false" version="1.0"/>
+</session>

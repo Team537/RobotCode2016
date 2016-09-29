@@ -4,11 +4,11 @@ package org.team537.toolbox;
  * A class that holds many various math functions.
  */
 public class Maths {
-	public static final double PI = 3.14159265358979323846;
-	public static final double DEGREES_IN_CIRCLE = 360.0;
-	public static final double DEGREES_IN_HALF_CIRCLE = 180.0;
-	public static final double ANG2RAD = PI / DEGREES_IN_HALF_CIRCLE;
-	public static final double LOG_HALF = Math.log(0.5);
+	public static double PI = 3.14159265358979323846;
+	public static double DEGREES_IN_CIRCLE = 360.0;
+	public static double DEGREES_IN_HALF_CIRCLE = 180.0;
+	public static double ANG2RAD = PI / DEGREES_IN_HALF_CIRCLE;
+	public static double LOG_HALF = Math.log(0.5);
 
 	/**
 	 * Gets the maximum value.
@@ -17,10 +17,10 @@ public class Maths {
 	 *
 	 * @return The maximum value.
 	 */
-	public static double maxValue(final double... fs) {
-		double max = 0;
+	public static double maxValue(double... fs) {
+		double max = 0.0;
 
-		for (final double v : fs) {
+		for (double v : fs) {
 			if (v > max) {
 				max = v;
 			}
@@ -36,10 +36,10 @@ public class Maths {
 	 *
 	 * @return The minimum value.
 	 */
-	public static double minValue(final double... fs) {
-		double min = 0;
+	public static double minValue(double... fs) {
+		double min = 0.0;
 
-		for (final double v : fs) {
+		for (double v : fs) {
 			if (v < min) {
 				min = v;
 			}
@@ -54,9 +54,10 @@ public class Maths {
 	 * @param value The current value reading.
 	 * @param target The target to get to.
 	 * @param tolerance The allowed tolerance.
+	 * 
 	 * @return If the value is acceptable under the tolerance.
 	 */
-	public static boolean nearTarget(final double value, final double target, final double tolerance) {
+	public static boolean nearTarget(double value, double target, double tolerance) {
 		return Math.abs(value - target) < tolerance;
 	}
 
@@ -67,11 +68,11 @@ public class Maths {
 	 *
 	 * @return The normalized angle.
 	 */
-	public static double normalizeAngle(final double angle) {
-		if (angle >= 360) {
-			return angle - 360;
+	public static double normalizeAngle(double angle) {
+		if (angle >= 360.0) {
+			return angle - 360.0;
 		} else if (angle < 0) {
-			return angle + 360;
+			return angle + 360.0;
 		}
 
 		return angle;
@@ -85,8 +86,8 @@ public class Maths {
 	 *
 	 * @return Returns a value with deadband applied.
 	 */
-	public static double deadband(final double min, final double value) {
-		return Math.abs(value) >= Math.abs(min) ? value : 0;
+	public static double deadband(double min, double value) {
+		return Math.abs(value) >= Math.abs(min) ? value : 0.0;
 	}
 
 	/**
@@ -98,7 +99,7 @@ public class Maths {
 	 *
 	 * @return {@code value}, clamped between {@code min} and {@code max}.
 	 */
-	public static double clamp(final double value, final double min, final double max) {
+	public static double clamp(double value, double min, double max) {
 		return value < min ? min : value > max ? max : value;
 	}
 
@@ -110,7 +111,7 @@ public class Maths {
 	 *
 	 * @return A limited value.
 	 */
-	public static double limit(final double value, final double limit) {
+	public static double limit(double value, double limit) {
 		return value > limit ? limit : value;
 	}
 
@@ -123,9 +124,9 @@ public class Maths {
 	 *
 	 * @return Returns a interpolated value.
 	 */
-	public static double cosInterpolate(final double a, final double b, final double blend) {
-		final double ft = blend * Math.PI;
-		final double f = (1f - Math.cos(ft)) * 0.5;
-		return a * (1 - f) + b * f;
+	public static double cosInterpolate(double a, double b, double blend) {
+		double ft = blend * Math.PI;
+		double f = (1f - Math.cos(ft)) * 0.5;
+		return a * (1.0 - f) + b * f;
 	}
 }

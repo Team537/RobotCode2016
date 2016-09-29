@@ -16,28 +16,28 @@ public class Drive extends Subsystem {
 			"Back Left", 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_LEFT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_LEFT_DRIVE), 
-			0.0, 0.0, 0.0
+			1.0, 0.0, 0.0
 	);
 
 	private final DriveModule backRight = new DriveModule(
 			"Back Right", 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_RIGHT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_RIGHT_DRIVE), 
-			0.0, 0.0, 0.0
+			1.0, 0.0, 0.0
 	);
 
 	private final DriveModule frontLeft = new DriveModule(
 			"Front Left", 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_LEFT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_LEFT_DRIVE), 
-			0.0, 0.0, 0.0
+			1.0, 0.0, 0.0
 	);
 
 	private final DriveModule frontRight = new DriveModule(
 			"Front Right", 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_RIGHT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_RIGHT_DRIVE), 
-			0.0, 0.0, 0.0
+			1.0, 0.0, 0.0
 	);
 
 	public Drive() {
@@ -61,12 +61,49 @@ public class Drive extends Subsystem {
 		SmartDashboard.putNumber("Drive Input Forward", forward);
 		SmartDashboard.putNumber("Drive Input Gyro", gyro);
 		
-		double angleSetpoint = Math.abs(forward) == 1 ? 180.0 : 0.0;
+		double fwd2 = (forward * Math.cos(gyro)) + strafe * Math.sin(gyro);
+		double str2 = (-forward * Math.sin(gyro)) + strafe * Math.cos(gyro);
 
-		backLeft.set(0.0, angleSetpoint);
-		backRight.set(0.0, angleSetpoint);
-		frontLeft.set(0.0, angleSetpoint);
-		frontRight.set(0.0, angleSetpoint);
+		double r = RobotMap.Robot.RATIO / 2.0;
+		double a = str2 - rotation * ((RobotMap.Robot.LENGTH / r) * 0.5);
+		double b = str2 + rotation * ((RobotMap.Robot.LENGTH / r) * 0.5);
+		double c = fwd2 - rotation * ((RobotMap.Robot.WIDTH / r) * 0.5);
+		double d = fwd2 + rotation * ((RobotMap.Robot.WIDTH / r) * 0.5);
+
+		SmartDashboard.putNumber("Maths R", r);
+		SmartDashboard.putNumber("Maths A", a);
+		SmartDashboard.putNumber("Maths B", b);
+		SmartDashboard.putNumber("Maths C", c);
+		SmartDashboard.putNumber("Maths D", d);
+
+		double frs = Math.sqrt((b * b) + (c * c));
+		double fls = Math.sqrt((a * a) + (c * c));
+		double bls = Math.sqrt((a * a) + (d * d));
+		double brs = Math.sqrt((b * b) + (d * d));
+		double max = Maths.maxValue(frs, fls, bls, brs);
+
+		double fra = Math.atan2(b, c) * (180.0 / Math.PI);
+		double fla = Math.atan2(a, c) * (180.0 / Math.PI);
+		double bla = Math.atan2(a, d) * (180.0 / Math.PI);
+		double bra = Math.atan2(b, d) * (180.0 / Math.PI);
+
+		if (max > 1.0) {
+			frs /= max;
+			fls /= max;
+			bls /= max;
+			brs /= max;
+		}
+
+		frontRight.set(0.0, fra); // frs
+		frontLeft.set(0.0, fla); // fls
+		backLeft.set(0.0, bla); // bls
+		backRight.set(0.0, bra); // brs
+		
+	//	double angleSetpoint = Math.abs(forward) == 1 ? 180.0 : 0.0;
+	//	backLeft.set(0.0, angleSetpoint);
+	//	backRight.set(0.0, angleSetpoint);
+	//	frontLeft.set(0.0, angleSetpoint);
+	//	frontRight.set(0.0, angleSetpoint);
 	}
 	
 	public void reset() {
@@ -108,14 +145,14 @@ public class Drive extends Subsystem {
 			SmartDashboard.putNumber(name + " Maths Speed", speed);
 			SmartDashboard.putNumber(name + " Maths Angle", angle);
 
-			this.angle.set((angle + 180.0) * (1024.0 / 360.0));
+			this.angle.set(angle * (1024.0 / 360.0)); // (angle + 180.0) * (1024.0 / 360.0)
 			this.drive.set(speed * 12.0);
 		}
 		
 		public void dashboard() {
 			SmartDashboard.putNumber(name + " Drive Speed", drive.getSpeed());
 			SmartDashboard.putNumber(name + " Drive (Encoder)", drive.getEncPosition());
-			SmartDashboard.putNumber(name + " Angle", angle.getAnalogInRaw() / 360.0);
+			SmartDashboard.putNumber(name + " Angle", angle.getAnalogInRaw());
 		}
 		
 		public void reset() {

@@ -13,4 +13,5 @@
 <fullyQualifiedTypeName name="edu.wpi.first.wpilibj.DriverStation"/>
 <fullyQualifiedTypeName name="org.team537.robot.RobotMap.Robot"/>
 <fullyQualifiedTypeName name="org.team537.robot.Robot"/>
+<fullyQualifiedTypeName name="edu.wpi.first.wpilibj.Compressor"/>
 </qualifiedTypeNameHistroy>

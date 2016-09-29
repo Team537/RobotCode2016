@@ -26,7 +26,7 @@ public class DriveDefault extends Command {
 		double rotation = Robot.oi.joystickPrimary.getRawAxis(RobotMap.JoystickAxes.RIGHT_X);
 		double strafe = Robot.oi.joystickPrimary.getRawAxis(RobotMap.JoystickAxes.LEFT_X);
 		double forward = -Robot.oi.joystickPrimary.getRawAxis(RobotMap.JoystickAxes.LEFT_Y);
-		double gyro = Robot.ahrs.getAngle();
+		double gyro = 0.0; // Robot.ahrs.getAngle();
 		Robot.drive.drive(rotation, strafe, forward, gyro);
 	}
 
