@@ -16,28 +16,28 @@ public class Drive extends Subsystem {
 			"Back Left", 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_LEFT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_LEFT_DRIVE), 
-			2.0, 0.0, 1.0
+			1.5, 0.0, 0.5
 	);
 
 	private final DriveModule backRight = new DriveModule(
 			"Back Right", 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_RIGHT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_RIGHT_DRIVE), 
-			2.0, 0.0, 1.0
+			1.5, 0.0, 0.5
 	);
 
 	private final DriveModule frontLeft = new DriveModule(
 			"Front Left", 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_LEFT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_LEFT_DRIVE), 
-			2.0, 0.0, 1.0
+			1.5, 0.0, 0.5
 	);
 
 	private final DriveModule frontRight = new DriveModule(
 			"Front Right", 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_RIGHT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_RIGHT_DRIVE), 
-			2.0, 0.0, 1.0
+			1.5, 0.0, 0.5
 	);
 
 	public Drive() {

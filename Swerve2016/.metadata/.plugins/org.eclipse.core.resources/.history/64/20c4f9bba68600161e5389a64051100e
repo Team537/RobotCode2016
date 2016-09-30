@@ -16,28 +16,28 @@ public class Drive extends Subsystem {
 			"Back Left", 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_LEFT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_LEFT_DRIVE), 
-			2.0, 0.0, 1.0
+			1.0, 0.0, 0.0
 	);
 
 	private final DriveModule backRight = new DriveModule(
 			"Back Right", 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_RIGHT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_BACK_RIGHT_DRIVE), 
-			2.0, 0.0, 1.0
+			1.0, 0.0, 0.0
 	);
 
 	private final DriveModule frontLeft = new DriveModule(
 			"Front Left", 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_LEFT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_LEFT_DRIVE), 
-			2.0, 0.0, 1.0
+			1.0, 0.0, 0.0
 	);
 
 	private final DriveModule frontRight = new DriveModule(
 			"Front Right", 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_RIGHT_ANGLE), 
 			new CANTalon(RobotMap.CAN.DRIVE_FRONT_RIGHT_DRIVE), 
-			2.0, 0.0, 1.0
+			1.0, 0.0, 0.0
 	);
 
 	public Drive() {
@@ -89,10 +89,15 @@ public class Drive extends Subsystem {
 			brs /= max;
 		}
 
-		double fra = Math.atan2(b, c) * (180.0 / Math.PI);
-		double fla = Math.atan2(a, c) * (180.0 / Math.PI);
-		double bla = Math.atan2(a, d) * (180.0 / Math.PI);
-		double bra = Math.atan2(b, d) * (180.0 / Math.PI);
+		double fra = (Math.atan2(b, c) * (180.0 / Math.PI)) + 360.0;
+		double fla = (Math.atan2(a, c) * (180.0 / Math.PI)) + 360.0;
+		double bla = (Math.atan2(a, d) * (180.0 / Math.PI)) + 360.0;
+		double bra = (Math.atan2(b, d) * (180.0 / Math.PI)) + 360.0;
+
+		fra = Maths.normalizeAngle(fra);
+		fla = Maths.normalizeAngle(fla);
+		bla = Maths.normalizeAngle(bla);
+		bra = Maths.normalizeAngle(bra);
 
 		frontRight.set(0.0, fra); // frs
 		frontLeft.set(0.0, fla); // fls
@@ -125,15 +130,12 @@ public class Drive extends Subsystem {
 		private String name;
 		private CANTalon angle;
 		private CANTalon drive;
-		private int potMin, potMax;
 		private int driveSign;
 		
 		public DriveModule(String name, CANTalon angle, CANTalon drive, double p, double i, double d) {
 			this.name = name;
 			this.angle = angle;
 			this.drive = drive;
-			this.potMin = 50;
-			this.potMax = 975;
 			this.driveSign = 1;
 
 			this.angle.setFeedbackDevice(FeedbackDevice.AnalogPot);
@@ -147,9 +149,7 @@ public class Drive extends Subsystem {
 		}
 		
 		public void set(double speed, double angle) {
-			angle = angle + 360.0;
-			
-			/*if (angle > 330) {
+			if (angle > 330) {
 				driveSign = -1;
 				angle -= 180;
 			} else if (angle < 30) {
@@ -157,14 +157,12 @@ public class Drive extends Subsystem {
 				angle += 180;
 			} else {
 				driveSign = 1;
-			}*/
-			
-			angle = Maths.normalizeAngle(angle);
+			}
 			
 			SmartDashboard.putNumber(name + " Maths Speed", speed);
 			SmartDashboard.putNumber(name + " Maths Angle", angle);
 
-			this.angle.set(((angle / 360.0) * (potMax - potMin)) + potMin);
+			this.angle.set(angle * (1024.0 / 360.0)); // (angle + 180.0) * (1024.0 / 360.0)
 			this.drive.set(driveSign * speed * 12.0);
 		}
 		
