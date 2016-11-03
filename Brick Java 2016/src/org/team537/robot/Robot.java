@@ -1,6 +1,10 @@
 package org.team537.robot;
 
+import org.team537.robot.autonomus.AutoLowBar;
+import org.team537.robot.autonomus.AutoRockWall;
+import org.team537.robot.autonomus.AutoSallyPort;
 import org.team537.robot.subsystems.Climber;
+import org.team537.robot.subsystems.Collector;
 import org.team537.robot.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -15,6 +19,7 @@ public class Robot extends IterativeRobot {
 	// Subsystems.
 	public static Drive drive;
 	public static Climber climber;
+	public static Collector collector;
 
 	// Interfaces.
 	public static OI oi;
@@ -33,6 +38,7 @@ public class Robot extends IterativeRobot {
 		// Subsystems.
 		drive = new Drive();
 		climber = new Climber();
+		collector = new Collector();
 
 		// Interfaces.
 		oi = new OI();
@@ -49,6 +55,9 @@ public class Robot extends IterativeRobot {
 		// Autonomous chooser to display on the dashboard.
 		autoChooser = new SendableChooser();
 		autoChooser.addObject("Nothing", null);
+		autoChooser.addObject("Low Bar", new AutoLowBar());
+		autoChooser.addObject("Rock Wall", new AutoRockWall());
+		autoChooser.addDefault("Sally Port", new AutoSallyPort());
 		SmartDashboard.putData("Autonomous", autoChooser);
 	}
 
@@ -128,6 +137,7 @@ public class Robot extends IterativeRobot {
 	private void dashboard() {
 		drive.dashboard();
 		climber.dashboard();
+		collector.dashboard();
 		
 		SmartDashboard.putBoolean("Compressor Enabled", compressor.enabled());
 		SmartDashboard.putNumber("Compressor Current", compressor.getCompressorCurrent());

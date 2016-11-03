@@ -21,7 +21,7 @@ public class Drive extends Subsystem {
 
 	private final Solenoid shifter = new Solenoid(RobotMap.Solenoid.DRIVE_SHIFTER);
 	
-	private boolean fullspeed = false;
+	private boolean fullspeed = true;
 
 	public Drive() {
 		leftDriveMaster.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);

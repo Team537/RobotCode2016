@@ -8,6 +8,7 @@ import org.team537.robot.commands.ClimberStateIncrement;
 import org.team537.robot.commands.DriveFullspeed;
 import org.team537.robot.commands.DriveShift;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 

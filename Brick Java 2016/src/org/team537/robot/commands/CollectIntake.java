@@ -3,16 +3,13 @@ package org.team537.robot.commands;
 import org.team537.robot.Robot;
 import org.team537.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ClimberStage1 extends Command {
-	private Timer timerPopup;
+public class CollectIntake extends Command {
+	private boolean reverse;
 	
-	public ClimberStage1() {
-		timerPopup = new Timer();
-		requires(Robot.climber);
+	public CollectIntake(boolean reverse) {
+		this.reverse = reverse;
 	}
 
 	/**
@@ -20,8 +17,11 @@ public class ClimberStage1 extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		SmartDashboard.putString("Climber State", "Stage1");
-		timerPopup.start();
+		if (Robot.collector.intake.getSetpoint() == (reverse ? -1.0 : 1.0) * RobotMap.Driver.COLLECTOR_SPEED) {
+			Robot.collector.intake.set(0.0);
+		} else {
+			Robot.collector.intake.set((reverse ? -1.0 : 1.0) * RobotMap.Driver.COLLECTOR_SPEED);
+		}
 	}
 
 	/**
@@ -29,16 +29,6 @@ public class ClimberStage1 extends Command {
 	 */
 	@Override
 	protected void execute() {
-		Robot.climber.deployStage2(false);
-		
-		if (timerPopup.get() > RobotMap.Driver.POPUP_DELAY) {
-			Robot.climber.deployPopup(true);
-			timerPopup.stop();
-			timerPopup.reset();
-		}
-		
-		Robot.climber.deployStage1(true);
-		Robot.climber.deployHooks(false);
 	}
 
 	/**
@@ -46,7 +36,7 @@ public class ClimberStage1 extends Command {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return Robot.climber.deployedStage1() && !Robot.climber.deployedStage2() && Robot.climber.deployedPopup();
+		return Robot.collector.intake.getSetpoint() == 0.0;
 	}
 
 	/**
@@ -54,6 +44,7 @@ public class ClimberStage1 extends Command {
 	 */
 	@Override
 	protected void end() {
+		Robot.collector.intake.set(0.0);
 	}
 
 	/**

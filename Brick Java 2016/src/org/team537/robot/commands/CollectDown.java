@@ -1,18 +1,13 @@
 package org.team537.robot.commands;
 
 import org.team537.robot.Robot;
-import org.team537.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ClimberStage1 extends Command {
-	private Timer timerPopup;
+public class CollectDown extends Command {
+	private boolean done;
 	
-	public ClimberStage1() {
-		timerPopup = new Timer();
-		requires(Robot.climber);
+	public CollectDown() {
 	}
 
 	/**
@@ -20,8 +15,7 @@ public class ClimberStage1 extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		SmartDashboard.putString("Climber State", "Stage1");
-		timerPopup.start();
+		done = false;
 	}
 
 	/**
@@ -29,16 +23,17 @@ public class ClimberStage1 extends Command {
 	 */
 	@Override
 	protected void execute() {
-		Robot.climber.deployStage2(false);
-		
-		if (timerPopup.get() > RobotMap.Driver.POPUP_DELAY) {
-			Robot.climber.deployPopup(true);
-			timerPopup.stop();
-			timerPopup.reset();
-		}
-		
-		Robot.climber.deployStage1(true);
-		Robot.climber.deployHooks(false);
+     //   Robot.collector.intake.configLimitMode(CANTalon::LimitMode::kLimitMode_SrxDisableSwitchInputs);
+        Robot.collector.intake.set(0.4);
+
+        if (Robot.collector.intake.isFwdLimitSwitchClosed())
+        {
+        	Robot.collector.intake.set(0.0);
+        //	Robot.collector.intake.configLimitMode(CANTalon::LimitMode::kLimitMode_SoftPositionLimits);
+        	Robot.collector.intake.setPosition(0.0);
+        	Robot.collector.intake.enable();
+            done = true;
+        }
 	}
 
 	/**
@@ -46,7 +41,7 @@ public class ClimberStage1 extends Command {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return Robot.climber.deployedStage1() && !Robot.climber.deployedStage2() && Robot.climber.deployedPopup();
+		return done;
 	}
 
 	/**
@@ -54,6 +49,7 @@ public class ClimberStage1 extends Command {
 	 */
 	@Override
 	protected void end() {
+		Robot.collector.intake.set(0.0);
 	}
 
 	/**

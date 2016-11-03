@@ -12,8 +12,10 @@ public class RobotMap {
 	public static class Driver {
 		public static final int PRIMARY_PORT = 0;
 		public static final int SECONDARY_PORT = 1;
-		public static final double DRIVE_SPEED = 0.70;
+		public static final double DRIVE_SPEED = 0.75;
 		public static final boolean ARCADE_DRIVE = false;
+		public static final double POPUP_DELAY = 2.234;
+		public static final double COLLECTOR_SPEED = 1.0;
 	}
 
 	/**
@@ -29,7 +31,7 @@ public class RobotMap {
 		public static final int BACK = 7;
 		public static final int START = 8;
 		public static final int LEFT = 9;
-		public static fnal int RIGHT = 10;
+		public static final int RIGHT = 10;
 	}
 
 	/**i
@@ -62,6 +64,9 @@ public class RobotMap {
 		public static final int DRIVE_RIGHT_0 = 2;
 		public static final int DRIVE_RIGHT_1 = 4;
 		public static final int DRIVE_RIGHT_2 = 6;
+
+		public static final int COLLECT_POSITION = 7;
+		public static final int COLLECT_INTAKE = 8;
 	}
 
 	/**
